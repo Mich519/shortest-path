@@ -7,7 +7,7 @@
 
 <HBox maxHeight="800.0" maxWidth="1000.0" minHeight="800.0" minWidth="1000.0" prefHeight="800.0" prefWidth="1000.0" style="-fx-background-color: #11151c;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.controller.PrimaryController">
    <children>
-      <Pane maxHeight="760.0" maxWidth="560.0" minHeight="760.0" minWidth="560.0" prefHeight="760.0" prefWidth="560.0" style="-fx-background-color: #364156;">
+      <Pane fx:id="graphEditor" maxHeight="760.0" maxWidth="560.0" minHeight="760.0" minWidth="560.0" prefHeight="760.0" prefWidth="560.0" style="-fx-background-color: #364156;">
          <HBox.margin>
             <Insets bottom="20.0" left="20.0" top="20.0" />
          </HBox.margin>
@@ -35,12 +35,12 @@
                         <Insets bottom="10.0" left="10.0" />
                      </VBox.margin>
                   </Button>
-                  <RadioButton mnemonicParsing="false" text="Choose start node">
+                  <RadioButton fx:id="startNode" mnemonicParsing="false" text="Choose start node">
                      <VBox.margin>
                         <Insets bottom="10.0" left="10.0" />
                      </VBox.margin>
                   </RadioButton>
-                  <RadioButton mnemonicParsing="false" text="Choose end node">
+                  <RadioButton fx:id="endNode" mnemonicParsing="false" text="Choose end node">
                      <VBox.margin>
                         <Insets bottom="10.0" left="10.0" />
                      </VBox.margin>

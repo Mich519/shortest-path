@@ -1,13 +1,21 @@
 package org.example.controller;
 
+import lombok.*;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
-import org.example.controller.eventHandlers.DragEventHandler;
-import org.example.controller.eventHandlers.MouseEventHandler;
+import javafx.scene.layout.Pane;
+import org.example.controller.eventHandlers.AddVertexEvent;
+import org.example.controller.eventHandlers.RemoveVertexEvent;
+import org.example.view.vertex.VertexView;
 
+import java.util.ArrayList;
+
+@Getter
 public class PrimaryController {
+    @FXML
+    private Pane graphEditor;
 
     @FXML
     private RadioButton startNode;
@@ -24,27 +32,36 @@ public class PrimaryController {
     @FXML
     private Button start;
 
-    private ToggleGroup startEndNodeVertexToggleGroup;
-    private ToggleGroup addRemoveVertexToggleGroup;
+    private ArrayList<VertexView> graphVertices;
 
-    private DragEventHandler dragEventHandler;
-    private MouseEventHandler mouseEventHandler;
+    private AddVertexEvent addVertexEvent;
 
     @FXML
     private void initialize() {
-        startEndNodeVertexToggleGroup = new ToggleGroup();
+        ToggleGroup startEndNodeVertexToggleGroup = new ToggleGroup();
         startNode.setToggleGroup(startEndNodeVertexToggleGroup);
         endNode.setToggleGroup(startEndNodeVertexToggleGroup);
         startNode.setSelected(true);
 
-        addRemoveVertexToggleGroup = new ToggleGroup();
+        ToggleGroup addRemoveVertexToggleGroup = new ToggleGroup();
         addVertex.setToggleGroup(addRemoveVertexToggleGroup);
         removeVertex.setToggleGroup(addRemoveVertexToggleGroup);
         addVertex.setSelected(true);
 
-        dragEventHandler =  new DragEventHandler();
-        mouseEventHandler = new MouseEventHandler();
+        graphEditor.setOnMouseClicked(new AddVertexEvent(this));
+
+        graphVertices = new ArrayList<>();
     }
 
+    public void addVertexToPane(double centerPosX, double centerPosY) {
+        VertexView v = new VertexView(centerPosX, centerPosY);
+        v.setOnMouseClicked(new RemoveVertexEvent(this, v));
+        graphEditor.getChildren().add(v);
+        graphVertices.add(v);
+    }
 
+    public void removeVertexFromPane(VertexView vertexToRemove) {
+        graphEditor.getChildren().remove(vertexToRemove);
+        graphVertices.remove(vertexToRemove);
+    }
 }

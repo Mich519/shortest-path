@@ -1,4 +1,12 @@
 package org.example.graph;
 
-public class Vertex {
+import javafx.scene.shape.Circle;
+
+public class Vertex<T> {
+    private T weight;
+    private Circle graphics;
+
+    Vertex() {
+
+    }
 }

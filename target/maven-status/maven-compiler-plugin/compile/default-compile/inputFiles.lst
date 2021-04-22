@@ -1,4 +1,8 @@
-/home/michal/Studia/si/shortest-path/src/main/java/org/example/SecondaryController.java
+/home/michal/Studia/si/shortest-path/src/main/java/org/example/controller/PrimaryController.java
+/home/michal/Studia/si/shortest-path/src/main/java/org/example/graph/Edge.java
+/home/michal/Studia/si/shortest-path/src/main/java/org/example/graph/Vertex.java
+/home/michal/Studia/si/shortest-path/src/main/java/org/example/controller/eventHandlers/DragEventHandler.java
 /home/michal/Studia/si/shortest-path/src/main/java/org/example/App.java
-/home/michal/Studia/si/shortest-path/src/main/java/org/example/PrimaryController.java
+/home/michal/Studia/si/shortest-path/src/main/java/org/example/controller/eventHandlers/MouseEventHandler.java
 /home/michal/Studia/si/shortest-path/src/main/java/module-info.java
+/home/michal/Studia/si/shortest-path/src/main/java/org/example/graph/Graph.java
