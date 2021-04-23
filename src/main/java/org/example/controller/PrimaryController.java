@@ -1,5 +1,8 @@
 package org.example.controller;
 
+import javafx.beans.property.DoubleProperty;
+import javafx.scene.Node;
+import javafx.scene.input.MouseEvent;
 import lombok.*;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -7,9 +10,8 @@ import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.Pane;
 import org.example.controller.eventHandlers.AddVertexEvent;
-import org.example.controller.eventHandlers.OnMouseReleasedEventHandler;
 import org.example.controller.eventHandlers.RemoveVertexEvent;
-import org.example.controller.eventHandlers.OnDragEventHandler;
+import org.example.graph.Edge;
 import org.example.graph.Graph;
 import org.example.graph.Vertex;
 
@@ -61,11 +63,12 @@ public class PrimaryController {
         graph = new Graph();
     }
 
-    public void addVertexToPane(double centerPosX, double centerPosY) {
-        Vertex<Double> v = new Vertex<>(0.0, centerPosX, centerPosY);
-        v.setOnMouseClicked(new RemoveVertexEvent(this, v));
-        v.setOnMouseDragged(new OnDragEventHandler(this, v));
-        v.setOnMouseReleased(new OnMouseReleasedEventHandler(this, v));
+    public void addVertexToPane(DoubleProperty centerPosX, DoubleProperty centerPosY) {
+        Vertex<Double> v = new Vertex<>(this, 0.0, centerPosX, centerPosY);
+        v.addEventFilter(MouseEvent.MOUSE_CLICKED, new RemoveVertexEvent(this, v));
+        //v.addEventFilter(MouseEvent.MOUSE_DRAGGED, new OnDragEventHandler(this, v));
+        //v.addEventFilter(MouseEvent.MOUSE_RELEASED, new OnMouseReleasedEventHandler(this, v));
+        //v.addEventFilter(DragEvent.DRAG_ENTERED, );
         graphEditor.getChildren().add(v);
         graph.addVertex(v);
     }
@@ -73,5 +76,15 @@ public class PrimaryController {
     public void removeVertexFromPane(Vertex<Double> vertexToRemove) {
         graphEditor.getChildren().remove(vertexToRemove);
         graph.removeVertex(vertexToRemove);
+    }
+
+    public void addEdgeToPane(Edge e) {
+        if(!graphEditor.getChildren().contains(e)) {
+            graphEditor.getChildren().add(e);
+        }
+    }
+
+    public void removeEdgeFromPane(Edge e) {
+        graphEditor.getChildren().remove(e);
     }
 }

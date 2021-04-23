@@ -1,5 +1,7 @@
 package org.example.controller.eventHandlers;
 
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.event.EventHandler;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
@@ -16,11 +18,9 @@ public class AddVertexEvent implements EventHandler<MouseEvent> {
     @Override
     public void handle(MouseEvent mouseEvent) {
         if (controller.getAddVertex().isSelected() && mouseEvent.getButton() == MouseButton.SECONDARY) {
-            System.out.println(mouseEvent.getPickResult());
-            double clickedXPos = mouseEvent.getX();
-            double clickedYPos = mouseEvent.getY();
+            DoubleProperty clickedXPos = new SimpleDoubleProperty(mouseEvent.getX());
+            DoubleProperty clickedYPos = new SimpleDoubleProperty(mouseEvent.getY());
             controller.addVertexToPane(clickedXPos, clickedYPos);
-            System.out.println("Add vertex");
         }
     }
 }
