@@ -1,4 +1,4 @@
-package org.example.controller.eventHandlers;
+package org.example.graph.eventHandlers;
 
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;

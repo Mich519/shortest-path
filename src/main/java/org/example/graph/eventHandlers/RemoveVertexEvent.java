@@ -1,4 +1,4 @@
-package org.example.controller.eventHandlers;
+package org.example.graph.eventHandlers;
 
 import javafx.event.EventHandler;
 import javafx.scene.input.MouseButton;

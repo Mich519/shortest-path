@@ -1,7 +1,6 @@
 package org.example.controller;
 
 import javafx.beans.property.DoubleProperty;
-import javafx.scene.Node;
 import javafx.scene.input.MouseEvent;
 import lombok.*;
 import javafx.fxml.FXML;
@@ -9,8 +8,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.Pane;
-import org.example.controller.eventHandlers.AddVertexEvent;
-import org.example.controller.eventHandlers.RemoveVertexEvent;
+import org.example.graph.eventHandlers.AddVertexEvent;
+import org.example.graph.eventHandlers.RemoveVertexEvent;
 import org.example.graph.Edge;
 import org.example.graph.Graph;
 import org.example.graph.Vertex;

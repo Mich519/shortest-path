@@ -7,6 +7,6 @@ module org.example {
     exports org.example;
     exports org.example.controller;
     opens org.example.controller to javafx.fxml;
-    exports org.example.controller.eventHandlers;
-    opens org.example.controller.eventHandlers to javafx.fxml;
+    exports org.example.graph.eventHandlers;
+    opens org.example.graph.eventHandlers to javafx.fxml;
 }
