@@ -6,6 +6,7 @@ import javafx.event.EventHandler;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import org.example.controller.PrimaryController;
+import org.example.graph.Vertex;
 
 public class AddVertexEvent implements EventHandler<MouseEvent> {
 
@@ -20,7 +21,8 @@ public class AddVertexEvent implements EventHandler<MouseEvent> {
         if (controller.getAddVertex().isSelected() && mouseEvent.getButton() == MouseButton.SECONDARY) {
             DoubleProperty clickedXPos = new SimpleDoubleProperty(mouseEvent.getX());
             DoubleProperty clickedYPos = new SimpleDoubleProperty(mouseEvent.getY());
-            controller.addVertexToPane(clickedXPos, clickedYPos);
+            Vertex v = new Vertex(controller, 0.0,  clickedXPos, clickedYPos);
+            controller.addVertexToPane(v);
         }
     }
 }

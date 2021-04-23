@@ -9,9 +9,9 @@ import org.example.graph.Vertex;
 public class RemoveVertexEvent implements EventHandler<MouseEvent> {
 
     private final PrimaryController controller;
-    private final Vertex<Double> target;
+    private final Vertex target;
 
-    public RemoveVertexEvent(PrimaryController controller, Vertex<Double> target) {
+    public RemoveVertexEvent(PrimaryController controller, Vertex target) {
         this.controller = controller;
         this.target = target;
     }
@@ -20,6 +20,8 @@ public class RemoveVertexEvent implements EventHandler<MouseEvent> {
     public void handle(MouseEvent mouseEvent) {
         if (controller.getRemoveVertex().isSelected() && mouseEvent.getButton() == MouseButton.SECONDARY) {
             controller.removeVertexFromPane(target);
+
+
         }
     }
 }

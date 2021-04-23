@@ -13,19 +13,20 @@ import org.example.controller.PrimaryController;
 import org.example.graph.eventHandlers.OnMouseDraggedEventHandler;
 import org.example.graph.eventHandlers.OnMousePressedEventHandler;
 import org.example.graph.eventHandlers.OnMouseReleasedEventHandler;
+import org.example.graph.eventHandlers.RemoveVertexEvent;
 
 @EqualsAndHashCode(callSuper = true)
 @Getter
 @Setter
-public class Vertex<T> extends Circle {
+public class Vertex extends Circle {
     private final PrimaryController controller;
-    private final T weight;
+    private final double weight;
 
     public static class DragData {
         public Edge e;
     }
 
-    public Vertex(PrimaryController controller, T weight, DoubleProperty centerX, DoubleProperty centerY) {
+    public Vertex(PrimaryController controller, double weight, DoubleProperty centerX, DoubleProperty centerY) {
         super(centerX.get(), centerY.get(), 20.0, Paint.valueOf("#A7ABDD"));
         this.controller = controller;
         this.weight = weight;
@@ -37,6 +38,7 @@ public class Vertex<T> extends Circle {
         setOnMousePressed(new OnMousePressedEventHandler(dragData, this));
         setOnMouseDragged(new OnMouseDraggedEventHandler(controller, dragData, this));
         setOnMouseReleased(new OnMouseReleasedEventHandler(controller, dragData));
+        setOnMouseClicked(new RemoveVertexEvent(controller, this));
     }
 }
 
