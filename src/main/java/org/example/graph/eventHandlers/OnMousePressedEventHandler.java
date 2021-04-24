@@ -24,7 +24,7 @@ public class OnMousePressedEventHandler implements EventHandler<MouseEvent> {
 
             /* append edge to first vertex */
             dragData.startVertex = target;
-            dragData.draggedEdge = new Edge(target, target);
+            dragData.draggedEdge = new Edge(target, target, 0);
             dragData.draggedEdge.endXProperty().unbind();
             dragData.draggedEdge.endYProperty().unbind();
         }

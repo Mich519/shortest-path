@@ -28,7 +28,7 @@ public class AddVertexEvent implements EventHandler<MouseEvent> {
             String graphEditorID = controller.getGraphEditor().getId();
 
             if(targetID != null && targetID.equals(graphEditorID)) {
-                Vertex v = new Vertex(controller, 0.0,  clickedXPos, clickedYPos);
+                Vertex v = new Vertex(controller, clickedXPos, clickedYPos);
                 controller.getGraph().addVertex(v);
                 controller.drawGraph();
             }

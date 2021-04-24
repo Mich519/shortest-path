@@ -12,22 +12,25 @@ import org.example.graph.eventHandlers.OnMousePressedEventHandler;
 import org.example.graph.eventHandlers.OnMouseReleasedEventHandler;
 import org.example.graph.eventHandlers.RemoveVertexEvent;
 
-@EqualsAndHashCode(callSuper = true)
+import java.util.HashSet;
+import java.util.List;
+
 @Getter
 @Setter
 public class Vertex extends Circle {
+
+    private HashSet<Edge> adjEdges;
     private final PrimaryController controller;
-    private final double weight;
 
     public static class DragData {
         public Vertex startVertex;
         public Edge draggedEdge;
     }
 
-    public Vertex(PrimaryController controller, double weight, DoubleProperty centerX, DoubleProperty centerY) {
+    public Vertex(PrimaryController controller, DoubleProperty centerX, DoubleProperty centerY) {
         super(centerX.get(), centerY.get(), 20.0, Paint.valueOf("#A7ABDD"));
         this.controller = controller;
-        this.weight = weight;
+        this.adjEdges = new HashSet<>();
         centerX.bind(centerXProperty());
         centerY.bind(centerYProperty());
 

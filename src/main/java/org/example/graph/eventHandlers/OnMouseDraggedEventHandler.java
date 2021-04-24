@@ -36,7 +36,7 @@ public class OnMouseDraggedEventHandler implements EventHandler<MouseEvent> {
             if (dragData.draggedEdge != null) {
                 dragData.draggedEdge.setEndX(mouseEvent.getX());
                 dragData.draggedEdge.setEndY(mouseEvent.getY());
-                controller.drawEdge(dragData.draggedEdge);
+                controller.addEdgeToPane(dragData.draggedEdge);
             }
         }
     }

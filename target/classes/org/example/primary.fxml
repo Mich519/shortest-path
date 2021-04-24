@@ -31,7 +31,7 @@
                         <Insets bottom="10.0" left="10.0" top="10.0" />
                      </VBox.margin>
                   </Label>
-                  <Button mnemonicParsing="false" text="Clear all">
+                  <Button fx:id="clearGraphEditor" mnemonicParsing="false" text="Clear all">
                      <VBox.margin>
                         <Insets bottom="10.0" left="10.0" />
                      </VBox.margin>
@@ -71,7 +71,7 @@
                         <Insets bottom="10.0" left="10.0" />
                      </VBox.margin>
                   </RadioButton>
-                  <Slider>
+                  <Slider fx:id="vertexCount">
                      <opaqueInsets>
                         <Insets />
                      </opaqueInsets>
@@ -84,7 +84,7 @@
                         <Insets bottom="10.0" left="10.0" right="10.0" />
                      </VBox.margin>
                   </Slider>
-                  <Button mnemonicParsing="false" text="Randomize">
+                  <Button fx:id="generate" mnemonicParsing="false" text="Generate">
                      <VBox.margin>
                         <Insets bottom="10.0" left="10.0" />
                      </VBox.margin>

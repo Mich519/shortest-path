@@ -76,8 +76,6 @@ public class PrimaryController {
 
         graphEditor.setOnMouseClicked(new AddVertexEvent(this));
 
-
-
         graph = new Graph();
         graphGenerator = new GraphGenerator(this);
 
@@ -91,40 +89,33 @@ public class PrimaryController {
         });
     }
 
-    public void addVertexToPane(Vertex vertexToAdd) {
-        if (!graphEditor.getChildren().contains(vertexToAdd)) {
-            graphEditor.getChildren().add(vertexToAdd);
+    public void addVertexToPane(Vertex v) {
+        if (!graphEditor.getChildren().contains(v)) {
+            graphEditor.getChildren().add(v);
         }
     }
 
     public void removeEdgeFromPane(Edge e) {
-        graphEditor.getChildren().remove(e);
-    }
-
-    public void drawEdge(Edge e) {
-        if (!graphEditor.getChildren().contains(e)) {
-            graphEditor.getChildren().add(e);
+        if (graphEditor.getChildren().contains(e)) {
+            graphEditor.getChildren().remove(e);
         }
     }
 
-    public void drawEdge(Vertex v1, Vertex v2) {
-        Edge e = new Edge(v1, v2);
+    public void addEdgeToPane(Edge e) {
         if (!graphEditor.getChildren().contains(e)) {
             graphEditor.getChildren().add(e);
         }
     }
 
     public void drawGraph() {
-        graphEditor.getChildren().clear();
+        graphEditor.getChildren().removeIf(e -> true);
         /* parse graph structure and draw it on graphEditor */
 
         // draw vertices
-        graph.getVertices().keySet().forEach(this::addVertexToPane);
+        graph.getVertices().forEach(this::addVertexToPane);
 
         // draw edges
-        graph.getVertices().forEach((vertex, adjVertices) -> {
-            adjVertices.forEach(adjVertex -> drawEdge(vertex, adjVertex));
-        });
+        graph.getVertices().forEach(v -> v.getAdjEdges().forEach(this::addEdgeToPane));
     }
 
     public void clearAll() {

@@ -5,7 +5,6 @@ import org.example.controller.PrimaryController;
 
 import java.util.Random;
 import java.util.Set;
-import java.util.concurrent.TimeUnit;
 
 public class GraphGenerator {
 
@@ -24,7 +23,7 @@ public class GraphGenerator {
 
         /* generate vertices */
 
-        Set<Vertex> vertices = controller.getGraph().getVertices().keySet();
+        Set<Vertex> vertices = controller.getGraph().getVertices();
         Random rand = new Random();
         for (int i = 0; i < numOfVertices; i++) {
             boolean canFit = false;
@@ -42,7 +41,7 @@ public class GraphGenerator {
                 }
 
             }
-            Vertex v = new Vertex(controller, 0.0, new SimpleDoubleProperty(x), new SimpleDoubleProperty(y));
+            Vertex v = new Vertex(controller, new SimpleDoubleProperty(x), new SimpleDoubleProperty(y));
             controller.getGraph().addVertex(v);
 
         }
@@ -52,7 +51,7 @@ public class GraphGenerator {
             for (Vertex w : vertices) {
                 double r = rand.nextDouble();
                 if(r < 0.05) {
-                    controller.getGraph().addEdge(v, w);
+                    controller.getGraph().addEdge(v, w, 0);
                 }
             }
         }
