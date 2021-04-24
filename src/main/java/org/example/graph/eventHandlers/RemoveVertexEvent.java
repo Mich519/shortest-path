@@ -19,9 +19,8 @@ public class RemoveVertexEvent implements EventHandler<MouseEvent> {
     @Override
     public void handle(MouseEvent mouseEvent) {
         if (controller.getRemoveVertex().isSelected() && mouseEvent.getButton() == MouseButton.SECONDARY) {
-            controller.removeVertexFromPane(target);
-
-
+            controller.getGraph().removeVertex(target);
+            controller.drawGraph();
         }
     }
 }

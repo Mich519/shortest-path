@@ -22,21 +22,19 @@ public class OnMouseReleasedEventHandler implements EventHandler<MouseEvent> {
     public void handle(MouseEvent mouseEvent) {
 
         /* append edge to second vertex */
-        if (dragData.e != null) {
+        if (dragData.draggedEdge != null) {
             Node target = mouseEvent.getPickResult().getIntersectedNode();
-            if (target instanceof Circle) {
-                Edge nE = new Edge(
-                        dragData.e.startXProperty(),
-                        dragData.e.startYProperty(),
-                        ((Circle) target).centerXProperty(),
-                        ((Circle) target).centerYProperty()
-                );
-                nE.endXProperty().bind(((Circle) target).centerXProperty());
-                nE.endYProperty().bind(((Circle) target).centerYProperty());
-                controller.addEdgeToPane(nE);
+            if (target instanceof Vertex) {
+                controller.getGraph().addEdge(dragData.startVertex, (Vertex)target);
+                //nE.endXProperty().bind(((Circle) target).centerXProperty());
+                //nE.endYProperty().bind(((Circle) target).centerYProperty());
+                controller.drawGraph();
             }
-            controller.removeEdgeFromPane(dragData.e);
+            controller.removeEdgeFromPane(dragData.draggedEdge);
         }
-        dragData.e = null;
+
+        /* drag has ended so clear drag data */
+        dragData.draggedEdge = null;
+        dragData.startVertex = null;
     }
 }

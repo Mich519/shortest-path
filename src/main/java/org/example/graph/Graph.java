@@ -26,11 +26,10 @@ public class Graph {
     public void addEdge(Vertex v1, Vertex v2) {
         vertices.get(v1).add(v2);
         vertices.get(v2).add(v1);
-
     }
 
     public void removeVertex(Vertex v) {
-        vertices.values().forEach(edge -> edge.remove(v));
+        vertices.values().forEach(adjVertices -> adjVertices.remove(v));
         vertices.remove(v);
     }
 }

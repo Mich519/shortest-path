@@ -23,7 +23,8 @@ public class Vertex extends Circle {
     private final double weight;
 
     public static class DragData {
-        public Edge e;
+        public Vertex startVertex;
+        public Edge draggedEdge;
     }
 
     public Vertex(PrimaryController controller, double weight, DoubleProperty centerX, DoubleProperty centerY) {

@@ -1,19 +1,15 @@
 package org.example.controller;
 
-import javafx.beans.property.DoubleProperty;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.shape.Line;
-import lombok.*;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.Pane;
-import org.example.graph.eventHandlers.AddVertexEvent;
-import org.example.graph.eventHandlers.RemoveVertexEvent;
+import lombok.Getter;
 import org.example.graph.Edge;
 import org.example.graph.Graph;
 import org.example.graph.Vertex;
+import org.example.graph.eventHandlers.AddVertexEvent;
 
 @Getter
 public class PrimaryController {
@@ -64,35 +60,38 @@ public class PrimaryController {
     }
 
     public void addVertexToPane(Vertex vertexToAdd) {
-        graphEditor.getChildren().add(vertexToAdd);
-        graph.addVertex(vertexToAdd);
-    }
-
-    public void removeVertexFromPane(Vertex vertexToRemove) {
-
-        // remove all edges connected to this vertex
-        double centerX = vertexToRemove.getCenterX();
-        double centerY = vertexToRemove.getCenterY();
-        graphEditor.getChildren().removeIf(node -> {
-            if(node instanceof Line) {
-                Edge e = (Edge) node;
-                return (e.getEndX() == centerX && e.getEndY() == centerY) || (e.getStartX() == centerX && e.getStartY() == centerY);
-            }
-                return false;
-        });
-
-
-        graphEditor.getChildren().remove(vertexToRemove);
-        graph.removeVertex(vertexToRemove);
-    }
-
-    public void addEdgeToPane(Edge e) {
-        if (!graphEditor.getChildren().contains(e)) {
-            graphEditor.getChildren().add(e);
+        if (!graphEditor.getChildren().contains(vertexToAdd)) {
+            graphEditor.getChildren().add(vertexToAdd);
         }
     }
 
     public void removeEdgeFromPane(Edge e) {
         graphEditor.getChildren().remove(e);
+    }
+
+    public void drawEdge(Edge e) {
+        if (!graphEditor.getChildren().contains(e)) {
+            graphEditor.getChildren().add(e);
+        }
+    }
+
+    public void drawEdge(Vertex v1, Vertex v2) {
+        Edge e = new Edge(v1, v2);
+        if (!graphEditor.getChildren().contains(e)) {
+            graphEditor.getChildren().add(e);
+        }
+    }
+
+    public void drawGraph() {
+        graphEditor.getChildren().clear();
+        /* parse graph structure and draw it on graphEditor */
+
+        // draw vertices
+        graph.getVertices().keySet().forEach(this::addVertexToPane);
+
+        // draw edges
+        graph.getVertices().forEach((vertex, adjVertices) -> {
+            adjVertices.forEach(adjVertex -> drawEdge(vertex, adjVertex));
+        });
     }
 }

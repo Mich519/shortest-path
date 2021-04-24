@@ -8,12 +8,12 @@ import javafx.scene.shape.StrokeLineCap;
 
 public class Edge extends Line {
 
-    public Edge(DoubleProperty startX, DoubleProperty startY, DoubleProperty endX, DoubleProperty endY) {
-        super(startX.get(), startY.get(), endX.get(), endY.get());
-        startXProperty().bind(startX);
-        startYProperty().bind(startY);
-        //endXProperty().bind(endX);
-        //endYProperty().bind(endY);
+    public Edge(Vertex start, Vertex end) {
+        super(start.centerXProperty().get(), start.centerYProperty().get(), end.centerXProperty().get(), end.centerYProperty().get());
+        startXProperty().bind(start.centerXProperty());
+        startYProperty().bind(start.centerYProperty());
+        endXProperty().bind(end.centerXProperty());
+        endYProperty().bind(end.centerYProperty());
         setStrokeWidth(2);
         setStroke(Color.LIMEGREEN);
         setStrokeLineCap(StrokeLineCap.BUTT);

@@ -22,7 +22,8 @@ public class AddVertexEvent implements EventHandler<MouseEvent> {
             DoubleProperty clickedXPos = new SimpleDoubleProperty(mouseEvent.getX());
             DoubleProperty clickedYPos = new SimpleDoubleProperty(mouseEvent.getY());
             Vertex v = new Vertex(controller, 0.0,  clickedXPos, clickedYPos);
-            controller.addVertexToPane(v);
+            controller.getGraph().addVertex(v);
+            controller.drawGraph();
         }
     }
 }

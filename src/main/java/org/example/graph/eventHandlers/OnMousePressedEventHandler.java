@@ -14,19 +14,19 @@ public class OnMousePressedEventHandler implements EventHandler<MouseEvent> {
         this.dragData = dragData;
         this.target = target;
     }
+
     @Override
     public void handle(MouseEvent mouseEvent) {
         // record a delta distance for the drag and drop operation.
         if (mouseEvent.getButton() == MouseButton.PRIMARY) {
             ;
         } else if (mouseEvent.getButton() == MouseButton.MIDDLE) {
+
             /* append edge to first vertex */
-            dragData.e = new Edge(
-                    target.centerXProperty(),
-                    target.centerYProperty(),
-                    target.centerXProperty(),
-                    target.centerYProperty()
-            );
+            dragData.startVertex = target;
+            dragData.draggedEdge = new Edge(target, target);
+            dragData.draggedEdge.endXProperty().unbind();
+            dragData.draggedEdge.endYProperty().unbind();
         }
     }
 }

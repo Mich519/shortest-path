@@ -11,7 +11,7 @@ public class OnMouseDraggedEventHandler implements EventHandler<MouseEvent> {
 
     private final PrimaryController controller;
     private final Vertex.DragData dragData;
-    private Vertex target;
+    private final Vertex target;
 
     public OnMouseDraggedEventHandler(PrimaryController controller, Vertex.DragData dragData, Vertex target) {
         this.controller = controller;
@@ -33,10 +33,10 @@ public class OnMouseDraggedEventHandler implements EventHandler<MouseEvent> {
 
         /* updating edge that is being dragged */
         else if (mouseEvent.getButton() == MouseButton.MIDDLE) {
-            if (dragData.e != null) {
-                dragData.e.setEndX(mouseEvent.getX());
-                dragData.e.setEndY(mouseEvent.getY());
-                controller.addEdgeToPane(dragData.e);
+            if (dragData.draggedEdge != null) {
+                dragData.draggedEdge.setEndX(mouseEvent.getX());
+                dragData.draggedEdge.setEndY(mouseEvent.getY());
+                controller.drawEdge(dragData.draggedEdge);
             }
         }
     }
