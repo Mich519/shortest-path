@@ -32,4 +32,8 @@ public class Graph {
         vertices.values().forEach(adjVertices -> adjVertices.remove(v));
         vertices.remove(v);
     }
+
+    public void removeAll() {
+        vertices.clear();
+    }
 }

@@ -1,0 +1,62 @@
+package org.example.graph;
+
+import javafx.beans.property.SimpleDoubleProperty;
+import org.example.controller.PrimaryController;
+
+import java.util.Random;
+import java.util.Set;
+import java.util.concurrent.TimeUnit;
+
+public class GraphGenerator {
+
+    private final PrimaryController controller;
+
+    public GraphGenerator(PrimaryController controller) {
+        this.controller = controller;
+    }
+
+    public void generate() throws InterruptedException {
+
+        controller.clearAll();
+        int numOfVertices = (int)controller.getVertexCount().getValue();
+        double width = controller.getGraphEditor().getWidth() * 0.9;
+        double height = controller.getGraphEditor().getHeight() * 0.9;
+
+        /* generate vertices */
+
+        Set<Vertex> vertices = controller.getGraph().getVertices().keySet();
+        Random rand = new Random();
+        for (int i = 0; i < numOfVertices; i++) {
+            boolean canFit = false;
+            double x = rand.nextDouble() * width, y = rand.nextDouble() * height;
+            while (!canFit) {
+                x = rand.nextDouble() * width;
+                y = rand.nextDouble() * height;
+                if(vertices.size() == 0)
+                    canFit = true;
+                for (Vertex other : vertices) {
+                    if (Math.sqrt((other.getCenterX() - x) * (other.getCenterX() - x) - (other.getCenterY() - y) * (other.getCenterY() - y)) > 2 * other.getRadius()) {
+                        System.out.println(other.getRadius());
+                        canFit = true;
+                    }
+                }
+
+            }
+            Vertex v = new Vertex(controller, 0.0, new SimpleDoubleProperty(x), new SimpleDoubleProperty(y));
+            controller.getGraph().addVertex(v);
+
+        }
+
+        /* generate edges */
+        for (Vertex v : vertices) {
+            for (Vertex w : vertices) {
+                double r = rand.nextDouble();
+                if(r < 0.05) {
+                    controller.getGraph().addEdge(v, w);
+                }
+            }
+        }
+        controller.drawGraph();
+    }
+}
+

@@ -3,15 +3,13 @@ package org.example.graph.eventHandlers;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.shape.Circle;
 import org.example.controller.PrimaryController;
-import org.example.graph.Edge;
 import org.example.graph.Vertex;
 
 public class OnMouseReleasedEventHandler implements EventHandler<MouseEvent> {
 
-    private PrimaryController controller;
-    private Vertex.DragData dragData;
+    private final PrimaryController controller;
+    private final Vertex.DragData dragData;
 
     public OnMouseReleasedEventHandler(PrimaryController controller, Vertex.DragData dragData) {
         this.controller = controller;

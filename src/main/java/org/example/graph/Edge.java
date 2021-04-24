@@ -1,12 +1,11 @@
 package org.example.graph;
 
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.StrokeLineCap;
 
 public class Edge extends Line {
+
 
     public Edge(Vertex start, Vertex end) {
         super(start.centerXProperty().get(), start.centerYProperty().get(), end.centerXProperty().get(), end.centerYProperty().get());

@@ -1,9 +1,6 @@
 package org.example.graph;
 
 import javafx.beans.property.DoubleProperty;
-import javafx.scene.Node;
-import javafx.scene.input.MouseButton;
-import javafx.scene.layout.Pane;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 import lombok.EqualsAndHashCode;

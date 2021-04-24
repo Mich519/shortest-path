@@ -21,9 +21,17 @@ public class AddVertexEvent implements EventHandler<MouseEvent> {
         if (controller.getAddVertex().isSelected() && mouseEvent.getButton() == MouseButton.SECONDARY) {
             DoubleProperty clickedXPos = new SimpleDoubleProperty(mouseEvent.getX());
             DoubleProperty clickedYPos = new SimpleDoubleProperty(mouseEvent.getY());
-            Vertex v = new Vertex(controller, 0.0,  clickedXPos, clickedYPos);
-            controller.getGraph().addVertex(v);
-            controller.drawGraph();
+
+            /* put vertex if clicked element is graphPane */
+
+            String targetID = mouseEvent.getPickResult().getIntersectedNode().getId();
+            String graphEditorID = controller.getGraphEditor().getId();
+
+            if(targetID != null && targetID.equals(graphEditorID)) {
+                Vertex v = new Vertex(controller, 0.0,  clickedXPos, clickedYPos);
+                controller.getGraph().addVertex(v);
+                controller.drawGraph();
+            }
         }
     }
 }
