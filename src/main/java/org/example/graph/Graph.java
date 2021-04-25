@@ -38,6 +38,8 @@ public class Graph {
 
     public void removeAll() {
         vertices.clear();
+        startVertex = null;
+        endVertex = null;
     }
 
     public void setStartVertex(Vertex v) {

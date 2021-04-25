@@ -9,7 +9,7 @@ import java.util.LinkedHashSet;
 import java.util.PriorityQueue;
 
 public class Dijkstra {
-    private Graph graph;
+    private final Graph graph;
 
     public Dijkstra(Graph graph) {
         this.graph = graph;
@@ -29,7 +29,6 @@ public class Dijkstra {
             s.add(v);
             for (Edge w : v.getAdjEdges()) {
                 /* perform relaxation for every vertex adjacent to v */
-
                 Vertex u = w.getDestination();
                 if (v.getCurLowestCost() + w.getWeight() < u.getCurLowestCost()) {
                     u.setCurLowestCost(v.getCurLowestCost() + w.getWeight());

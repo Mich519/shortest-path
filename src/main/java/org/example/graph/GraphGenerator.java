@@ -6,7 +6,6 @@ import org.example.controller.PrimaryController;
 import java.util.*;
 
 // todo: improve randomized vertices distribution
-// todo: make sure that randomized graph has a subtree (every vertex has to be accessible)
 
 public class GraphGenerator {
 

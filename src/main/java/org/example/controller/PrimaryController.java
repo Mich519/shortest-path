@@ -108,9 +108,7 @@ public class PrimaryController {
     }
 
     public void removeEdgeFromPane(Edge e) {
-        if (graphEditor.getChildren().contains(e)) {
-            graphEditor.getChildren().remove(e);
-        }
+        graphEditor.getChildren().remove(e);
     }
 
     public void addEdgeToPane(Edge e) {
@@ -120,7 +118,7 @@ public class PrimaryController {
     }
 
     public void drawGraph() {
-        graphEditor.getChildren().removeIf(e -> true);
+        graphEditor.getChildren().clear();
 
         // draw vertices
         graph.getVertices().forEach(v -> {
@@ -141,5 +139,7 @@ public class PrimaryController {
     public void clearAll() {
         graphEditor.getChildren().clear();
         graph.removeAll();
+        System.out.println(graph.getStartVertex());
+        System.out.println(graph.getEndVertex());
     }
 }
