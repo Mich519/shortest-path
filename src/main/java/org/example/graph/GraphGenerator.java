@@ -3,10 +3,13 @@ package org.example.graph;
 import javafx.beans.property.SimpleDoubleProperty;
 import org.example.controller.PrimaryController;
 
-import java.util.Random;
-import java.util.Set;
+import java.util.*;
+
+// todo: improve randomized vertices distribution
+// todo: make sure that randomized graph has a subtree (every vertex has to be accessible)
 
 public class GraphGenerator {
+
 
     private final PrimaryController controller;
 
@@ -17,7 +20,7 @@ public class GraphGenerator {
     public void generate() throws InterruptedException {
 
         controller.clearAll();
-        int numOfVertices = (int)controller.getVertexCount().getValue();
+        int numOfVertices = (int) controller.getVertexCount().getValue();
         double width = controller.getGraphEditor().getWidth() * 0.9;
         double height = controller.getGraphEditor().getHeight() * 0.9;
 
@@ -31,7 +34,7 @@ public class GraphGenerator {
             while (!canFit) {
                 x = rand.nextDouble() * width;
                 y = rand.nextDouble() * height;
-                if(vertices.size() == 0)
+                if (vertices.size() == 0)
                     canFit = true;
                 for (Vertex other : vertices) {
                     if (Math.sqrt((other.getCenterX() - x) * (other.getCenterX() - x) - (other.getCenterY() - y) * (other.getCenterY() - y)) > 2 * other.getRadius()) {
@@ -45,12 +48,25 @@ public class GraphGenerator {
             controller.getGraph().addVertex(v);
 
         }
-
         /* generate edges */
+
+        // create edges so that graph is a tree
+        List<Vertex> remaining = new ArrayList<>(vertices);
+        Collections.shuffle(remaining);
+        Iterator<Vertex> it = remaining.listIterator();
+        Vertex prev, next;
+        next = it.hasNext() ? it.next() : null;
+        while (it.hasNext()) {
+            prev = next;
+            next = it.next();
+            controller.getGraph().addEdge(prev, next, 0);
+        }
+
+        // add random edges
         for (Vertex v : vertices) {
             for (Vertex w : vertices) {
                 double r = rand.nextDouble();
-                if(r < 0.05) {
+                if (r < 0.05) {
                     controller.getGraph().addEdge(v, w, 0);
                 }
             }

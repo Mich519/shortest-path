@@ -11,6 +11,8 @@ import java.util.*;
 @Getter
 public class Graph {
     private final HashSet<Vertex> vertices;
+    private Vertex startVertex;
+    private Vertex endVertex;
 
     public Graph() {
         vertices = new HashSet<>();
@@ -36,5 +38,13 @@ public class Graph {
 
     public void removeAll() {
         vertices.clear();
+    }
+
+    public void setStartVertex(Vertex v) {
+        this.startVertex = v;
+    }
+
+    public void setEndVertex(Vertex v) {
+        this.endVertex = v;
     }
 }

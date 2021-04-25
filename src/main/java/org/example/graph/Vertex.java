@@ -21,6 +21,7 @@ public class Vertex extends Circle {
 
     private HashSet<Edge> adjEdges;
     private final PrimaryController controller;
+    private double curLowestCost = Double.POSITIVE_INFINITY;
 
     public static class DragData {
         public Vertex startVertex;

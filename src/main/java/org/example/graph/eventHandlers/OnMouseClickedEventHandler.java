@@ -8,11 +8,11 @@ import javafx.scene.input.MouseEvent;
 import org.example.controller.PrimaryController;
 import org.example.graph.Vertex;
 
-public class AddVertexEvent implements EventHandler<MouseEvent> {
+public class OnMouseClickedEventHandler implements EventHandler<MouseEvent> {
 
     private final PrimaryController controller;
 
-    public AddVertexEvent(PrimaryController controller) {
+    public OnMouseClickedEventHandler(PrimaryController controller) {
         this.controller = controller;
     }
 
@@ -33,6 +33,7 @@ public class AddVertexEvent implements EventHandler<MouseEvent> {
                 controller.drawGraph();
             }
         }
+
     }
 }
 

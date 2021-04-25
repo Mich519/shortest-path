@@ -6,6 +6,8 @@ import javafx.scene.shape.StrokeLineCap;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
+import java.util.Random;
+
 @Getter
 @EqualsAndHashCode(callSuper = false)
 public class Edge extends Line {
@@ -17,7 +19,9 @@ public class Edge extends Line {
         super(source.centerXProperty().get(), source.centerYProperty().get(), destination.centerXProperty().get(), destination.centerYProperty().get());
         this.source = source;
         this.destination = destination;
-        this.weight = weight;
+        //this.weight = weight;
+        Random rand = new Random();
+        this.weight = rand.nextDouble() * 100;
         startXProperty().bind(source.centerXProperty());
         startYProperty().bind(source.centerYProperty());
         endXProperty().bind(destination.centerXProperty());

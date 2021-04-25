@@ -104,7 +104,7 @@
                         <Insets bottom="10.0" left="10.0" top="10.0" />
                      </VBox.margin>
                   </Label>
-                  <RadioButton mnemonicParsing="false" text="Algorytm 1">
+                  <RadioButton fx:id="dijkstra" mnemonicParsing="false" text="Dijkstra">
                      <VBox.margin>
                         <Insets bottom="10.0" left="10.0" top="10.0" />
                      </VBox.margin>
