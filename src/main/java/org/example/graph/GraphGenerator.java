@@ -58,7 +58,7 @@ public class GraphGenerator {
         while (it.hasNext()) {
             prev = next;
             next = it.next();
-            controller.getGraph().addEdge(prev, next, 0);
+            controller.getGraph().addEdge(prev, next);
         }
 
         // add random edges
@@ -66,7 +66,7 @@ public class GraphGenerator {
             for (Vertex w : vertices) {
                 double r = rand.nextDouble();
                 if (r < 0.05) {
-                    controller.getGraph().addEdge(v, w, 0);
+                    controller.getGraph().addEdge(v, w);
                 }
             }
         }

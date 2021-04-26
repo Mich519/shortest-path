@@ -6,6 +6,7 @@ import javafx.scene.control.RadioButton;
 import javafx.scene.control.Slider;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Paint;
 import lombok.Getter;
 import org.example.graph.Edge;
@@ -95,7 +96,7 @@ public class PrimaryController {
         });
 
         start.setOnMouseClicked(mouseEvent -> {
-            if(dijkstra.isSelected()) {
+            if (dijkstra.isSelected()) {
                 simulation.simulateDijkstra();
             }
         });

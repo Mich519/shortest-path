@@ -22,13 +22,13 @@ public class Graph {
         vertices.add(v);
     }
 
-    public void addEdge(Vertex v1, Vertex v2, double weight) {
-        v1.getAdjEdges().add(new Edge(v1, v2, weight));
-        v2.getAdjEdges().add(new Edge(v2, v1, weight));
+    public void addEdge(Vertex v1, Vertex v2) {
+        v1.getAdjEdges().add(new Edge(v1, v2));
+        v2.getAdjEdges().add(new Edge(v2, v1));
     }
 
-    public void addDirectedEdge(Vertex src, Vertex dst, double weight) {
-        src.getAdjEdges().add(new Edge(src, dst, weight));
+    public void addDirectedEdge(Vertex src, Vertex dst  ) {
+        src.getAdjEdges().add(new Edge(src, dst));
     }
 
     public void removeVertex(Vertex v) {
