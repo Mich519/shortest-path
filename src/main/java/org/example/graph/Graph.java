@@ -42,6 +42,15 @@ public class Graph {
         endVertex = null;
     }
 
+    public double calcDistanceToGoal(Vertex start) {
+        if(endVertex != null) {
+            double temp1 = Math.pow(endVertex.getCenterX() - start.getCenterX(), 2);
+            double temp2 = Math.pow(endVertex.getCenterY() - start.getCenterY(), 2);
+            return Math.sqrt(temp1 + temp2);
+        }
+        return 0;
+    }
+
     public void setStartVertex(Vertex v) {
         this.startVertex = v;
     }

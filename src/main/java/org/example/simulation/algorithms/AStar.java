@@ -6,19 +6,16 @@ import org.example.graph.Edge;
 import org.example.graph.Graph;
 import org.example.graph.Vertex;
 import org.example.graph.comparators.VertexByCurLowestCostComparator;
+import org.example.graph.comparators.VertexByTotalCostComparator;
 
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.PriorityQueue;
 
-// todo: animation
-// todo: edge label with weight
-// todo: path traversing optimization
-
-public class Dijkstra {
+public class AStar {
     private final Graph graph;
 
-    public Dijkstra(Graph graph) {
+    public AStar(Graph graph) {
         this.graph = graph;
     }
 
@@ -27,7 +24,7 @@ public class Dijkstra {
         LinkedHashSet<Vertex> s = new LinkedHashSet<>(); // s - will be storing ordered vertices that represent shortest path at the end
         mapVertexToPrev.put(graph.getStartVertex(), null);
         graph.getStartVertex().setCurLowestCost(0);
-        PriorityQueue<Vertex> q = new PriorityQueue<>(10, new VertexByCurLowestCostComparator());
+        PriorityQueue<Vertex> q = new PriorityQueue<>(10, new VertexByTotalCostComparator(graph));
         q.addAll(graph.getVertices());
         while (!q.isEmpty()) {
             Vertex v = q.poll();
@@ -55,7 +52,6 @@ public class Dijkstra {
             }
             if (v == graph.getEndVertex())
                 break;
-
         }
 
         /* color edges that represent a path */
@@ -77,7 +73,3 @@ public class Dijkstra {
         s.forEach(System.out::println);
     }
 }
-
-
-
-

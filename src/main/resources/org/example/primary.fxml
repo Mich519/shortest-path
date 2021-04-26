@@ -109,7 +109,7 @@
                         <Insets bottom="10.0" left="10.0" top="10.0" />
                      </VBox.margin>
                   </RadioButton>
-                  <RadioButton mnemonicParsing="false" text="Algorytm 2">
+                  <RadioButton fx:id="aStar" mnemonicParsing="false" text="A*">
                      <VBox.margin>
                         <Insets bottom="10.0" left="10.0" />
                      </VBox.margin>

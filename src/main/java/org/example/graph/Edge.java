@@ -1,5 +1,8 @@
 package org.example.graph;
 
+import javafx.beans.binding.Bindings;
+import javafx.beans.binding.NumberBinding;
+import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
@@ -14,7 +17,6 @@ import java.util.Random;
 public class Edge extends Line {
     private final Vertex source;
     private final Vertex destination;
-    //private final SimpleDoubleProperty weight;
 
     public Edge(Vertex source, Vertex destination) {
         super(source.centerXProperty().get(), source.centerYProperty().get(), destination.centerXProperty().get(), destination.centerYProperty().get());

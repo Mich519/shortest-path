@@ -6,7 +6,7 @@ import javafx.scene.control.RadioButton;
 import javafx.scene.control.Slider;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import lombok.Getter;
 import org.example.graph.Edge;
@@ -54,6 +54,9 @@ public class PrimaryController {
     private RadioButton dijkstra;
 
     @FXML
+    private RadioButton aStar;
+
+    @FXML
     private Button start;
 
     private Graph graph;
@@ -62,30 +65,23 @@ public class PrimaryController {
 
     private Simulation simulation;
 
-    @FXML
-    private void initialize() {
-        ToggleGroup toggleGroup2 = new ToggleGroup();
-        startNode.setToggleGroup(toggleGroup2);
-        endNode.setToggleGroup(toggleGroup2);
-        addVertex.setToggleGroup(toggleGroup2);
-        removeVertex.setToggleGroup(toggleGroup2);
-        addEdge.setToggleGroup(toggleGroup2);
-        removeEdge.setToggleGroup(toggleGroup2);
-
+    private void initRadioButtons() {
+        ToggleGroup toggleGroup1 = new ToggleGroup();
+        startNode.setToggleGroup(toggleGroup1);
+        endNode.setToggleGroup(toggleGroup1);
+        addVertex.setToggleGroup(toggleGroup1);
+        removeVertex.setToggleGroup(toggleGroup1);
+        addEdge.setToggleGroup(toggleGroup1);
+        removeEdge.setToggleGroup(toggleGroup1);
         addVertex.setSelected(true);
 
-        vertexCount.setMin(3);
-        vertexCount.setMax(100);
-        vertexCount.setValue(20);
-        vertexCount.setShowTickLabels(true);
-        vertexCount.setShowTickMarks(true);
+        ToggleGroup toggleGroup2 = new ToggleGroup();
+        dijkstra.setToggleGroup(toggleGroup2);
+        aStar.setToggleGroup(toggleGroup2);
+    }
 
+    public void initButtons() {
         graphEditor.setOnMouseClicked(new OnMouseClickedEventHandler(this));
-
-        graph = new Graph();
-        graphGenerator = new GraphGenerator(this);
-        simulation = new Simulation(this, graph);
-
         clearGraphEditor.setOnMouseClicked(mouseEvent -> clearAll());
         generate.setOnMouseClicked(mouseEvent -> {
             try {
@@ -98,8 +94,28 @@ public class PrimaryController {
         start.setOnMouseClicked(mouseEvent -> {
             if (dijkstra.isSelected()) {
                 simulation.simulateDijkstra();
+            } else if (aStar.isSelected()) {
+                simulation.simulateAStar();
             }
         });
+    }
+
+    private void initSliders() {
+        vertexCount.setMin(3);
+        vertexCount.setMax(100);
+        vertexCount.setValue(20);
+        vertexCount.setShowTickLabels(true);
+        vertexCount.setShowTickMarks(true);
+    }
+
+    @FXML
+    private void initialize() {
+        initRadioButtons();
+        initSliders();
+        graph = new Graph();
+        graphGenerator = new GraphGenerator(this);
+        simulation = new Simulation(this, graph);
+        initButtons();
     }
 
     public void addVertexToPane(Vertex v) {
@@ -128,7 +144,10 @@ public class PrimaryController {
         });
 
         // draw edges
-        graph.getVertices().forEach(v -> v.getAdjEdges().forEach(this::addEdgeToPane));
+        graph.getVertices().forEach(v -> v.getAdjEdges().forEach(e -> {
+            e.setStroke(Color.LIMEGREEN);
+            addEdgeToPane(e);
+        }));
 
         // set unique colors for start and end nodes
         if (graph.getStartVertex() != null)
