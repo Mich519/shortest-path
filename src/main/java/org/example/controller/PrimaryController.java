@@ -139,21 +139,21 @@ public class PrimaryController {
 
         // draw vertices
         graph.getVertices().forEach(v -> {
-            v.setFill(Paint.valueOf("#A7ABDD"));
+            v.setFill(Vertex.defaultColor);
             addVertexToPane(v);
         });
 
         // draw edges
         graph.getVertices().forEach(v -> v.getAdjEdges().forEach(e -> {
-            e.setStroke(Color.LIMEGREEN);
+            e.setStroke(Edge.defaultColor);
             addEdgeToPane(e);
         }));
 
         // set unique colors for start and end nodes
         if (graph.getStartVertex() != null)
-            graph.getStartVertex().setFill(Paint.valueOf("#009933"));
+            graph.getStartVertex().setFill(Vertex.startColor);
         if (graph.getEndVertex() != null)
-            graph.getEndVertex().setFill(Paint.valueOf("#FF0000"));
+            graph.getEndVertex().setFill(Vertex.endColor);
     }
 
     public void clearAll() {

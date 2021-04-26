@@ -1,6 +1,5 @@
 package org.example.graph.comparators;
 
-import org.example.graph.Graph;
 import org.example.graph.Vertex;
 
 import java.util.Comparator;

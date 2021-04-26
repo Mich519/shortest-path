@@ -65,7 +65,7 @@ public class GraphGenerator {
         for (Vertex v : vertices) {
             for (Vertex w : vertices) {
                 double r = rand.nextDouble();
-                if (r < 0.05) {
+                if (r < 0.0) {
                     controller.getGraph().addEdge(v, w);
                 }
             }

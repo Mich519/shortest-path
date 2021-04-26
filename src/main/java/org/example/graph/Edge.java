@@ -15,6 +15,9 @@ import java.util.Random;
 @Getter
 @EqualsAndHashCode(callSuper = false)
 public class Edge extends Line {
+    public static final Color defaultColor = Color.LIMEGREEN;
+    public static final Color pathColor = Color.BLUE;
+
     private final Vertex source;
     private final Vertex destination;
 
@@ -26,10 +29,8 @@ public class Edge extends Line {
         startYProperty().bind(source.centerYProperty());
         endXProperty().bind(destination.centerXProperty());
         endYProperty().bind(destination.centerYProperty());
-        setStrokeWidth(2);
-        setStroke(Color.LIMEGREEN);
-        //setStrokeLineCap(StrokeLineCap.BUTT);
-        //getStrokeDashArray().setAll(10.0, 5.0);
+        setStrokeWidth(4);
+        setStroke(Edge.defaultColor);
         setMouseTransparent(true);
     }
 

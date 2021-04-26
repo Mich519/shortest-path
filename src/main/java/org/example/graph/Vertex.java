@@ -1,6 +1,7 @@
 package org.example.graph;
 
 import javafx.beans.property.DoubleProperty;
+import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 import lombok.EqualsAndHashCode;
@@ -18,6 +19,10 @@ import java.util.List;
 @Getter
 @Setter
 public class Vertex extends Circle {
+    public static final Color defaultColor = Color.ORANGE;
+    public static final Color pathColor = Color.AQUAMARINE;
+    public static final Color startColor = Color.GREEN;
+    public static final Color endColor = Color.RED;
 
     private HashSet<Edge> adjEdges;
     private final PrimaryController controller;
@@ -29,7 +34,7 @@ public class Vertex extends Circle {
     }
 
     public Vertex(PrimaryController controller, DoubleProperty centerX, DoubleProperty centerY) {
-        super(centerX.get(), centerY.get(), 20.0, Paint.valueOf("#A7ABDD"));
+        super(centerX.get(), centerY.get(), 20.0, Vertex.defaultColor);
         this.controller = controller;
         this.adjEdges = new HashSet<>();
         centerX.bind(centerXProperty());

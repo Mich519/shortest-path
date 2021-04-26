@@ -2,8 +2,7 @@ package org.example.simulation;
 
 import org.example.controller.PrimaryController;
 import org.example.graph.Graph;
-import org.example.simulation.algorithms.AStar;
-import org.example.simulation.algorithms.Dijkstra;
+import org.example.simulation.algorithms.*;
 
 public class Simulation {
 
@@ -26,6 +25,7 @@ public class Simulation {
             /* check if start and end vertices are set */
             dijkstra.run();
         }
+        controller.drawGraph();
     }
 
     public void simulateAStar() {
