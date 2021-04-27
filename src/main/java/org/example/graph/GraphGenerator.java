@@ -36,16 +36,12 @@ public class GraphGenerator {
                 if (vertices.size() == 0)
                     canFit = true;
                 for (Vertex other : vertices) {
-                    if (Math.sqrt((other.getCenterX() - x) * (other.getCenterX() - x) - (other.getCenterY() - y) * (other.getCenterY() - y)) > 2 * other.getRadius()) {
-                        System.out.println(other.getRadius());
+                    if (Math.sqrt((other.getCenterX() - x) * (other.getCenterX() - x) - (other.getCenterY() - y) * (other.getCenterY() - y)) > 2 * other.getRadius())
                         canFit = true;
-                    }
                 }
-
             }
             Vertex v = new Vertex(controller, new SimpleDoubleProperty(x), new SimpleDoubleProperty(y));
             controller.getGraph().addVertex(v);
-
         }
         /* generate edges */
 

@@ -16,6 +16,7 @@ import java.util.*;
 // todo: edge label with weight
 // todo: path traversing optimization
 // todo: AStar and Dijkstra code is similiar - remove redundancy
+// todo: create wrapper for vertices
 
 public class Dijkstra {
     private final Graph graph;
@@ -35,21 +36,15 @@ public class Dijkstra {
 
         /* color edges that represent a path */
         for (Vertex ver = graph.getEndVertex(); ver != null; ver = mapVertexToPrev.get(ver)) {
-            Vertex pred = mapVertexToPrev.get(ver);
             transitions.add(new FillTransition(Duration.millis(500), ver, Color.ORANGE, Color.RED));
-            for (Edge e : ver.getAdjEdges()) {
-                if (pred != null && e.getDestination() == pred) {
-                    transitions.add(new StrokeTransition(Duration.millis(500), e, Color.LIMEGREEN, Color.BLUE));
-                    for (Edge d : pred.getAdjEdges()) {
-                        if (d.getDestination() == ver) {
-                            transitions.add(new StrokeTransition(Duration.millis(500), d, Color.LIMEGREEN, Color.BLUE));
-                        }
-                    }
-                }
+            Vertex pred = mapVertexToPrev.get(ver);
+            if (pred != null) {
+                Edge e1 = ver.findEdgeConnectedTo(pred);
+                Edge e2 = pred.findEdgeConnectedTo(ver);
+                transitions.add(new StrokeTransition(Duration.millis(500), e1, Color.LIMEGREEN, Color.BLUE));
+                transitions.add(new StrokeTransition(Duration.millis(500), e2, Color.LIMEGREEN, Color.BLUE));
             }
         }
-        st.getChildren().addAll(transitions);
-        st.play();
         st.getChildren().addAll(transitions);
         st.play();
 
@@ -70,21 +65,15 @@ public class Dijkstra {
         q.addAll(graph.getVertices());
         while (!q.isEmpty()) {
             Vertex v = q.poll();
-
-            //v.setFill(Paint.valueOf("#3366ff"));
-
             s.add(v);
             for (Edge w : v.getAdjEdges()) {
                 /* perform relaxation for every vertex adjacent to v */
                 Vertex u = w.getDestination();
                 if (v.getCurLowestCost() + w.calculateWeight() < u.getCurLowestCost()) {
-                    u.setCurLowestCost(v.getCurLowestCost() + w.calculateWeight());
 
                     // update predecessor of current vertex
-                    if (mapVertexToPrev.get(u) == null)
-                        mapVertexToPrev.put(u, v);
-                    else
-                        mapVertexToPrev.replace(u, v);
+                    u.setCurLowestCost(v.getCurLowestCost() + w.calculateWeight());
+                    mapVertexToPrev.put(u, v);
 
                     // update the priority queue by reinserting the vertex
                     q.remove(u);

@@ -9,12 +9,16 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import lombok.Getter;
+import org.example.fileIO.FileInOutHandler;
 import org.example.graph.Edge;
 import org.example.graph.Graph;
 import org.example.graph.GraphGenerator;
 import org.example.graph.Vertex;
 import org.example.graph.eventHandlers.OnMouseClickedEventHandler;
 import org.example.simulation.Simulation;
+
+import java.io.IOException;
+import java.io.Serializable;
 
 // todo: add slider labels
 // todo: fix window responsiveness
@@ -48,6 +52,12 @@ public class PrimaryController {
     private Button generate;
 
     @FXML
+    private Button save;
+
+    @FXML
+    private Button load;
+
+    @FXML
     private Slider vertexCount;
 
     @FXML
@@ -60,10 +70,9 @@ public class PrimaryController {
     private Button start;
 
     private Graph graph;
-
     private GraphGenerator graphGenerator;
-
     private Simulation simulation;
+    private FileInOutHandler fIleInOutHandler;
 
     private void initRadioButtons() {
         ToggleGroup toggleGroup1 = new ToggleGroup();
@@ -98,6 +107,26 @@ public class PrimaryController {
                 simulation.simulateAStar();
             }
         });
+
+        save.setOnMouseClicked(mouseEvent -> {
+            try {
+                fIleInOutHandler.safeGraphToFile(graph);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+
+        load.setOnMouseClicked(mouseEvent -> {
+            try {
+                clearAll();
+                graph = fIleInOutHandler.loadGraphFromFile();
+                System.out.println(graph.getVertices());
+                drawGraph();
+
+            } catch (IOException | ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+        });
     }
 
     private void initSliders() {
@@ -112,9 +141,10 @@ public class PrimaryController {
     private void initialize() {
         initRadioButtons();
         initSliders();
-        graph = new Graph();
-        graphGenerator = new GraphGenerator(this);
-        simulation = new Simulation(this, graph);
+        this.graph = new Graph();
+        this.graphGenerator = new GraphGenerator(this);
+        this.simulation = new Simulation(this, graph);
+        this.fIleInOutHandler = new FileInOutHandler(this);
         initButtons();
     }
 

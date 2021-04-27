@@ -13,22 +13,23 @@ import org.example.graph.eventHandlers.OnMousePressedEventHandler;
 import org.example.graph.eventHandlers.OnMouseReleasedEventHandler;
 import org.example.graph.eventHandlers.RemoveVertexEvent;
 
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.List;
 
 @Getter
 @Setter
-public class Vertex extends Circle {
+public class Vertex extends Circle implements Serializable {
     public static final Color defaultColor = Color.ORANGE;
     public static final Color pathColor = Color.AQUAMARINE;
     public static final Color startColor = Color.GREEN;
     public static final Color endColor = Color.RED;
 
     private HashSet<Edge> adjEdges;
-    private final PrimaryController controller;
+    private transient PrimaryController controller;
     private double curLowestCost = Double.POSITIVE_INFINITY;
 
-    public static class DragData {
+    public static class DragData implements Serializable{
         public Vertex startVertex;
         public Edge draggedEdge;
     }
@@ -47,5 +48,15 @@ public class Vertex extends Circle {
         setOnMouseReleased(new OnMouseReleasedEventHandler(controller, dragData));
         setOnMouseClicked(new RemoveVertexEvent(controller, this));
     }
+
+    public Edge findEdgeConnectedTo(Vertex v) {
+        for (Edge e : adjEdges) {
+            if(e.getDestination() == v) {
+                return e;
+            }
+        }
+        return null;
+    }
+
 }
 

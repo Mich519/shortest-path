@@ -1,30 +1,29 @@
 package org.example.graph;
 
-import javafx.beans.binding.Bindings;
-import javafx.beans.binding.NumberBinding;
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
-import javafx.scene.shape.StrokeLineCap;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.Setter;
 
-import java.util.Random;
+import java.io.Serializable;
 
 @Getter
 @EqualsAndHashCode(callSuper = false)
-public class Edge extends Line {
+public class Edge extends Line implements Serializable {
     public static final Color defaultColor = Color.LIMEGREEN;
     public static final Color pathColor = Color.BLUE;
 
     private final Vertex source;
     private final Vertex destination;
+    @Setter
+    private double pheromone;
 
     public Edge(Vertex source, Vertex destination) {
         super(source.centerXProperty().get(), source.centerYProperty().get(), destination.centerXProperty().get(), destination.centerYProperty().get());
         this.source = source;
         this.destination = destination;
+        this.pheromone = 0.0;
         startXProperty().bind(source.centerXProperty());
         startYProperty().bind(source.centerYProperty());
         endXProperty().bind(destination.centerXProperty());

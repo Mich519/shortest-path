@@ -2,14 +2,11 @@ package org.example.graph;
 
 import lombok.Getter;
 
+import java.io.Serializable;
 import java.util.*;
 
-/*
-    T - weight type of vertex
- */
-
 @Getter
-public class Graph {
+public class Graph implements Serializable {
     private final HashSet<Vertex> vertices;
     private Vertex startVertex;
     private Vertex endVertex;

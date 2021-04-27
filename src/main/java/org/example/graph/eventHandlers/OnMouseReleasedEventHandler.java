@@ -24,8 +24,6 @@ public class OnMouseReleasedEventHandler implements EventHandler<MouseEvent> {
             Node target = mouseEvent.getPickResult().getIntersectedNode();
             if (target instanceof Vertex) {
                 controller.getGraph().addEdge(dragData.startVertex, (Vertex)target);
-                //nE.endXProperty().bind(((Circle) target).centerXProperty());
-                //nE.endYProperty().bind(((Circle) target).centerYProperty());
                 controller.drawGraph();
             }
             controller.removeEdgeFromPane(dragData.draggedEdge);
