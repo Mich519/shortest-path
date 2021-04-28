@@ -19,13 +19,12 @@ import java.util.*;
 // todo: create wrapper for vertices
 
 public class Dijkstra {
-    private final Graph graph;
 
-    public Dijkstra(Graph graph) {
-        this.graph = graph;
+    public Dijkstra( ) {
+
     }
 
-    private void simulateTraversal(LinkedHashSet<Vertex> s, HashMap<Vertex, Vertex> mapVertexToPrev) {
+    private void simulateTraversal(Graph graph, LinkedHashSet<Vertex> s, HashMap<Vertex, Vertex> mapVertexToPrev) {
         /* vertices animation */
         List<Transition> transitions = new ArrayList<>();
         for (Vertex v : s) {
@@ -56,7 +55,7 @@ public class Dijkstra {
         });
     }
 
-    public void run() {
+    public void run(Graph graph) {
         HashMap<Vertex, Vertex> mapVertexToPrev = new HashMap<>(); // maps vertex to its predecessor in a path
         LinkedHashSet<Vertex> s = new LinkedHashSet<>(); // s - will be storing ordered vertices that represent shortest path at the end
         mapVertexToPrev.put(graph.getStartVertex(), null);
@@ -85,7 +84,7 @@ public class Dijkstra {
         }
 
         /* vertices animation */
-        simulateTraversal(s, mapVertexToPrev);
+        simulateTraversal(graph, s, mapVertexToPrev);
     }
 }
 

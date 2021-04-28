@@ -7,31 +7,29 @@ import org.example.simulation.algorithms.*;
 public class Simulation {
 
     private final PrimaryController controller;
-    private final Graph graph;
 
     private final Dijkstra dijkstra;
     private final AStar aStar;
 
 
-    public Simulation(PrimaryController controller, Graph graph) {
+    public Simulation(PrimaryController controller) {
         this.controller = controller;
-        this.graph = graph;
-        this.dijkstra = new Dijkstra(graph);
-        this.aStar = new AStar(graph);
+        this.dijkstra = new Dijkstra();
+        this.aStar = new AStar();
     }
 
     public void simulateDijkstra() {
-        if (graph.getStartVertex() != null && graph.getEndVertex() != null) {
+        if (controller.getGraph().getStartVertex() != null && controller.getGraph().getEndVertex() != null) {
             /* check if start and end vertices are set */
-            dijkstra.run();
+            dijkstra.run(controller.getGraph());
         }
         controller.drawGraph();
     }
 
     public void simulateAStar() {
-        if (graph.getStartVertex() != null && graph.getEndVertex() != null) {
+        if (controller.getGraph().getStartVertex() != null && controller.getGraph().getEndVertex() != null) {
             /* check if start and end vertices are set */
-            aStar.run();
+            aStar.run(controller.getGraph());
         }
     }
 }

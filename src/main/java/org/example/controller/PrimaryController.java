@@ -120,7 +120,6 @@ public class PrimaryController {
             try {
                 clearAll();
                 graph = fIleInOutHandler.loadGraphFromFile();
-                System.out.println(graph.getVertices());
                 drawGraph();
 
             } catch (IOException | ClassNotFoundException e) {
@@ -143,7 +142,7 @@ public class PrimaryController {
         initSliders();
         this.graph = new Graph();
         this.graphGenerator = new GraphGenerator(this);
-        this.simulation = new Simulation(this, graph);
+        this.simulation = new Simulation(this);
         this.fIleInOutHandler = new FileInOutHandler(this);
         initButtons();
     }
@@ -189,7 +188,5 @@ public class PrimaryController {
     public void clearAll() {
         graphEditor.getChildren().clear();
         graph.removeAll();
-        System.out.println(graph.getStartVertex());
-        System.out.println(graph.getEndVertex());
     }
 }

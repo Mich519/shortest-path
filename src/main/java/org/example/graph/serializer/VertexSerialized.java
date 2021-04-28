@@ -29,5 +29,4 @@ public class VertexSerialized implements Serializable {
         DoubleProperty centerY = new SimpleDoubleProperty(Double.parseDouble(this.centerY));
         return new Vertex(controller, centerX, centerY);
     }
-
 }

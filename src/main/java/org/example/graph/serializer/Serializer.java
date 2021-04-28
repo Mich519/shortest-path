@@ -39,7 +39,6 @@ public class Serializer implements Serializable {
         Map<VertexSerialized, Vertex> map = new HashMap<>();
         for (VertexSerialized vw : graphSerialized.getWrappedVertices()) {
             Vertex v = vw.unwrap(controller);
-            v.setController(controller);
             map.put(vw, v);
             graph.addVertex(v);
         }
