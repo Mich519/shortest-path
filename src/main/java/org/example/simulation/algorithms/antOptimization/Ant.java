@@ -38,10 +38,10 @@ public class Ant {
 
         // total probabilities
         double p_denominator = 0.0;
-        for (Edge e : curVertex.getAdjEdges()) {
-            if (!traversedEdges.contains(e)) {
+        for (Edge adjEdge : curVertex.getAdjEdges()) {
+            if (!traversedEdges.contains(adjEdge)) {
                 // skip already traversed edges
-                p_denominator += Math.pow(e.getPheromone(), AntOptimization.alpha) * Math.pow(e.calculateWeight(), AntOptimization.beta);
+                p_denominator += Math.pow(adjEdge.getPheromone(), AntOptimization.alpha) * Math.pow(adjEdge.calculateWeight(), AntOptimization.beta);
             }
         }
 
@@ -54,20 +54,18 @@ public class Ant {
         }
     }
 
-    public void makeMove() {
-        Map<Edge, Double> probabilities = new HashMap<>();
+    public void makeMove(Map<Edge, Double> probabilities) {
+
         calculateProbabilities(probabilities);
 
         // pick random node
         double r = new Random().nextDouble();
         double sum = 0.0;
         for (Edge adjEdge : probabilities.keySet()) {
-            if (!traversedEdges.contains(adjEdge)) {
-                sum += probabilities.get(adjEdge);
-                if (r < sum) {
-                    traversedEdges.add(adjEdge);
-                    curVertex = adjEdge.getDestination();
-                }
+            sum += probabilities.get(adjEdge);
+            if (r < sum) {
+                traversedEdges.add(adjEdge);
+                curVertex = adjEdge.getDestination();
             }
         }
 

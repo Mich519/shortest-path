@@ -1,13 +1,14 @@
 package org.example.controller;
 
 import javafx.fxml.FXML;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.Slider;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.Pane;
-import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
+import javafx.stage.FileChooser;
+import javafx.stage.WindowEvent;
 import lombok.Getter;
 import org.example.fileIO.FileInOutHandler;
 import org.example.graph.Edge;
@@ -17,8 +18,8 @@ import org.example.graph.Vertex;
 import org.example.graph.eventHandlers.OnMouseClickedEventHandler;
 import org.example.simulation.Simulation;
 
+import java.io.File;
 import java.io.IOException;
-import java.io.Serializable;
 
 // todo: add slider labels
 // todo: fix window responsiveness
@@ -67,12 +68,16 @@ public class PrimaryController {
     private RadioButton aStar;
 
     @FXML
+    private RadioButton antOptimization;
+
+    @FXML
     private Button start;
+
 
     private Graph graph;
     private GraphGenerator graphGenerator;
     private Simulation simulation;
-    private FileInOutHandler fIleInOutHandler;
+    private FileInOutHandler fileInOutHandler;
 
     private void initRadioButtons() {
         ToggleGroup toggleGroup1 = new ToggleGroup();
@@ -87,6 +92,7 @@ public class PrimaryController {
         ToggleGroup toggleGroup2 = new ToggleGroup();
         dijkstra.setToggleGroup(toggleGroup2);
         aStar.setToggleGroup(toggleGroup2);
+        antOptimization.setToggleGroup(toggleGroup2);
     }
 
     public void initButtons() {
@@ -108,24 +114,7 @@ public class PrimaryController {
             }
         });
 
-        save.setOnMouseClicked(mouseEvent -> {
-            try {
-                fIleInOutHandler.safeGraphToFile(graph);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        });
 
-        load.setOnMouseClicked(mouseEvent -> {
-            try {
-                clearAll();
-                graph = fIleInOutHandler.loadGraphFromFile();
-                drawGraph();
-
-            } catch (IOException | ClassNotFoundException e) {
-                e.printStackTrace();
-            }
-        });
     }
 
     private void initSliders() {
@@ -143,8 +132,46 @@ public class PrimaryController {
         this.graph = new Graph();
         this.graphGenerator = new GraphGenerator(this);
         this.simulation = new Simulation(this);
-        this.fIleInOutHandler = new FileInOutHandler(this);
+        this.fileInOutHandler = new FileInOutHandler(this);
+
         initButtons();
+    }
+
+    public void afterInitialize(WindowEvent event) {
+        /* this executes after scene is initialized */
+
+        /* initialize load graph button */
+        load.setOnMouseClicked(mouseEvent -> {
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.setTitle("Open File");
+            fileChooser.setInitialDirectory(new File("src/main/resources/org/example/savedGraphs"));
+            Scene scene = load.getScene();
+            File file = fileChooser.showOpenDialog(scene.getWindow());
+            if (file != null) {
+                try {
+                    clearAll();
+                    this.graph = fileInOutHandler.loadGraphFromFile(file);
+                    drawGraph();
+                } catch (IOException | ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+        /* initialize save graph button */
+        save.setOnMouseClicked(mouseEvent -> {
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.setInitialDirectory(new File("src/main/resources/org/example/savedGraphs"));
+            Scene scene = save.getScene();
+            File file = fileChooser.showSaveDialog(scene.getWindow());
+            if (file != null) {
+                try {
+                    fileInOutHandler.safeGraphToFile(graph, file);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 
     public void addVertexToPane(Vertex v) {

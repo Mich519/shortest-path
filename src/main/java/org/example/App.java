@@ -5,6 +5,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import org.example.controller.PrimaryController;
 
 import java.io.IOException;
 
@@ -22,15 +23,15 @@ public class App extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
-        scene = new Scene(loadFXML(), windowWidth, windowHeight);
+        FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource(fxml + ".fxml"));
+        Parent p = fxmlLoader.load();
+        scene = new Scene(p, windowWidth, windowHeight);
         stage.setScene(scene);
         //stage.setResizable(false);
+        PrimaryController primaryController = fxmlLoader.getController();
+        stage.setOnShown(primaryController::afterInitialize);
         stage.show();
-    }
 
-    private static Parent loadFXML() throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource(fxml + ".fxml"));
-        return fxmlLoader.load();
     }
 
     public static void main(String[] args) {

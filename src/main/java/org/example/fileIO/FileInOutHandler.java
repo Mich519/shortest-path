@@ -16,8 +16,8 @@ public class FileInOutHandler {
         this.serializer = new Serializer();
     }
 
-    public void safeGraphToFile(Graph graph) throws IOException {
-        FileOutputStream fos = new FileOutputStream("src/main/resources/org/example/savedGraphs/graph");
+    public void safeGraphToFile(Graph graph, File destination) throws IOException {
+        FileOutputStream fos = new FileOutputStream(destination);
         ObjectOutputStream oos = new ObjectOutputStream(fos);
         GraphSerialized graphSerialized = serializer.serialize(graph);
         oos.writeObject(graphSerialized);
@@ -25,12 +25,11 @@ public class FileInOutHandler {
         fos.close();
     }
 
-    public Graph loadGraphFromFile() throws IOException, ClassNotFoundException {
-        FileInputStream fis = new FileInputStream("src/main/resources/org/example/savedGraphs/graph");
+    public Graph loadGraphFromFile(File file) throws IOException, ClassNotFoundException {
+        FileInputStream fis = new FileInputStream(file);
         ObjectInputStream ois = new ObjectInputStream(fis);
         GraphSerialized graphSerialized = (GraphSerialized) ois.readObject();
         Graph graph = serializer.deserialize(graphSerialized, controller);
-
         ois.close();
         fis.close();
         return graph;
