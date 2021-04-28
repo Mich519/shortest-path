@@ -132,7 +132,7 @@
                         <Insets bottom="10.0" left="10.0" />
                      </VBox.margin>
                   </RadioButton>
-                  <Slider fx:id="simSpeed">
+                  <Slider fx:id="simulationSpeed">
                      <VBox.margin>
                         <Insets bottom="10.0" left="10.0" right="10.0" />
                      </VBox.margin>

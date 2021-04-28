@@ -62,6 +62,9 @@ public class PrimaryController {
     private Slider vertexCount;
 
     @FXML
+    private Slider simulationSpeed;
+
+    @FXML
     private RadioButton dijkstra;
 
     @FXML
@@ -123,6 +126,11 @@ public class PrimaryController {
         vertexCount.setValue(20);
         vertexCount.setShowTickLabels(true);
         vertexCount.setShowTickMarks(true);
+
+        simulationSpeed.setMin(100);
+        simulationSpeed.setMax(1000);
+        simulationSpeed.setValue(500);
+        simulationSpeed.setShowTickMarks(true);
     }
 
     @FXML
