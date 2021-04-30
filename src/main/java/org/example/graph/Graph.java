@@ -48,6 +48,14 @@ public class Graph implements Serializable {
         return 0;
     }
 
+    public Edge findSameEdge(Edge e) {
+        for (Edge e1 : e.getDestination().getAdjEdges()) {
+            if(e1.getDestination() == e.getSource())
+                return e1;
+        }
+        return null;
+    }
+
     public void setStartVertex(Vertex v) {
         this.startVertex = v;
     }

@@ -18,7 +18,7 @@ public class Simulation {
         this.controller = controller;
         this.dijkstra = new Dijkstra(controller);
         this.aStar = new AStar();
-        this.antOptimization = new AntOptimization(controller);
+        this.antOptimization = new AntOptimization();
     }
 
     public void simulateDijkstra() {
@@ -36,10 +36,10 @@ public class Simulation {
         }
     }
 
-    public void  simulateAntOptimization() {
+    public void simulateAntOptimization() {
         if (controller.getGraph().getStartVertex() != null && controller.getGraph().getEndVertex() != null) {
             /* check if start and end vertices are set */
-            antOptimization.run();
+            antOptimization.run(controller);
         }
     }
 }

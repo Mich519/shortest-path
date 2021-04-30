@@ -23,7 +23,7 @@ public class Edge extends Line implements Serializable {
         super(source.centerXProperty().get(), source.centerYProperty().get(), destination.centerXProperty().get(), destination.centerYProperty().get());
         this.source = source;
         this.destination = destination;
-        this.pheromone = 0.0;
+        this.pheromone = 1.0 / calculateWeight() ; // initial pheromone value
         startXProperty().bind(source.centerXProperty());
         startYProperty().bind(source.centerYProperty());
         endXProperty().bind(destination.centerXProperty());

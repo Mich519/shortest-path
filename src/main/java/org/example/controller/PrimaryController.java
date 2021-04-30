@@ -114,10 +114,11 @@ public class PrimaryController {
                 simulation.simulateDijkstra();
             } else if (aStar.isSelected()) {
                 simulation.simulateAStar();
+            } else if (antOptimization.isSelected()) {
+                simulation.simulateAntOptimization();
             }
+
         });
-
-
     }
 
     private void initSliders() {
@@ -152,7 +153,7 @@ public class PrimaryController {
         load.setOnMouseClicked(mouseEvent -> {
             FileChooser fileChooser = new FileChooser();
             fileChooser.setTitle("Open File");
-            fileChooser.setInitialDirectory(new File("src/main/resources/org/example/savedGraphs"));
+            fileChooser.setInitialDirectory(new File("src/main/resources/org/example/graphs"));
             Scene scene = load.getScene();
             File file = fileChooser.showOpenDialog(scene.getWindow());
             if (file != null) {
@@ -169,7 +170,7 @@ public class PrimaryController {
         /* initialize save graph button */
         save.setOnMouseClicked(mouseEvent -> {
             FileChooser fileChooser = new FileChooser();
-            fileChooser.setInitialDirectory(new File("src/main/resources/org/example/savedGraphs"));
+            fileChooser.setInitialDirectory(new File("src/main/resources/org/example/graphs"));
             Scene scene = save.getScene();
             File file = fileChooser.showSaveDialog(scene.getWindow());
             if (file != null) {

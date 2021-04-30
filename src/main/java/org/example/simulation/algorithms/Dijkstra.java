@@ -27,7 +27,6 @@ public class Dijkstra {
     }
 
     private void simulateTraversal(Graph graph, LinkedHashSet<Vertex> s, HashMap<Vertex, Vertex> mapVertexToPrev) {
-        System.out.println(1000 - controller.getSimulationSpeed().getValue());
         /* vertices animation */
         List<Transition> transitions = new ArrayList<>();
         for (Vertex v : s) {
