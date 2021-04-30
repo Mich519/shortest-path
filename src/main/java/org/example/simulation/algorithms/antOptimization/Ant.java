@@ -13,14 +13,16 @@ import java.util.*;
 @Setter
 public class Ant {
     private final double q = 1000; // amount of dropped pheromone
+    private Graph graph;
     private final Vertex startVertex;
     private final Vertex endVertex;
 
     private Vertex curVertex;
-    Set<Edge> traversedEdges;
+    private Set<Edge> traversedEdges;
     private boolean isFinished = false;
 
-    Ant(Vertex startVertex, Vertex endVertex) {
+    Ant(Graph graph, Vertex startVertex, Vertex endVertex) {
+        this.graph = graph;
         this.startVertex = startVertex;
         this.endVertex = endVertex;
         this.curVertex = startVertex;
@@ -53,7 +55,7 @@ public class Ant {
         //e.setPheromone((1-AntOptimization.evapRate) * e.getPheromone() + AntOptimization.evapRate * e.calculateWeight());
     }
 
-    public void updateTraversedEdges(Graph graph) {
+    public void updateTraversedEdges() {
         for (Edge e : traversedEdges) {
             double f = e.getPheromone();
             double deltaF = q / e.calculateWeight();
@@ -62,7 +64,7 @@ public class Ant {
         }
     }
 
-    public void makeMove(Graph graph) {
+    public void makeMove() {
 
         Map<Edge, Double> probabilities = new HashMap<>();
         calculateProbabilities(probabilities);

@@ -11,6 +11,7 @@ import org.example.graph.Edge;
 import org.example.graph.Graph;
 import org.example.graph.Vertex;
 
+import java.security.cert.X509Certificate;
 import java.util.*;
 
 public class AntOptimization {
@@ -19,9 +20,14 @@ public class AntOptimization {
     public static final double alpha = 2.1;
     public static final double beta = 2.1;
     private static final int numOfIterations = 100;
+
+    private final PrimaryController controller;
+    private Graph graph;
     private final List<Set<Edge>> allPaths;
 
-    public AntOptimization() {
+    public AntOptimization(PrimaryController controller) {
+        this.controller = controller;
+        this.controller.getGraph();
         this.allPaths = new ArrayList<>();
     }
 
@@ -41,14 +47,14 @@ public class AntOptimization {
         return sum;
     }
 
-    private void initAnts(Set<Ant> ants, Graph graph) {
+    private void initAnts(Set<Ant> ants) {
         for (int i = 0; i < numOfAnts; i++) {
-            Ant a = new Ant(graph.getStartVertex(), graph.getEndVertex());
+            Ant a = new Ant(graph, graph.getStartVertex(), graph.getEndVertex());
             ants.add(a);
         }
     }
 
-    private void evaporation(Graph graph) {
+    private void evaporation() {
         // evaporation
         for (Vertex v : graph.getVertices()) {
             for (Edge e : v.getAdjEdges()) {
@@ -59,63 +65,61 @@ public class AntOptimization {
         }
     }
 
-    private void updatePheromoneOnCurrentBestPath(Set<Ant> ants, Set<Edge> currentShortestPath, Graph graph) {
+    private void updatePheromoneOnCurrentBestPath(Set<Ant> ants, Set<Edge> currentShortestPath) {
         // all ants finished - update pheromone for the best path
         for (Ant a : ants) {
             if (a.getCurVertex() == a.getEndVertex()) {
                 // ant reached the goal - update pheromone on that path
-                if (currentShortestPath.isEmpty() || Double.compare(sumOfWeight(a.getTraversedEdges()), sumOfWeight(currentShortestPath)) < 0) {
+                if (currentShortestPath.isEmpty() || sumOfWeight(a.getTraversedEdges()) < (sumOfWeight(currentShortestPath))) {
                     currentShortestPath.clear();
-                    currentShortestPath.addAll(a.getTraversedEdges());
-                    allPaths.add(currentShortestPath);
-                    a.updateTraversedEdges(graph);
+                    currentShortestPath.addAll(new HashSet<>(a.getTraversedEdges())); // copy constructor
+                    allPaths.add(new HashSet<>(a.getTraversedEdges()));
+                    a.updateTraversedEdges();
                     System.out.println("New shortest found! with length " + sumOfWeight(a.getTraversedEdges()));
                 }
             }
         }
     }
 
-    public void run(PrimaryController controller) {
-        Graph graph = controller.getGraph();
+    public void run() {
         System.out.println("Ants started");
+        graph = controller.getGraph();
         Set<Ant> ants = new HashSet<>();
         Set<Edge> currentShortestPath = new HashSet<>();
 
-
-        initAnts(ants, graph);
+        initAnts(ants);
 
         for (int i = 0; i < numOfIterations; i++) {
             while (!antsFinished(ants)) {
                 for (Ant ant : ants) {
                     if (!ant.isFinished())
-                        ant.makeMove(graph);
+                        ant.makeMove();
                 }
             }
 
-            evaporation(graph);
-            updatePheromoneOnCurrentBestPath(ants, currentShortestPath, graph);
+            evaporation();
+            updatePheromoneOnCurrentBestPath(ants, currentShortestPath);
             ants.forEach(Ant::resetPosition);
         }
 
         System.out.println("Ants finished");
 
         // animate
-        /* vertices animation */
         List<Transition> transitions = new ArrayList<>();
         SequentialTransition st = new SequentialTransition();
-        //System.out.println(allPaths);
-        st.setCycleCount(1);
-        allPaths.forEach(System.out::println);
 
+        allPaths.forEach(System.out::println);
+        int colorShades = 255 / allPaths.size();
+        int i=0;
         for (Set<Edge> s : allPaths) {
-            Color randomColor = Color.rgb(new Random().nextInt(255), new Random().nextInt(255), new Random().nextInt(255));
+            Color randomColor = Color.rgb(colorShades * i++, 0, 0);
             for (Edge e : s) {
                 transitions.add(new StrokeTransition(Duration.millis(50), e, Edge.defaultColor, randomColor));
-                transitions.add(new StrokeTransition(Duration.millis(50), graph.findSameEdge(e), Edge.defaultColor, randomColor));
+                //transitions.add(new StrokeTransition(Duration.millis(50), graph.findSameEdge(e), Edge.defaultColor, randomColor));
             }
         }
+        st.setCycleCount(1);
         st.getChildren().addAll(transitions);
         st.play();
-
     }
 }
