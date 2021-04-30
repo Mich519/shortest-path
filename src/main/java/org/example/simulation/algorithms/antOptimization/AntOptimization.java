@@ -1,15 +1,17 @@
 package org.example.simulation.algorithms.antOptimization;
 
+import javafx.animation.FillTransition;
+import javafx.animation.SequentialTransition;
+import javafx.animation.StrokeTransition;
+import javafx.animation.Transition;
 import javafx.scene.paint.Color;
+import javafx.util.Duration;
 import org.example.controller.PrimaryController;
 import org.example.graph.Edge;
 import org.example.graph.Graph;
 import org.example.graph.Vertex;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class AntOptimization {
     public static final int numOfAnts = 2000;
@@ -17,8 +19,10 @@ public class AntOptimization {
     public static final double alpha = 2.1;
     public static final double beta = 2.1;
     private static final int numOfIterations = 100;
+    private final List<Set<Edge>> allPaths;
 
     public AntOptimization() {
+        this.allPaths = new ArrayList<>();
     }
 
     private boolean antsFinished(Set<Ant> ants) {
@@ -60,12 +64,12 @@ public class AntOptimization {
         for (Ant a : ants) {
             if (a.getCurVertex() == a.getEndVertex()) {
                 // ant reached the goal - update pheromone on that path
-                if (currentShortestPath.isEmpty() || sumOfWeight(a.getTraversedEdges()) < sumOfWeight(currentShortestPath)) {
-                    System.out.println("New shortest found!");
+                if (currentShortestPath.isEmpty() || Double.compare(sumOfWeight(a.getTraversedEdges()), sumOfWeight(currentShortestPath)) < 0) {
                     currentShortestPath.clear();
                     currentShortestPath.addAll(a.getTraversedEdges());
-                    System.out.println(currentShortestPath);
+                    allPaths.add(currentShortestPath);
                     a.updateTraversedEdges(graph);
+                    System.out.println("New shortest found! with length " + sumOfWeight(a.getTraversedEdges()));
                 }
             }
         }
@@ -76,7 +80,7 @@ public class AntOptimization {
         System.out.println("Ants started");
         Set<Ant> ants = new HashSet<>();
         Set<Edge> currentShortestPath = new HashSet<>();
-        Edge highestPheromoneEdge = null;
+
 
         initAnts(ants, graph);
 
@@ -90,29 +94,28 @@ public class AntOptimization {
 
             evaporation(graph);
             updatePheromoneOnCurrentBestPath(ants, currentShortestPath, graph);
+            ants.forEach(Ant::resetPosition);
         }
-        ants.forEach(Ant::resetPosition);
 
-        double scale = 1.0;
-        for (Vertex v : graph.getVertices()) {
-            for (Edge e : v.getAdjEdges()) {
-                if (highestPheromoneEdge == null || e.getPheromone() > highestPheromoneEdge.getPheromone())
-                    highestPheromoneEdge = e;
-                scale = (255 / highestPheromoneEdge.getPheromone()) - 1;
-                //System.out.println(e.getPheromone());
-            }
-        }
-        for (Vertex v : graph.getVertices()) {
-            for (Edge e : v.getAdjEdges()) {
-                e.setStroke(Color.rgb((int) (e.getPheromone() * scale), (int) (e.getPheromone() * scale), (int) (e.getPheromone() * scale)));
-            }
-
-        }
-        System.out.println(currentShortestPath);
-        for (Edge e : currentShortestPath) {
-            e.setStroke(Color.BLUE);
-            graph.findSameEdge(e).setStroke(Color.BLUE);
-        }
         System.out.println("Ants finished");
+
+        // animate
+        /* vertices animation */
+        List<Transition> transitions = new ArrayList<>();
+        SequentialTransition st = new SequentialTransition();
+        //System.out.println(allPaths);
+        st.setCycleCount(1);
+        allPaths.forEach(System.out::println);
+
+        for (Set<Edge> s : allPaths) {
+            Color randomColor = Color.rgb(new Random().nextInt(255), new Random().nextInt(255), new Random().nextInt(255));
+            for (Edge e : s) {
+                transitions.add(new StrokeTransition(Duration.millis(50), e, Edge.defaultColor, randomColor));
+                transitions.add(new StrokeTransition(Duration.millis(50), graph.findSameEdge(e), Edge.defaultColor, randomColor));
+            }
+        }
+        st.getChildren().addAll(transitions);
+        st.play();
+
     }
 }
