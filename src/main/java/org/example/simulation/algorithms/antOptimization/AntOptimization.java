@@ -1,6 +1,5 @@
 package org.example.simulation.algorithms.antOptimization;
 
-import javafx.animation.FillTransition;
 import javafx.animation.SequentialTransition;
 import javafx.animation.StrokeTransition;
 import javafx.animation.Transition;
@@ -10,11 +9,15 @@ import org.example.controller.PrimaryController;
 import org.example.graph.Edge;
 import org.example.graph.Graph;
 import org.example.graph.Vertex;
+import org.example.simulation.algorithms.Algorithm;
 
-import java.security.cert.X509Certificate;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
-public class AntOptimization {
+public class AntOptimization implements Algorithm {
+    public static final double droppedPheromone = 1000; // amount of dropped pheromone
     public static final int numOfAnts = 2000;
     public static final double evapRate = 0.7; // evaporation rate
     public static final double alpha = 2.1;
@@ -49,7 +52,7 @@ public class AntOptimization {
 
     private void initAnts(Set<Ant> ants) {
         for (int i = 0; i < numOfAnts; i++) {
-            Ant a = new Ant(graph, graph.getStartVertex(), graph.getEndVertex());
+            Ant a = new Ant(graph);
             ants.add(a);
         }
     }
@@ -81,6 +84,7 @@ public class AntOptimization {
         }
     }
 
+    @Override
     public void run() {
         System.out.println("Ants started");
         graph = controller.getGraph();
@@ -121,5 +125,13 @@ public class AntOptimization {
         st.setCycleCount(1);
         st.getChildren().addAll(transitions);
         st.play();
+        st.setOnFinished(actionEvent -> {
+            for (Vertex v : graph.getVertices()) {
+                for (Edge e : v.getAdjEdges()) {
+                    // reset edge pheromon
+                    e.setPheromone(1.0 / e.calculateWeight());
+                }
+            }
+        });
     }
 }

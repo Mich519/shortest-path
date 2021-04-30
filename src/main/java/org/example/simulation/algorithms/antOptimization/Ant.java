@@ -12,7 +12,7 @@ import java.util.*;
 @Getter
 @Setter
 public class Ant {
-    private final double q = 1000; // amount of dropped pheromone
+
     private Graph graph;
     private final Vertex startVertex;
     private final Vertex endVertex;
@@ -21,10 +21,10 @@ public class Ant {
     private Set<Edge> traversedEdges;
     private boolean isFinished = false;
 
-    Ant(Graph graph, Vertex startVertex, Vertex endVertex) {
+    Ant(Graph graph) {
         this.graph = graph;
-        this.startVertex = startVertex;
-        this.endVertex = endVertex;
+        this.startVertex = graph.getStartVertex();
+        this.endVertex = graph.getEndVertex();
         this.curVertex = startVertex;
         this.traversedEdges = new LinkedHashSet<>();
     }
@@ -58,14 +58,13 @@ public class Ant {
     public void updateTraversedEdges() {
         for (Edge e : traversedEdges) {
             double f = e.getPheromone();
-            double deltaF = q / e.calculateWeight();
+            double deltaF = AntOptimization.droppedPheromone / e.calculateWeight();
             e.setPheromone(f + deltaF);
             graph.findSameEdge(e).setPheromone(f + deltaF);
         }
     }
 
     public void makeMove() {
-
         Map<Edge, Double> probabilities = new HashMap<>();
         calculateProbabilities(probabilities);
         // pick random node

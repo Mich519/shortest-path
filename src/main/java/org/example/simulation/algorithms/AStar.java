@@ -6,6 +6,7 @@ import javafx.animation.StrokeTransition;
 import javafx.animation.Transition;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
+import org.example.controller.PrimaryController;
 import org.example.graph.Edge;
 import org.example.graph.Graph;
 import org.example.graph.Vertex;
@@ -13,7 +14,12 @@ import org.example.graph.comparators.VertexByTotalCostComparator;
 
 import java.util.*;
 
-public class AStar {
+public class AStar implements Algorithm{
+
+    private PrimaryController controller;
+    public AStar(PrimaryController controller) {
+        this.controller = controller;
+    }
 
     private void simulateTraversal(Graph graph, LinkedHashSet<Vertex> s, HashMap<Vertex, Vertex> mapVertexToPrev) {
         /* vertices animation */
@@ -46,7 +52,9 @@ public class AStar {
         });
     }
 
-    public void run(Graph graph) {
+    @Override
+    public void run() {
+        Graph graph = controller.getGraph();
         HashMap<Vertex, Vertex> mapVertexToPrev = new HashMap<>(); // maps vertex to its predecessor in a path
         LinkedHashSet<Vertex> s = new LinkedHashSet<>(); // s - will be storing ordered vertices that represent shortest path at the end
         mapVertexToPrev.put(graph.getStartVertex(), null);

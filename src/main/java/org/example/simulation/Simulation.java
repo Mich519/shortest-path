@@ -12,13 +12,16 @@ public class Simulation {
     private final Dijkstra dijkstra;
     private final AStar aStar;
     private final AntOptimization antOptimization;
+    private final BellmanFord bellmanFord;
 
 
     public Simulation(PrimaryController controller) {
         this.controller = controller;
         this.dijkstra = new Dijkstra(controller);
-        this.aStar = new AStar();
+        this.aStar = new AStar(controller);
         this.antOptimization = new AntOptimization(controller);
+        this.bellmanFord = new BellmanFord(controller);
+
     }
 
     public void simulateDijkstra() {
@@ -32,7 +35,7 @@ public class Simulation {
     public void simulateAStar() {
         if (controller.getGraph().getStartVertex() != null && controller.getGraph().getEndVertex() != null) {
             /* check if start and end vertices are set */
-            aStar.run(controller.getGraph());
+            aStar.run();
         }
     }
 
@@ -40,6 +43,13 @@ public class Simulation {
         if (controller.getGraph().getStartVertex() != null && controller.getGraph().getEndVertex() != null) {
             /* check if start and end vertices are set */
             antOptimization.run();
+        }
+    }
+
+    public void simulateBellmanFord() throws Exception {
+        if (controller.getGraph().getStartVertex() != null && controller.getGraph().getEndVertex() != null) {
+            /* check if start and end vertices are set */
+            bellmanFord.run();
         }
     }
 }

@@ -19,7 +19,7 @@ import java.util.*;
 // todo: AStar and Dijkstra code is similiar - remove redundancy
 // todo: create wrapper for vertices
 
-public class Dijkstra {
+public class Dijkstra implements Algorithm{
 
     private final PrimaryController controller;
     public Dijkstra(PrimaryController controller) {
@@ -57,6 +57,7 @@ public class Dijkstra {
         });
     }
 
+    @Override
     public void run() {
         Graph graph = controller.getGraph();
         HashMap<Vertex, Vertex> mapVertexToPrev = new HashMap<>(); // maps vertex to its predecessor in a path
