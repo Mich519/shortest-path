@@ -5,7 +5,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<HBox maxHeight="1024.0" maxWidth="1600.0" minHeight="640.0" minWidth="800.0" prefHeight="1024.0" prefWidth="1600.0" style="-fx-background-color: #11151c;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.controller.PrimaryController">
+<HBox maxHeight="1240.0" maxWidth="1600.0" minHeight="640.0" minWidth="800.0" prefHeight="1240.0" prefWidth="1600.0" style="-fx-background-color: #11151c;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.controller.PrimaryController">
    <children>
       <Pane fx:id="graphEditor" style="-fx-background-color: #364156; -fx-border-radius: 10px;" HBox.hgrow="ALWAYS">
          <HBox.margin>
@@ -171,16 +171,62 @@
                         <Insets bottom="10.0" left="10.0" />
                      </VBox.margin>
                   </RadioButton>
-                  <RadioButton fx:id="antOptimization" mnemonicParsing="false" text="Ant Optimization">
-                     <VBox.margin>
-                        <Insets bottom="10.0" left="10.0" />
-                     </VBox.margin>
-                  </RadioButton>
                   <RadioButton fx:id="bellmanFord" mnemonicParsing="false" text="Bellman-Ford">
                      <VBox.margin>
                         <Insets bottom="10.0" left="10.0" />
                      </VBox.margin>
                   </RadioButton>
+                  <VBox spacing="10.0" style="-fx-border-color: #264653; -fx-border-radius: 10 10 10 10;">
+                     <VBox.margin>
+                        <Insets bottom="10.0" left="10.0" right="10.0" />
+                     </VBox.margin>
+                     <children>
+                        <RadioButton fx:id="antOptimization" mnemonicParsing="false" text="Ant Optimization">
+                           <VBox.margin>
+                              <Insets bottom="10.0" />
+                           </VBox.margin>
+                        </RadioButton>
+                        <VBox>
+                           <children>
+                              <Label text="Number of ants" />
+                              <Slider fx:id="numberOfAnts" />
+                           </children>
+                        </VBox>
+                        <VBox>
+                           <children>
+                              <Label text="Pheromone per ant" />
+                              <Slider fx:id="pheromonePerAnt" />
+                           </children>
+                        </VBox>
+                        <VBox>
+                           <children>
+                              <Label text="Alpha" />
+                              <Slider fx:id="alpha" />
+                           </children>
+                        </VBox>
+                        <VBox>
+                           <children>
+                              <Label text="Beta" />
+                              <Slider fx:id="beta" />
+                           </children>
+                        </VBox>
+                        <VBox>
+                           <children>
+                              <Label text="Evaporation rate" />
+                              <Slider fx:id="evaporationRate" />
+                           </children>
+                        </VBox>
+                        <VBox>
+                           <children>
+                              <Label text="Number of iterations" />
+                              <Slider fx:id="numberOfIterations" />
+                           </children>
+                        </VBox>
+                     </children>
+                     <padding>
+                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                     </padding>
+                  </VBox>
                   <VBox alignment="CENTER" style="-fx-border-color: #264653; -fx-border-radius: 10 10 10 10;">
                      <VBox.margin>
                         <Insets bottom="10.0" left="10.0" right="10.0" />

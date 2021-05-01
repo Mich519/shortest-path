@@ -17,12 +17,12 @@ import java.util.List;
 import java.util.Set;
 
 public class AntOptimization implements Algorithm {
-    public static final double droppedPheromone = 1000; // amount of dropped pheromone
-    public static final int numOfAnts = 2000;
-    public static final double evapRate = 0.7; // evaporation rate
-    public static final double alpha = 2.1;
-    public static final double beta = 2.1;
-    private static final int numOfIterations = 100;
+    public double pheromonePerAnt = 1000; // amount of dropped pheromone
+    public int numOfAnts = 2000;
+    public double evapRate = 0.7; // evaporation rate
+    public double alpha = 2.1;
+    public double beta = 2.1;
+    private int numOfIterations = 100;
 
     private final PrimaryController controller;
     private Graph graph;
@@ -32,6 +32,15 @@ public class AntOptimization implements Algorithm {
         this.controller = controller;
         this.controller.getGraph();
         this.allPaths = new ArrayList<>();
+    }
+
+    private void initParameters() {
+        pheromonePerAnt = controller.getPheromonePerAnt().getValue();
+        numOfAnts = (int)controller.getNumberOfAnts().getValue();
+        evapRate = controller.getEvaporationRate().getValue();
+        alpha = controller.getAlpha().getValue();
+        beta = controller.getBeta().getValue();
+        numOfIterations = (int)controller.getNumberOfIterations().getValue();
     }
 
     private boolean antsFinished(Set<Ant> ants) {
@@ -52,7 +61,7 @@ public class AntOptimization implements Algorithm {
 
     private void initAnts(Set<Ant> ants) {
         for (int i = 0; i < numOfAnts; i++) {
-            Ant a = new Ant(graph);
+            Ant a = new Ant(graph, alpha, beta, pheromonePerAnt);
             ants.add(a);
         }
     }
@@ -61,7 +70,7 @@ public class AntOptimization implements Algorithm {
         // evaporation
         for (Vertex v : graph.getVertices()) {
             for (Edge e : v.getAdjEdges()) {
-                double f = (1 - AntOptimization.evapRate) * e.getPheromone();
+                double f = (1 - evapRate) * e.getPheromone();
                 e.setPheromone(f);
                 graph.findSameEdge(e).setPheromone(f);
             }
@@ -87,6 +96,7 @@ public class AntOptimization implements Algorithm {
     @Override
     public void run() {
         System.out.println("Ants started");
+        initParameters();
         graph = controller.getGraph();
         Set<Ant> ants = new HashSet<>();
         Set<Edge> currentShortestPath = new HashSet<>();
@@ -114,7 +124,7 @@ public class AntOptimization implements Algorithm {
 
         allPaths.forEach(System.out::println);
         int colorShades = 255 / allPaths.size();
-        int i=0;
+        int i = 0;
         for (Set<Edge> s : allPaths) {
             Color randomColor = Color.rgb(colorShades * i++, 0, 0);
             for (Edge e : s) {

@@ -2,7 +2,6 @@ package org.example.simulation.algorithms.antOptimization;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.example.controller.PrimaryController;
 import org.example.graph.Edge;
 import org.example.graph.Graph;
 import org.example.graph.Vertex;
@@ -17,16 +16,24 @@ public class Ant {
     private final Vertex startVertex;
     private final Vertex endVertex;
 
+    // parameters
+    private double alpha;
+    private double beta;
+    private double pheromonePerAnt;
+
     private Vertex curVertex;
     private Set<Edge> traversedEdges;
     private boolean isFinished = false;
 
-    Ant(Graph graph) {
+    Ant(Graph graph, double alpha, double beta, double pheromonePerAnt) {
         this.graph = graph;
         this.startVertex = graph.getStartVertex();
         this.endVertex = graph.getEndVertex();
         this.curVertex = startVertex;
         this.traversedEdges = new LinkedHashSet<>();
+        this.alpha = alpha;
+        this.beta = beta;
+        this.pheromonePerAnt = pheromonePerAnt;
     }
 
     private void calculateProbabilities(Map<Edge, Double> probabilities) {
@@ -37,14 +44,14 @@ public class Ant {
         for (Edge adjEdge : curVertex.getAdjEdges()) {
             if (!traversedEdges.contains(adjEdge)) {
                 // skip already traversed edges
-                p_denominator += Math.pow(adjEdge.getPheromone(), AntOptimization.alpha) * Math.pow(1 / adjEdge.getLength().get(), AntOptimization.beta);
+                p_denominator += Math.pow(adjEdge.getPheromone(), alpha) * Math.pow(1 / adjEdge.getLength().get(), beta);
             }
         }
 
         // update probabilities of each adj vertex
         for (Edge adjEdge : curVertex.getAdjEdges()) {
             if (!traversedEdges.contains(adjEdge)) {
-                double p_nominator = Math.pow(adjEdge.getPheromone(), AntOptimization.alpha) * Math.pow(1 / adjEdge.getLength().get(), AntOptimization.beta);
+                double p_nominator = Math.pow(adjEdge.getPheromone(), alpha) * Math.pow(1 / adjEdge.getLength().get(), beta);
                 probabilities.put(adjEdge, p_nominator / p_denominator);
             }
         }
@@ -58,7 +65,7 @@ public class Ant {
     public void updateTraversedEdges() {
         for (Edge e : traversedEdges) {
             double f = e.getPheromone();
-            double deltaF = AntOptimization.droppedPheromone / e.getLength().get();
+            double deltaF = pheromonePerAnt / e.getLength().get();
             e.setPheromone(f + deltaF);
             graph.findSameEdge(e).setPheromone(f + deltaF);
         }

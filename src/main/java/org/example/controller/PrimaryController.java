@@ -77,6 +77,24 @@ public class PrimaryController {
     private RadioButton bellmanFord;
 
     @FXML
+    private Slider numberOfAnts;
+
+    @FXML
+    private Slider pheromonePerAnt;
+
+    @FXML
+    private Slider alpha;
+
+    @FXML
+    private Slider beta;
+
+    @FXML
+    private Slider evaporationRate;
+
+    @FXML
+    private Slider numberOfIterations;
+
+    @FXML
     private Button start;
 
 
@@ -99,6 +117,7 @@ public class PrimaryController {
         dijkstra.setToggleGroup(toggleGroup2);
         aStar.setToggleGroup(toggleGroup2);
         antOptimization.setToggleGroup(toggleGroup2);
+        bellmanFord.setToggleGroup(toggleGroup2);
     }
 
     public void initButtons() {
@@ -141,6 +160,25 @@ public class PrimaryController {
         simulationSpeed.setMax(1000);
         simulationSpeed.setValue(500);
         simulationSpeed.setShowTickMarks(true);
+
+        // ant optimization sliders
+        numberOfAnts.setMin(100);
+        numberOfAnts.setMax(2000);
+        pheromonePerAnt.setMin(100);
+        pheromonePerAnt.setMax(2000);
+        pheromonePerAnt.setValue(1000);
+        alpha.setMin(1);
+        alpha.setMax(10);
+        alpha.setValue(2.1);
+        beta.setMin(1);
+        beta.setMax(10);
+        beta.setValue(2.1);
+        evaporationRate.setMin(0.1);
+        evaporationRate.setMax(0.9);
+        evaporationRate.setValue(0.7);
+        numberOfIterations.setMin(10);
+        numberOfIterations.setMax(2000);
+        numberOfIterations.setValue(100);
     }
 
     @FXML
