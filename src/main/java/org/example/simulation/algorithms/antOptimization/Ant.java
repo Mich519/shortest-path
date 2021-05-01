@@ -24,6 +24,7 @@ public class Ant {
     private Vertex curVertex;
     private Set<Edge> traversedEdges;
     private boolean isFinished = false;
+    private int numOfMoves = 0;
 
     Ant(Graph graph, double alpha, double beta, double pheromonePerAnt) {
         this.graph = graph;
@@ -67,7 +68,7 @@ public class Ant {
             double f = e.getPheromone();
             double deltaF = pheromonePerAnt / e.getLength().get();
             e.setPheromone(f + deltaF);
-            graph.findSameEdge(e).setPheromone(f + deltaF);
+            //graph.findSameEdge(e).setPheromone(f + deltaF);
         }
     }
 
@@ -85,12 +86,13 @@ public class Ant {
                 localPheromoneUpdate(adjEdge);
                 localPheromoneUpdate(graph.findSameEdge(adjEdge));
                 curVertex = adjEdge.getDestination();
+                numOfMoves++;
                 break;
             }
         }
 
         // ant reached the goal or can't move forward
-        if (curVertex == endVertex || probabilities.isEmpty()) {
+        if (curVertex == endVertex || probabilities.isEmpty() || numOfMoves > graph.getVertices().size()) {
             isFinished = true;
         }
     }
@@ -99,5 +101,6 @@ public class Ant {
         curVertex = startVertex;
         traversedEdges.clear();
         isFinished = false;
+        numOfMoves = 0;
     }
 }

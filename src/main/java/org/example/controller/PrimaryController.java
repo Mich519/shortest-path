@@ -50,6 +50,9 @@ public class PrimaryController {
     private RadioButton removeEdge;
 
     @FXML
+    private RadioButton edgeLabels;
+
+    @FXML
     private Button generate;
 
     @FXML
@@ -118,6 +121,14 @@ public class PrimaryController {
         aStar.setToggleGroup(toggleGroup2);
         antOptimization.setToggleGroup(toggleGroup2);
         bellmanFord.setToggleGroup(toggleGroup2);
+
+        edgeLabels.setSelected(true);
+        edgeLabels.setOnMouseClicked(mouseEvent -> {
+            for (Vertex v : graph.getVertices()) {
+                for (Edge e : v.getAdjEdges())
+                    e.getLengthLabel().setVisible(edgeLabels.isSelected());
+            }
+        });
     }
 
     public void initButtons() {
@@ -164,21 +175,34 @@ public class PrimaryController {
         // ant optimization sliders
         numberOfAnts.setMin(100);
         numberOfAnts.setMax(2000);
+        numberOfAnts.setValue(100);
+        numberOfAnts.setShowTickLabels(true);
+        numberOfAnts.setShowTickMarks(true);
         pheromonePerAnt.setMin(100);
         pheromonePerAnt.setMax(2000);
         pheromonePerAnt.setValue(1000);
+        pheromonePerAnt.setShowTickLabels(true);
+        pheromonePerAnt.setShowTickMarks(true);
         alpha.setMin(1);
         alpha.setMax(10);
         alpha.setValue(2.1);
+        alpha.setShowTickLabels(true);
+        alpha.setShowTickMarks(true);
         beta.setMin(1);
         beta.setMax(10);
         beta.setValue(2.1);
+        beta.setShowTickLabels(true);
+        beta.setShowTickMarks(true);
         evaporationRate.setMin(0.1);
         evaporationRate.setMax(0.9);
         evaporationRate.setValue(0.7);
+        evaporationRate.setShowTickLabels(true);
+        evaporationRate.setShowTickMarks(true);
         numberOfIterations.setMin(10);
         numberOfIterations.setMax(2000);
         numberOfIterations.setValue(100);
+        numberOfIterations.setShowTickLabels(true);
+        numberOfIterations.setShowTickMarks(true);
     }
 
     @FXML
@@ -237,12 +261,14 @@ public class PrimaryController {
     }
 
     public void removeEdgeFromPane(Edge e) {
+        graphEditor.getChildren().remove(e.getLengthLabel()); // also remove its label
         graphEditor.getChildren().remove(e);
     }
 
     public void addEdgeToPane(Edge e) {
         if (!graphEditor.getChildren().contains(e)) {
             graphEditor.getChildren().add(e);
+            graphEditor.getChildren().addAll(e.getLengthLabel()); // also add its label
         }
     }
 

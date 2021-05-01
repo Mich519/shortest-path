@@ -18,9 +18,7 @@ public class OnMousePressedEventHandler implements EventHandler<MouseEvent> {
     @Override
     public void handle(MouseEvent mouseEvent) {
         // record a delta distance for the drag and drop operation.
-        if (mouseEvent.getButton() == MouseButton.PRIMARY) {
-            ;
-        } else if (mouseEvent.getButton() == MouseButton.MIDDLE) {
+        if (mouseEvent.getButton() == MouseButton.MIDDLE) {
 
             /* append edge to first vertex */
             dragData.startVertex = target;

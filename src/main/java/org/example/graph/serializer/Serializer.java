@@ -49,7 +49,6 @@ public class Serializer implements Serializable {
                 graph.addEdge(v1, v2);
             }
         }
-
         return graph;
     }
 }

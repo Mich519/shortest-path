@@ -5,14 +5,14 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<HBox maxHeight="1240.0" maxWidth="1600.0" minHeight="640.0" minWidth="800.0" prefHeight="1240.0" prefWidth="1600.0" style="-fx-background-color: #11151c;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.controller.PrimaryController">
+<HBox alignment="TOP_RIGHT" maxHeight="1240.0" maxWidth="1600.0" minHeight="640.0" minWidth="800.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="1240.0" prefWidth="1600.0" style="-fx-background-color: #11151c;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.controller.PrimaryController">
    <children>
       <Pane fx:id="graphEditor" style="-fx-background-color: #364156; -fx-border-radius: 10px;" HBox.hgrow="ALWAYS">
          <HBox.margin>
             <Insets bottom="20.0" left="20.0" right="10.0" top="20.0" />
          </HBox.margin>
       </Pane>
-      <VBox fx:id="menu" style="-fx-background-color: #212d40;" HBox.hgrow="NEVER">
+      <VBox fx:id="menu" style="-fx-background-color: #212d40;">
          <HBox.margin>
             <Insets bottom="20.0" right="20.0" top="20.0" />
          </HBox.margin>
@@ -59,7 +59,7 @@
                         </RadioButton>
                         <RadioButton fx:id="removeEdge" mnemonicParsing="false" text="Remove Edge">
                            <VBox.margin>
-                              <Insets bottom="10.0" left="10.0" />
+                              <Insets left="10.0" />
                            </VBox.margin>
                         </RadioButton>
                         <VBox>
@@ -67,6 +67,11 @@
                               <Insets bottom="10.0" left="10.0" right="10.0" />
                            </VBox.margin>
                         </VBox>
+                        <RadioButton fx:id="edgeLabels" mnemonicParsing="false" text="Show edge labels">
+                           <VBox.margin>
+                              <Insets left="10.0" />
+                           </VBox.margin>
+                        </RadioButton>
                         <HBox alignment="CENTER">
                            <VBox.margin>
                               <Insets bottom="10.0" left="10.0" right="10.0" />
@@ -101,7 +106,7 @@
                               <Font name="System Bold" size="20.0" />
                            </font>
                         </Label>
-                        <RadioButton mnemonicParsing="false" text="Directed edges">
+                        <RadioButton mnemonicParsing="false" text="Directed graph">
                            <VBox.margin>
                               <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                            </VBox.margin>

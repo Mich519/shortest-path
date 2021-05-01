@@ -29,6 +29,7 @@ public class FileInOutHandler {
         FileInputStream fis = new FileInputStream(file);
         ObjectInputStream ois = new ObjectInputStream(fis);
         GraphSerialized graphSerialized = (GraphSerialized) ois.readObject();
+
         Graph graph = serializer.deserialize(graphSerialized, controller);
         ois.close();
         fis.close();

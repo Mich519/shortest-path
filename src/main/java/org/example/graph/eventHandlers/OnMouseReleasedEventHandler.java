@@ -22,7 +22,7 @@ public class OnMouseReleasedEventHandler implements EventHandler<MouseEvent> {
         /* append edge to second vertex */
         if (dragData.draggedEdge != null) {
             Node target = mouseEvent.getPickResult().getIntersectedNode();
-            if (target instanceof Vertex) {
+            if (target instanceof Vertex && dragData.startVertex != target) {
                 controller.getGraph().addEdge(dragData.startVertex, (Vertex)target);
                 controller.drawGraph();
             }

@@ -1,5 +1,6 @@
 package org.example.graph;
 
+import javafx.scene.paint.Color;
 import lombok.Getter;
 
 import java.io.Serializable;
@@ -20,8 +21,13 @@ public class Graph implements Serializable {
     }
 
     public void addEdge(Vertex v1, Vertex v2) {
-        v1.getAdjEdges().add(new Edge(v1, v2));
-        v2.getAdjEdges().add(new Edge(v2, v1));
+        //Color color = Edge.defaultColor;
+        Edge e1 = new Edge(v1, v2);
+        Edge e2 = new Edge(v2, v1);
+        //e1.setColor(color);
+        //e2.setColor(color);
+        v1.getAdjEdges().add(e1);
+        v2.getAdjEdges().add(e2);
     }
 
     public void addDirectedEdge(Vertex src, Vertex dst  ) {

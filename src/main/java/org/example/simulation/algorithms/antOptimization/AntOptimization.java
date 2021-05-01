@@ -11,18 +11,16 @@ import org.example.graph.Graph;
 import org.example.graph.Vertex;
 import org.example.simulation.algorithms.Algorithm;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+// todo: algorithm doesn't work when graph is loaded from a file
 
 public class AntOptimization implements Algorithm {
-    public double pheromonePerAnt = 1000; // amount of dropped pheromone
-    public int numOfAnts = 2000;
-    public double evapRate = 0.7; // evaporation rate
-    public double alpha = 2.1;
-    public double beta = 2.1;
-    private int numOfIterations = 100;
+    public double pheromonePerAnt; // amount of dropped pheromone
+    public int numOfAnts;
+    public double evapRate; // evaporation rate
+    public double alpha;
+    public double beta;
+    private int numOfIterations;
 
     private final PrimaryController controller;
     private Graph graph;
@@ -30,7 +28,6 @@ public class AntOptimization implements Algorithm {
 
     public AntOptimization(PrimaryController controller) {
         this.controller = controller;
-        this.controller.getGraph();
         this.allPaths = new ArrayList<>();
     }
 
@@ -84,8 +81,9 @@ public class AntOptimization implements Algorithm {
                 // ant reached the goal - update pheromone on that path
                 if (currentShortestPath.isEmpty() || sumOfWeight(a.getTraversedEdges()) < (sumOfWeight(currentShortestPath))) {
                     currentShortestPath.clear();
-                    currentShortestPath.addAll(new HashSet<>(a.getTraversedEdges())); // copy constructor
-                    allPaths.add(new HashSet<>(a.getTraversedEdges()));
+                    Set<Edge> temp =  new LinkedHashSet<>(a.getTraversedEdges());
+                    currentShortestPath.addAll(temp); // copy constructor
+                    allPaths.add(temp);
                     a.updateTraversedEdges();
                     System.out.println("New shortest found! with length " + sumOfWeight(a.getTraversedEdges()));
                 }
@@ -99,7 +97,7 @@ public class AntOptimization implements Algorithm {
         initParameters();
         graph = controller.getGraph();
         Set<Ant> ants = new HashSet<>();
-        Set<Edge> currentShortestPath = new HashSet<>();
+        Set<Edge> currentShortestPath = new LinkedHashSet<>();
 
         initAnts(ants);
 
@@ -128,20 +126,22 @@ public class AntOptimization implements Algorithm {
         for (Set<Edge> s : allPaths) {
             Color randomColor = Color.rgb(colorShades * i++, 0, 0);
             for (Edge e : s) {
-                transitions.add(new StrokeTransition(Duration.millis(50), e, Edge.defaultColor, randomColor));
-                //transitions.add(new StrokeTransition(Duration.millis(50), graph.findSameEdge(e), Edge.defaultColor, randomColor));
+                transitions.add(new StrokeTransition(Duration.millis(1001 - controller.getSimulationSpeed().getValue()), e, Edge.defaultColor, randomColor));
+                transitions.add(new StrokeTransition(Duration.millis(1001 - controller.getSimulationSpeed().getValue()), graph.findSameEdge(e), Edge.defaultColor, randomColor));
             }
         }
+
         st.setCycleCount(1);
         st.getChildren().addAll(transitions);
         st.play();
         st.setOnFinished(actionEvent -> {
             for (Vertex v : graph.getVertices()) {
                 for (Edge e : v.getAdjEdges()) {
-                    // reset edge pheromon
+                    // reset edge pheromone
                     e.setPheromone(1.0 / e.getLength().get());
                 }
             }
+            allPaths.clear();
         });
     }
 }
