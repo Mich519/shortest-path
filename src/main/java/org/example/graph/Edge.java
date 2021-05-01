@@ -1,5 +1,8 @@
 package org.example.graph;
 
+import javafx.beans.binding.DoubleBinding;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import lombok.EqualsAndHashCode;
@@ -18,12 +21,29 @@ public class Edge extends Line implements Serializable {
     private final Vertex destination;
     @Setter
     private double pheromone;
+    private DoubleBinding length;
+
+    private void bindLength() {
+        this.length = new DoubleBinding() {
+            {
+                super.bind(startXProperty());
+                super.bind(startYProperty());
+                super.bind(endXProperty());
+                super.bind(endYProperty());
+            }
+
+            @Override
+            protected double computeValue() {
+                return Math.sqrt(Math.pow(endXProperty().get() - startXProperty().get(), 2) + Math.pow(endYProperty().get() - startYProperty().get(), 2));
+            }
+        };
+    }
 
     public Edge(Vertex source, Vertex destination) {
         super(source.centerXProperty().get(), source.centerYProperty().get(), destination.centerXProperty().get(), destination.centerYProperty().get());
         this.source = source;
         this.destination = destination;
-        this.pheromone = 1.0 / calculateWeight() ; // initial pheromone value
+
         startXProperty().bind(source.centerXProperty());
         startYProperty().bind(source.centerYProperty());
         endXProperty().bind(destination.centerXProperty());
@@ -31,9 +51,7 @@ public class Edge extends Line implements Serializable {
         setStrokeWidth(4);
         setStroke(Edge.defaultColor);
         setMouseTransparent(true);
-    }
-
-    public double calculateWeight() {
-        return Math.sqrt(Math.pow(getEndX() - getStartX(), 2) + Math.pow(getEndY() - getStartY(), 2));
+        bindLength();
+        this.pheromone = 1.0 / length.get(); // initial pheromone value
     }
 }

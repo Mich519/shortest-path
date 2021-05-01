@@ -45,7 +45,7 @@ public class AntOptimization implements Algorithm {
     private double sumOfWeight(Set<Edge> edges) {
         double sum = 0.0;
         for (Edge e : edges) {
-            sum += e.calculateWeight();
+            sum += e.getLength().get();
         }
         return sum;
     }
@@ -129,7 +129,7 @@ public class AntOptimization implements Algorithm {
             for (Vertex v : graph.getVertices()) {
                 for (Edge e : v.getAdjEdges()) {
                     // reset edge pheromon
-                    e.setPheromone(1.0 / e.calculateWeight());
+                    e.setPheromone(1.0 / e.getLength().get());
                 }
             }
         });

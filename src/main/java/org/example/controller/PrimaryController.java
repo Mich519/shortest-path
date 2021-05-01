@@ -74,6 +74,9 @@ public class PrimaryController {
     private RadioButton antOptimization;
 
     @FXML
+    private RadioButton bellmanFord;
+
+    @FXML
     private Button start;
 
 
@@ -116,6 +119,12 @@ public class PrimaryController {
                 simulation.simulateAStar();
             } else if (antOptimization.isSelected()) {
                 simulation.simulateAntOptimization();
+            } else if (bellmanFord.isSelected()) {
+                try {
+                    simulation.simulateBellmanFord();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
 
         });

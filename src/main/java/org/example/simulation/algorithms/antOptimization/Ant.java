@@ -37,14 +37,14 @@ public class Ant {
         for (Edge adjEdge : curVertex.getAdjEdges()) {
             if (!traversedEdges.contains(adjEdge)) {
                 // skip already traversed edges
-                p_denominator += Math.pow(adjEdge.getPheromone(), AntOptimization.alpha) * Math.pow(1 / adjEdge.calculateWeight(), AntOptimization.beta);
+                p_denominator += Math.pow(adjEdge.getPheromone(), AntOptimization.alpha) * Math.pow(1 / adjEdge.getLength().get(), AntOptimization.beta);
             }
         }
 
         // update probabilities of each adj vertex
         for (Edge adjEdge : curVertex.getAdjEdges()) {
             if (!traversedEdges.contains(adjEdge)) {
-                double p_nominator = Math.pow(adjEdge.getPheromone(), AntOptimization.alpha) * Math.pow(1 / adjEdge.calculateWeight(), AntOptimization.beta);
+                double p_nominator = Math.pow(adjEdge.getPheromone(), AntOptimization.alpha) * Math.pow(1 / adjEdge.getLength().get(), AntOptimization.beta);
                 probabilities.put(adjEdge, p_nominator / p_denominator);
             }
         }
@@ -58,7 +58,7 @@ public class Ant {
     public void updateTraversedEdges() {
         for (Edge e : traversedEdges) {
             double f = e.getPheromone();
-            double deltaF = AntOptimization.droppedPheromone / e.calculateWeight();
+            double deltaF = AntOptimization.droppedPheromone / e.getLength().get();
             e.setPheromone(f + deltaF);
             graph.findSameEdge(e).setPheromone(f + deltaF);
         }

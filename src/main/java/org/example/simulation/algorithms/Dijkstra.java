@@ -72,10 +72,10 @@ public class Dijkstra implements Algorithm{
             for (Edge w : v.getAdjEdges()) {
                 /* perform relaxation for every vertex adjacent to v */
                 Vertex u = w.getDestination();
-                if (v.getCurLowestCost() + w.calculateWeight() < u.getCurLowestCost()) {
+                if (v.getCurLowestCost() + w.getLength().get() < u.getCurLowestCost()) {
 
                     // update predecessor of current vertex
-                    u.setCurLowestCost(v.getCurLowestCost() + w.calculateWeight());
+                    u.setCurLowestCost(v.getCurLowestCost() + w.getLength().get());
                     mapVertexToPrev.put(u, v);
 
                     // update the priority queue by reinserting the vertex

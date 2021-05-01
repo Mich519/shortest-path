@@ -6,6 +6,7 @@ import javafx.event.EventHandler;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import org.example.controller.PrimaryController;
+import org.example.graph.Edge;
 import org.example.graph.Vertex;
 
 public class OnMouseClickedEventHandler implements EventHandler<MouseEvent> {
@@ -27,13 +28,12 @@ public class OnMouseClickedEventHandler implements EventHandler<MouseEvent> {
             String targetID = mouseEvent.getPickResult().getIntersectedNode().getId();
             String graphEditorID = controller.getGraphEditor().getId();
 
-            if(targetID != null && targetID.equals(graphEditorID)) {
+            if (targetID != null && targetID.equals(graphEditorID)) {
                 Vertex v = new Vertex(controller, clickedXPos, clickedYPos);
                 controller.getGraph().addVertex(v);
                 controller.drawGraph();
             }
         }
-
     }
 }
 

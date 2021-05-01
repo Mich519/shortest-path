@@ -3,108 +3,152 @@
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.shape.*?>
 <?import javafx.scene.text.*?>
 
-<HBox maxHeight="800.0" maxWidth="1000.0" minHeight="800.0" minWidth="1000.0" prefHeight="800.0" prefWidth="1000.0" style="-fx-background-color: #11151c;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.controller.PrimaryController">
+<HBox maxHeight="1024.0" maxWidth="1600.0" minHeight="640.0" minWidth="800.0" prefHeight="1024.0" prefWidth="1600.0" style="-fx-background-color: #11151c;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.controller.PrimaryController">
    <children>
-      <Pane fx:id="graphEditor" maxHeight="760.0" maxWidth="560.0" minHeight="760.0" minWidth="560.0" prefHeight="760.0" prefWidth="560.0" style="-fx-background-color: #364156;">
+      <Pane fx:id="graphEditor" style="-fx-background-color: #364156; -fx-border-radius: 10px;" HBox.hgrow="ALWAYS">
          <HBox.margin>
-            <Insets bottom="20.0" left="20.0" top="20.0" />
+            <Insets bottom="20.0" left="20.0" right="10.0" top="20.0" />
          </HBox.margin>
       </Pane>
-      <VBox fx:id="menu" maxHeight="760.0" maxWidth="390.0" minHeight="760.0" minWidth="390.0" prefHeight="760.0" prefWidth="390.0" style="-fx-background-color: #212d40;">
+      <VBox fx:id="menu" style="-fx-background-color: #212d40;" HBox.hgrow="NEVER">
          <HBox.margin>
-            <Insets bottom="20.0" left="10.0" top="20.0" />
+            <Insets bottom="20.0" right="20.0" top="20.0" />
          </HBox.margin>
          <children>
-            <VBox prefHeight="200.0" prefWidth="100.0" style="-fx-background-color: #d66853;">
+            <HBox>
                <VBox.margin>
                   <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                </VBox.margin>
                <children>
-                  <Label alignment="TOP_LEFT" contentDisplay="CENTER" text="Editor ">
-                     <font>
-                        <Font name="System Bold" size="20.0" />
-                     </font>
-                     <VBox.margin>
-                        <Insets bottom="10.0" left="10.0" top="10.0" />
-                     </VBox.margin>
-                  </Label>
-                  <Button fx:id="clearGraphEditor" mnemonicParsing="false" text="Clear all">
-                     <VBox.margin>
-                        <Insets bottom="10.0" left="10.0" />
-                     </VBox.margin>
-                  </Button>
-                  <RadioButton fx:id="startNode" mnemonicParsing="false" text="Choose start node">
-                     <VBox.margin>
-                        <Insets bottom="10.0" left="10.0" />
-                     </VBox.margin>
-                  </RadioButton>
-                  <RadioButton fx:id="endNode" mnemonicParsing="false" text="Choose end node">
-                     <VBox.margin>
-                        <Insets bottom="10.0" left="10.0" />
-                     </VBox.margin>
-                  </RadioButton>
-                  <RadioButton fx:id="addVertex" mnemonicParsing="false" text="Add vertex">
-                     <VBox.margin>
-                        <Insets bottom="10.0" left="10.0" />
-                     </VBox.margin>
-                  </RadioButton>
-                  <RadioButton fx:id="removeVertex" mnemonicParsing="false" text="Remove vertex">
-                     <VBox.margin>
-                        <Insets bottom="10.0" left="10.0" />
-                     </VBox.margin>
-                  </RadioButton>
-                  <RadioButton fx:id="addEdge" mnemonicParsing="false" text="Add edge">
-                     <VBox.margin>
-                        <Insets bottom="10.0" left="10.0" />
-                     </VBox.margin>
-                  </RadioButton>
-                  <RadioButton fx:id="removeEdge" mnemonicParsing="false" text="Remove Edge">
-                     <VBox.margin>
-                        <Insets bottom="10.0" left="10.0" />
-                     </VBox.margin>
-                  </RadioButton>
-                  <RadioButton mnemonicParsing="false" text="Directed edges">
-                     <VBox.margin>
-                        <Insets bottom="10.0" left="10.0" />
-                     </VBox.margin>
-                  </RadioButton>
-                  <Slider fx:id="vertexCount">
-                     <opaqueInsets>
-                        <Insets />
-                     </opaqueInsets>
-                     <VBox.margin>
-                        <Insets bottom="10.0" left="10.0" right="10.0" />
-                     </VBox.margin>
-                  </Slider>
-                  <Slider>
-                     <VBox.margin>
-                        <Insets bottom="10.0" left="10.0" right="10.0" />
-                     </VBox.margin>
-                  </Slider>
-                  <HBox>
-                     <VBox.margin>
-                        <Insets bottom="10.0" left="10.0" />
-                     </VBox.margin>
+                  <VBox style="-fx-background-color: #77aca2;">
                      <children>
-                        <Button fx:id="generate" mnemonicParsing="false" text="Generate">
-                           <HBox.margin>
-                              <Insets right="10.0" />
-                           </HBox.margin>
-                        </Button>
-                        <Button fx:id="save" mnemonicParsing="false" text="Save">
-                           <HBox.margin>
-                              <Insets right="10.0" />
-                           </HBox.margin>
-                        </Button>
-                        <Button fx:id="load" mnemonicParsing="false" text="Load" />
+                        <Label alignment="TOP_LEFT" contentDisplay="CENTER" text="Editor ">
+                           <font>
+                              <Font name="System Bold" size="20.0" />
+                           </font>
+                           <VBox.margin>
+                              <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                           </VBox.margin>
+                        </Label>
+                        <RadioButton fx:id="startNode" mnemonicParsing="false" text="Choose start node">
+                           <VBox.margin>
+                              <Insets bottom="10.0" left="10.0" right="10.0" />
+                           </VBox.margin>
+                        </RadioButton>
+                        <RadioButton fx:id="endNode" mnemonicParsing="false" text="Choose end node">
+                           <VBox.margin>
+                              <Insets bottom="10.0" left="10.0" right="10.0" />
+                           </VBox.margin>
+                        </RadioButton>
+                        <RadioButton fx:id="addVertex" mnemonicParsing="false" text="Add vertex">
+                           <VBox.margin>
+                              <Insets bottom="10.0" left="10.0" right="10.0" />
+                           </VBox.margin>
+                        </RadioButton>
+                        <RadioButton fx:id="removeVertex" mnemonicParsing="false" text="Remove vertex">
+                           <VBox.margin>
+                              <Insets bottom="10.0" left="10.0" right="10.0" />
+                           </VBox.margin>
+                        </RadioButton>
+                        <RadioButton fx:id="addEdge" mnemonicParsing="false" text="Add edge">
+                           <VBox.margin>
+                              <Insets bottom="10.0" left="10.0" right="10.0" />
+                           </VBox.margin>
+                        </RadioButton>
+                        <RadioButton fx:id="removeEdge" mnemonicParsing="false" text="Remove Edge">
+                           <VBox.margin>
+                              <Insets bottom="10.0" left="10.0" />
+                           </VBox.margin>
+                        </RadioButton>
+                        <VBox>
+                           <VBox.margin>
+                              <Insets bottom="10.0" left="10.0" right="10.0" />
+                           </VBox.margin>
+                        </VBox>
+                        <HBox alignment="CENTER">
+                           <VBox.margin>
+                              <Insets bottom="10.0" left="10.0" right="10.0" />
+                           </VBox.margin>
+                           <children>
+                              <Button fx:id="save" mnemonicParsing="false" text="Save">
+                                 <HBox.margin>
+                                    <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                 </HBox.margin>
+                              </Button>
+                              <Button fx:id="load" mnemonicParsing="false" text="Load">
+                                 <HBox.margin>
+                                    <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                 </HBox.margin>
+                              </Button>
+                              <Button fx:id="clearGraphEditor" mnemonicParsing="false" text="Clear all">
+                                 <HBox.margin>
+                                    <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                 </HBox.margin>
+                              </Button>
+                           </children>
+                        </HBox>
                      </children>
-                  </HBox>
+                  </VBox>
+                  <VBox style="-fx-background-color: #9dbebb;">
+                     <children>
+                        <Label text="Generator">
+                           <VBox.margin>
+                              <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                           </VBox.margin>
+                           <font>
+                              <Font name="System Bold" size="20.0" />
+                           </font>
+                        </Label>
+                        <RadioButton mnemonicParsing="false" text="Directed edges">
+                           <VBox.margin>
+                              <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                           </VBox.margin>
+                        </RadioButton>
+                        <VBox alignment="CENTER_LEFT">
+                           <VBox.margin>
+                              <Insets bottom="10.0" top="10.0" />
+                           </VBox.margin>
+                           <children>
+                              <VBox alignment="CENTER" style="-fx-border-color: #468189; -fx-border-radius: 10 10 10 10;">
+                                 <VBox.margin>
+                                    <Insets bottom="10.0" left="10.0" right="10.0" />
+                                 </VBox.margin>
+                                 <HBox.margin>
+                                    <Insets bottom="20.0" left="20.0" right="10.0" />
+                                 </HBox.margin>
+                                 <children>
+                                    <Label text="Number of vertices">
+                                       <VBox.margin>
+                                          <Insets left="10.0" right="10.0" />
+                                       </VBox.margin>
+                                    </Label>
+                                    <Slider fx:id="vertexCount">
+                                       <opaqueInsets>
+                                          <Insets />
+                                       </opaqueInsets>
+                                       <VBox.margin>
+                                          <Insets bottom="10.0" left="10.0" right="10.0" />
+                                       </VBox.margin>
+                                    </Slider>
+                                 </children>
+                              </VBox>
+                              <HBox alignment="CENTER">
+                                 <children>
+                                    <Button fx:id="generate" mnemonicParsing="false" text="Generate" />
+                                 </children>
+                                 <VBox.margin>
+                                    <Insets bottom="10.0" top="10.0" />
+                                 </VBox.margin>
+                              </HBox>
+                           </children>
+                        </VBox>
+                     </children>
+                  </VBox>
                </children>
-            </VBox>
-            <VBox prefHeight="200.0" prefWidth="100.0" style="-fx-background-color: #7d4e57;">
+            </HBox>
+            <VBox alignment="CENTER_LEFT" style="-fx-background-color: #468189;">
                <VBox.margin>
                   <Insets bottom="10.0" left="10.0" right="10.0" />
                </VBox.margin>
@@ -132,20 +176,41 @@
                         <Insets bottom="10.0" left="10.0" />
                      </VBox.margin>
                   </RadioButton>
-                  <Slider fx:id="simulationSpeed">
+                  <RadioButton fx:id="bellmanFord" mnemonicParsing="false" text="Bellman-Ford">
+                     <VBox.margin>
+                        <Insets bottom="10.0" left="10.0" />
+                     </VBox.margin>
+                  </RadioButton>
+                  <VBox alignment="CENTER" style="-fx-border-color: #264653; -fx-border-radius: 10 10 10 10;">
                      <VBox.margin>
                         <Insets bottom="10.0" left="10.0" right="10.0" />
                      </VBox.margin>
-                  </Slider>
+                     <children>
+                        <Label text="Simulation speed">
+                           <VBox.margin>
+                              <Insets />
+                           </VBox.margin>
+                        </Label>
+                        <Slider fx:id="simulationSpeed">
+                           <VBox.margin>
+                              <Insets bottom="10.0" left="10.0" right="10.0" />
+                           </VBox.margin>
+                        </Slider>
+                     </children>
+                  </VBox>
+                  <RadioButton mnemonicParsing="false" text="Show weights">
+                     <VBox.margin>
+                        <Insets bottom="10.0" left="10.0" />
+                     </VBox.margin>
+                  </RadioButton>
+                  <Button fx:id="start" mnemonicParsing="false" text="Start" textAlignment="CENTER">
+                     <VBox.margin>
+                        <Insets bottom="10.0" left="10.0" right="10.0" />
+                     </VBox.margin>
+                  </Button>
                </children>
             </VBox>
-            <Button fx:id="start" maxWidth="195.0" mnemonicParsing="false" prefHeight="100.0" text="Start" textAlignment="CENTER">
-               <VBox.margin>
-                  <Insets left="185.0" />
-               </VBox.margin>
-            </Button>
          </children>
       </VBox>
-      <Line endX="100.0" startX="-100.0" />
    </children>
 </HBox>

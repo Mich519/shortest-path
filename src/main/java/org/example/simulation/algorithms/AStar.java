@@ -67,8 +67,8 @@ public class AStar implements Algorithm{
             for (Edge w : v.getAdjEdges()) {
                 /* perform relaxation for every vertex adjacent to v */
                 Vertex u = w.getDestination();
-                if (v.getCurLowestCost() + w.calculateWeight() < u.getCurLowestCost()) {
-                    u.setCurLowestCost(v.getCurLowestCost() + w.calculateWeight());
+                if (v.getCurLowestCost() + w.getLength().get() < u.getCurLowestCost()) {
+                    u.setCurLowestCost(v.getCurLowestCost() + w.getLength().get());
 
                     // update predecessor of current vertex
                     mapVertexToPrev.put(u, v);
