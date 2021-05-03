@@ -21,13 +21,12 @@ public class Graph implements Serializable {
     }
 
     public void addEdge(Vertex v1, Vertex v2) {
-        //Color color = Edge.defaultColor;
-        Edge e1 = new Edge(v1, v2);
-        Edge e2 = new Edge(v2, v1);
-        //e1.setColor(color);
-        //e2.setColor(color);
-        v1.getAdjEdges().add(e1);
-        v2.getAdjEdges().add(e2);
+        for (Edge e : v1.getAdjEdges()) {
+            if(e.getNeighbourOf(v1) == v2) return; // there is already edge connecting v1 and v2
+        }
+        Edge e = new Edge(v1, v2);
+        v1.getAdjEdges().add(e);
+        v2.getAdjEdges().add(e);
     }
 
     public void addDirectedEdge(Vertex src, Vertex dst  ) {
@@ -36,7 +35,7 @@ public class Graph implements Serializable {
 
     public void removeVertex(Vertex v) {
         vertices.remove(v);
-        vertices.forEach(vertex -> vertex.getAdjEdges().removeIf(edge -> edge.getDestination() == v));
+        vertices.forEach(vertex -> vertex.getAdjEdges().removeIf(edge -> edge.getNeighbourOf(vertex) == v));
     }
 
     public void removeAll() {
@@ -52,14 +51,6 @@ public class Graph implements Serializable {
             return Math.sqrt(temp1 + temp2);
         }
         return 0;
-    }
-
-    public Edge findSameEdge(Edge e) {
-        for (Edge e1 : e.getDestination().getAdjEdges()) {
-            if(e1.getDestination() == e.getSource())
-                return e1;
-        }
-        return null;
     }
 
     public void setStartVertex(Vertex v) {

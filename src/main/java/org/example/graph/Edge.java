@@ -10,6 +10,7 @@ import javafx.scene.control.Label;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Line;
+import javafx.util.Pair;
 import javafx.util.StringConverter;
 import javafx.util.converter.NumberStringConverter;
 import lombok.EqualsAndHashCode;
@@ -24,9 +25,9 @@ public class Edge extends Line implements Serializable {
     public static final Color defaultColor = Color.LIMEGREEN;
     public static final Color pathColor = Color.BLUE;
 
-
-    private final Vertex source;
-    private final Vertex destination;
+    private Pair<Vertex, Vertex> vertices;
+    //private final Vertex source;
+    //private final Vertex destination;
 
     private DoubleBinding length;
     @Setter
@@ -53,13 +54,14 @@ public class Edge extends Line implements Serializable {
     }
 
     private void bindLabel() {
-        StringProperty sp = new SimpleStringProperty();
+        this.ssp = new SimpleStringProperty();
         DoubleProperty dp = new SimpleDoubleProperty();
         dp.bind(length);
-        Bindings.bindBidirectional(sp, dp, new NumberStringConverter());
+        Bindings.bindBidirectional(ssp, dp, new NumberStringConverter());
         this.lengthLabel = new Label();
+        lengthLabel.setMouseTransparent(true);
         lengthLabel.setTextFill(Paint.valueOf("ddd8c4"));
-        lengthLabel.textProperty().bind(sp);
+        lengthLabel.textProperty().bind(ssp);
 
 
         lengthLabel.layoutXProperty().bind(endXProperty().subtract(endXProperty().subtract(startXProperty()).divide(2)));
@@ -68,10 +70,8 @@ public class Edge extends Line implements Serializable {
 
     public Edge(Vertex source, Vertex destination) {
         super(source.centerXProperty().get(), source.centerYProperty().get(), destination.centerXProperty().get(), destination.centerYProperty().get());
-        this.source = source;
-        this.destination = destination;
+        vertices = new Pair<>(source, destination);
         this.color = Edge.defaultColor;
-
 
         startXProperty().bind(source.centerXProperty());
         startYProperty().bind(source.centerYProperty());
@@ -85,5 +85,13 @@ public class Edge extends Line implements Serializable {
         bindLabel();
         this.pheromone = 1.0 / length.get(); // initial pheromone value
 
+    }
+
+    public Vertex getNeighbourOf(Vertex v) {
+        if (vertices.getKey() == v)
+            return vertices.getValue();
+        else if (vertices.getValue() == v)
+            return vertices.getKey();
+        return null;
     }
 }

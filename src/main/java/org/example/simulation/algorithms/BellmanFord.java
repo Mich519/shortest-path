@@ -35,7 +35,7 @@ public class BellmanFord implements Algorithm{
         for (int i=0; i<graph.getVertices().size(); i++) {
             for(Vertex v : graph.getVertices()) {
                 for (Edge e : v.getAdjEdges()) {
-                    Vertex neighbour = e.getDestination();
+                    Vertex neighbour = e.getNeighbourOf(v);
                     if(distances.get(v) + e.getLength().get() < distances.get(neighbour)) {
                         distances.put(neighbour, distances.get(v) + e.getLength().get());
                         predecessors.put(neighbour, v);
@@ -47,7 +47,7 @@ public class BellmanFord implements Algorithm{
         // check for negative weight cycles
         for (Vertex v : graph.getVertices()) {
             for (Edge e : v.getAdjEdges()) {
-                Vertex neighbour = e.getDestination();
+                Vertex neighbour = e.getNeighbourOf(v);
                 if (distances.get(v) + e.getLength().get() < distances.get(neighbour)) {
                     throw new Exception("Graph contains negative weight cycle.");
                 }

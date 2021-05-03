@@ -14,9 +14,10 @@ import org.example.graph.comparators.VertexByTotalCostComparator;
 
 import java.util.*;
 
-public class AStar implements Algorithm{
+public class AStar implements Algorithm {
 
-    private PrimaryController controller;
+    private final PrimaryController controller;
+
     public AStar(PrimaryController controller) {
         this.controller = controller;
     }
@@ -35,10 +36,8 @@ public class AStar implements Algorithm{
             transitions.add(new FillTransition(Duration.millis(500), ver, Color.ORANGE, Color.RED));
             Vertex pred = mapVertexToPrev.get(ver);
             if (pred != null) {
-                Edge e1 = ver.findEdgeConnectedTo(pred);
-                Edge e2 = pred.findEdgeConnectedTo(ver);
-                transitions.add(new StrokeTransition(Duration.millis(500), e1, Color.LIMEGREEN, Color.BLUE));
-                transitions.add(new StrokeTransition(Duration.millis(500), e2, Color.LIMEGREEN, Color.BLUE));
+                Edge e = ver.findEdgeConnectedTo(pred);
+                transitions.add(new StrokeTransition(Duration.millis(500), e, Color.LIMEGREEN, Color.BLUE));
             }
         }
         st.getChildren().addAll(transitions);
@@ -66,7 +65,7 @@ public class AStar implements Algorithm{
             s.add(v);
             for (Edge w : v.getAdjEdges()) {
                 /* perform relaxation for every vertex adjacent to v */
-                Vertex u = w.getDestination();
+                Vertex u = w.getNeighbourOf(v);
                 if (v.getCurLowestCost() + w.getLength().get() < u.getCurLowestCost()) {
                     u.setCurLowestCost(v.getCurLowestCost() + w.getLength().get());
 

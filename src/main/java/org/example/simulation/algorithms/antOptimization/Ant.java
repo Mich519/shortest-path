@@ -82,10 +82,8 @@ public class Ant {
             sum += probabilities.get(adjEdge);
             if (r < sum) {
                 traversedEdges.add(adjEdge);
-                traversedEdges.add(graph.findSameEdge(adjEdge));
                 localPheromoneUpdate(adjEdge);
-                localPheromoneUpdate(graph.findSameEdge(adjEdge));
-                curVertex = adjEdge.getDestination();
+                curVertex = adjEdge.getNeighbourOf(curVertex);
                 numOfMoves++;
                 break;
             }

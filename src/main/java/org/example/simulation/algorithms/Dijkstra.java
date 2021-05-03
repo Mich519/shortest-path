@@ -71,7 +71,7 @@ public class Dijkstra implements Algorithm{
             s.add(v);
             for (Edge w : v.getAdjEdges()) {
                 /* perform relaxation for every vertex adjacent to v */
-                Vertex u = w.getDestination();
+                Vertex u = w.getNeighbourOf(v);
                 if (v.getCurLowestCost() + w.getLength().get() < u.getCurLowestCost()) {
 
                     // update predecessor of current vertex

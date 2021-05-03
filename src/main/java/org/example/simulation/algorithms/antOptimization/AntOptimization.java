@@ -69,7 +69,6 @@ public class AntOptimization implements Algorithm {
             for (Edge e : v.getAdjEdges()) {
                 double f = (1 - evapRate) * e.getPheromone();
                 e.setPheromone(f);
-                graph.findSameEdge(e).setPheromone(f);
             }
         }
     }
@@ -127,7 +126,6 @@ public class AntOptimization implements Algorithm {
             Color randomColor = Color.rgb(colorShades * i++, 0, 0);
             for (Edge e : s) {
                 transitions.add(new StrokeTransition(Duration.millis(1001 - controller.getSimulationSpeed().getValue()), e, Edge.defaultColor, randomColor));
-                transitions.add(new StrokeTransition(Duration.millis(1001 - controller.getSimulationSpeed().getValue()), graph.findSameEdge(e), Edge.defaultColor, randomColor));
             }
         }
 

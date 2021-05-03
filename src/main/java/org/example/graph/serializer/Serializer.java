@@ -24,10 +24,9 @@ public class Serializer implements Serializable {
         for (Vertex v: graph.getVertices()) {
             for (Edge e : v.getAdjEdges()) {
                 // wrap edge
-                VertexSerialized source = map.get(e.getSource());
-                VertexSerialized destination = map.get(e.getDestination());
-                EdgeSerialized ew = new EdgeSerialized(source, destination);
-                source.getAdjEdges().add(ew);
+                VertexSerialized source = map.get(v);
+                VertexSerialized destination = map.get(e.getNeighbourOf(v));
+                graphSerialized.addEdge(source, destination);
             }
         }
 
@@ -44,8 +43,8 @@ public class Serializer implements Serializable {
         }
         for (VertexSerialized vw : graphSerialized.getWrappedVertices()) {
             for (EdgeSerialized ew : vw.getAdjEdges()) {
-                Vertex v1 = map.get(ew.getSource());
-                Vertex v2 = map.get(ew.getDestination());
+                Vertex v1 = map.get(ew.getNeighbourOf(vw));
+                Vertex v2 = map.get(vw);
                 graph.addEdge(v1, v2);
             }
         }

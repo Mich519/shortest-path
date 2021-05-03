@@ -1,6 +1,7 @@
 package org.example.controller;
 
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.RadioButton;
@@ -42,12 +43,6 @@ public class PrimaryController {
 
     @FXML
     private RadioButton removeVertex;
-
-    @FXML
-    private RadioButton addEdge;
-
-    @FXML
-    private RadioButton removeEdge;
 
     @FXML
     private RadioButton edgeLabels;
@@ -112,8 +107,6 @@ public class PrimaryController {
         endNode.setToggleGroup(toggleGroup1);
         addVertex.setToggleGroup(toggleGroup1);
         removeVertex.setToggleGroup(toggleGroup1);
-        addEdge.setToggleGroup(toggleGroup1);
-        removeEdge.setToggleGroup(toggleGroup1);
         addVertex.setSelected(true);
 
         ToggleGroup toggleGroup2 = new ToggleGroup();

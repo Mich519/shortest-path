@@ -16,16 +16,17 @@ import java.io.IOException;
 public class App extends Application {
 
     private static final String fxml = "primary";
-    private static final int windowWidth = 1000;
+    private static final int windowWidth = 1200;
     private static final int windowHeight = 800;
 
     @Override
     public void start(Stage stage) throws IOException {
+
         FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource(fxml + ".fxml"));
         Parent p = fxmlLoader.load();
         Scene scene = new Scene(p, windowWidth, windowHeight);
         stage.setScene(scene);
-        //stage.setResizable(false);
+        stage.setResizable(false);
         PrimaryController primaryController = fxmlLoader.getController();
         stage.setOnShown(primaryController::afterInitialize);
         // stage.setMaximized(true);

@@ -51,7 +51,7 @@ public class Vertex extends Circle implements Serializable {
 
     public Edge findEdgeConnectedTo(Vertex v) {
         for (Edge e : adjEdges) {
-            if(e.getDestination() == v) {
+            if(e.getNeighbourOf(this) == v) {
                 return e;
             }
         }
