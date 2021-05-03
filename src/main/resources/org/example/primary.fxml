@@ -234,7 +234,7 @@
                   </Slider>
                </children>
             </VBox>
-            <RadioButton mnemonicParsing="false" text="Show weights">
+            <RadioButton fx:id="showWeights" mnemonicParsing="false" selected="true" text="Show weights">
                <VBox.margin>
                   <Insets bottom="10.0" left="10.0" />
                </VBox.margin>

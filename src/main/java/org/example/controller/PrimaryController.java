@@ -93,6 +93,9 @@ public class PrimaryController {
     private Slider numberOfIterations;
 
     @FXML
+    private RadioButton showWeights;
+
+    @FXML
     private Button start;
 
 
@@ -120,6 +123,14 @@ public class PrimaryController {
             for (Vertex v : graph.getVertices()) {
                 for (Edge e : v.getAdjEdges())
                     e.getLengthLabel().setVisible(edgeLabels.isSelected());
+            }
+        });
+
+        showWeights.setOnMouseClicked(event -> {
+            for (Vertex v : graph.getVertices()) {
+                for (Edge e : v.getAdjEdges()) {
+                    e.getLengthLabel().setVisible(showWeights.isSelected());
+                }
             }
         });
     }
