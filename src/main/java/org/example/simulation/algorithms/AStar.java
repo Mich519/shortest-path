@@ -10,6 +10,7 @@ import org.example.controller.PrimaryController;
 import org.example.graph.Edge;
 import org.example.graph.Graph;
 import org.example.graph.Vertex;
+import org.example.graph.comparators.VertexByCurLowestCostComparator;
 import org.example.graph.comparators.VertexByTotalCostComparator;
 
 import java.util.*;
@@ -58,7 +59,7 @@ public class AStar implements Algorithm {
         LinkedHashSet<Vertex> s = new LinkedHashSet<>(); // s - will be storing ordered vertices that represent shortest path at the end
         mapVertexToPrev.put(graph.getStartVertex(), null);
         graph.getStartVertex().setCurLowestCost(0);
-        PriorityQueue<Vertex> q = new PriorityQueue<>(10, new VertexByTotalCostComparator(graph));
+        PriorityQueue<Vertex> q = new PriorityQueue<>(10, new VertexByCurLowestCostComparator());
         q.addAll(graph.getVertices());
         while (!q.isEmpty()) {
             Vertex v = q.poll();
@@ -67,9 +68,9 @@ public class AStar implements Algorithm {
                 /* perform relaxation for every vertex adjacent to v */
                 Vertex u = w.getNeighbourOf(v);
                 if (v.getCurLowestCost() + w.getLength().get() < u.getCurLowestCost()) {
-                    u.setCurLowestCost(v.getCurLowestCost() + w.getLength().get());
 
                     // update predecessor of current vertex
+                    u.setCurLowestCost(v.getCurLowestCost() + w.getLength().get());
                     mapVertexToPrev.put(u, v);
 
                     // update the priority queue by reinserting the vertex

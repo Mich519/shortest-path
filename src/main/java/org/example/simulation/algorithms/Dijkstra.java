@@ -30,20 +30,18 @@ public class Dijkstra implements Algorithm{
         /* vertices animation */
         List<Transition> transitions = new ArrayList<>();
         for (Vertex v : s) {
-            transitions.add(new FillTransition(Duration.millis(1000 - controller.getSimulationSpeed().getValue()), v, Color.ORANGE, Color.BLUEVIOLET));
+            transitions.add(new FillTransition(Duration.millis(1001 - controller.getSimulationSpeed().getValue()), v, Color.ORANGE, Color.BLUEVIOLET));
         }
         SequentialTransition st = new SequentialTransition();
         st.setCycleCount(1);
 
         /* color edges that represent a path */
         for (Vertex ver = graph.getEndVertex(); ver != null; ver = mapVertexToPrev.get(ver)) {
-            transitions.add(new FillTransition(Duration.millis(1000 - controller.getSimulationSpeed().getValue()), ver, Color.ORANGE, Color.RED));
+            transitions.add(new FillTransition(Duration.millis(1001 - controller.getSimulationSpeed().getValue()), ver, Color.ORANGE, Color.RED));
             Vertex pred = mapVertexToPrev.get(ver);
             if (pred != null) {
-                Edge e1 = ver.findEdgeConnectedTo(pred);
-                Edge e2 = pred.findEdgeConnectedTo(ver);
-                transitions.add(new StrokeTransition(Duration.millis(1000 - controller.getSimulationSpeed().getValue()), e1, Color.LIMEGREEN, Color.BLUE));
-                transitions.add(new StrokeTransition(Duration.millis(1000 - controller.getSimulationSpeed().getValue()), e2, Color.LIMEGREEN, Color.BLUE));
+                Edge e = ver.findEdgeConnectedTo(pred);
+                transitions.add(new StrokeTransition(Duration.millis(1001 - controller.getSimulationSpeed().getValue()), e, Color.LIMEGREEN, Color.BLUE));
             }
         }
         st.getChildren().addAll(transitions);

@@ -50,9 +50,10 @@ public class Ant {
         }
 
         // update probabilities of each adj vertex
+        double p_nominator = 1;
         for (Edge adjEdge : curVertex.getAdjEdges()) {
             if (!traversedEdges.contains(adjEdge)) {
-                double p_nominator = Math.pow(adjEdge.getPheromone(), alpha) * Math.pow(1 / adjEdge.getLength().get(), beta);
+                p_nominator = Math.pow(adjEdge.getPheromone(), alpha) * Math.pow(1 / adjEdge.getLength().get(), beta);
                 probabilities.put(adjEdge, p_nominator / p_denominator);
             }
         }

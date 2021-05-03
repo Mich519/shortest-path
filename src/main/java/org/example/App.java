@@ -16,7 +16,7 @@ import java.io.IOException;
 public class App extends Application {
 
     private static final String fxml = "primary";
-    private static final int windowWidth = 1200;
+    private static final int windowWidth = 1400;
     private static final int windowHeight = 800;
 
     @Override
@@ -31,7 +31,6 @@ public class App extends Application {
         stage.setOnShown(primaryController::afterInitialize);
         // stage.setMaximized(true);
         stage.show();
-
     }
 
     public static void main(String[] args) {

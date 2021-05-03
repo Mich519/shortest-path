@@ -68,7 +68,10 @@ public class AntOptimization implements Algorithm {
         for (Vertex v : graph.getVertices()) {
             for (Edge e : v.getAdjEdges()) {
                 double f = (1 - evapRate) * e.getPheromone();
-                e.setPheromone(f);
+                if(f > 0.000001) {
+                    // zero division prevention
+                    e.setPheromone(f);
+                }
             }
         }
     }
@@ -119,7 +122,6 @@ public class AntOptimization implements Algorithm {
         List<Transition> transitions = new ArrayList<>();
         SequentialTransition st = new SequentialTransition();
 
-        allPaths.forEach(System.out::println);
         int colorShades = 255 / allPaths.size();
         int i = 0;
         for (Set<Edge> s : allPaths) {
@@ -140,6 +142,7 @@ public class AntOptimization implements Algorithm {
                 }
             }
             allPaths.clear();
+            System.out.println("Animation finished");
         });
     }
 }
