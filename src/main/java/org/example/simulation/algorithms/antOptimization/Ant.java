@@ -23,8 +23,9 @@ public class Ant {
 
     private Vertex curVertex;
     private Set<Edge> traversedEdges;
-    private boolean isFinished = false;
-    private int numOfMoves = 0;
+    private boolean isFinished;
+    private int numOfMoves;
+    private Integer numOfSuccessfulPaths;
 
     Ant(Graph graph, double alpha, double beta, double pheromonePerAnt) {
         this.graph = graph;
@@ -35,6 +36,9 @@ public class Ant {
         this.alpha = alpha;
         this.beta = beta;
         this.pheromonePerAnt = pheromonePerAnt;
+        this.numOfSuccessfulPaths = numOfSuccessfulPaths;
+        this.isFinished = false;
+        this.numOfMoves = 0;
     }
 
     private void calculateProbabilities(Map<Edge, Double> probabilities) {
@@ -76,6 +80,7 @@ public class Ant {
     public void makeMove() {
         Map<Edge, Double> probabilities = new HashMap<>();
         calculateProbabilities(probabilities);
+        System.out.println("test");
         // pick random node
         double r = new Random().nextDouble();
         double sum = 0.0;
@@ -94,12 +99,5 @@ public class Ant {
         if (curVertex == endVertex || probabilities.isEmpty() || numOfMoves > graph.getVertices().size()) {
             isFinished = true;
         }
-    }
-
-    public void resetPosition() {
-        curVertex = startVertex;
-        traversedEdges.clear();
-        isFinished = false;
-        numOfMoves = 0;
     }
 }

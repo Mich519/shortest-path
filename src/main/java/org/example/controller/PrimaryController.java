@@ -96,8 +96,10 @@ public class PrimaryController {
     private RadioButton showWeights;
 
     @FXML
-    private Button start;
+    private RadioButton generateReport;
 
+    @FXML
+    private Button start;
 
     private Graph graph;
     private GraphGenerator graphGenerator;

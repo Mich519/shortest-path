@@ -29,11 +29,11 @@ public class App extends Application {
         stage.setResizable(false);
         PrimaryController primaryController = fxmlLoader.getController();
         stage.setOnShown(primaryController::afterInitialize);
-        // stage.setMaximized(true);
         stage.show();
     }
 
     public static void main(String[] args) {
+
         launch();
     }
 }
