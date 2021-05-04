@@ -28,7 +28,7 @@ public class OnMouseDraggedEventHandler implements EventHandler<MouseEvent> {
             /* check if dragged vertex is within a bounds of a 'graphEditor' pane */
             if (mouseEvent.getX() - target.getRadius() > 0 && mouseEvent.getX() + target.getRadius() < controller.getGraphEditor().getWidth())
                 target.setCenterX(mouseEvent.getX());
-            if (mouseEvent.getY() - target.getRadius() > 0 && mouseEvent.getX() + target.getRadius() < controller.getGraphEditor().getPrefWidth())
+            if (mouseEvent.getY() - target.getRadius() > 0 && mouseEvent.getY() + target.getRadius() < controller.getGraphEditor().getHeight())
                 target.setCenterY(mouseEvent.getY());
         } else if (mouseEvent.getButton() == MouseButton.MIDDLE) {
             /* update edge that is being dragged */
