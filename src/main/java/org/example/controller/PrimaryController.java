@@ -154,7 +154,11 @@ public class PrimaryController {
             } else if (aStar.isSelected()) {
                 simulation.simulateAStar();
             } else if (antOptimization.isSelected()) {
-                simulation.simulateAntOptimization();
+                try {
+                    simulation.simulateAntOptimization();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             } else if (bellmanFord.isSelected()) {
                 try {
                     simulation.simulateBellmanFord();

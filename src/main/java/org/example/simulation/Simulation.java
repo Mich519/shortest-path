@@ -39,7 +39,7 @@ public class Simulation {
         }
     }
 
-    public void simulateAntOptimization() {
+    public void simulateAntOptimization() throws InterruptedException {
         if (controller.getGraph().getStartVertex() != null && controller.getGraph().getEndVertex() != null) {
             /* check if start and end vertices are set */
             antOptimization.run();

@@ -7,10 +7,11 @@ import org.example.graph.Graph;
 import org.example.graph.Vertex;
 
 import java.util.*;
+import java.util.concurrent.Callable;
 
 @Getter
 @Setter
-public class Ant {
+public class Ant implements Callable {
 
     private Graph graph;
     private final Vertex startVertex;
@@ -77,27 +78,30 @@ public class Ant {
         }
     }
 
-    public void makeMove() {
-        Map<Edge, Double> probabilities = new HashMap<>();
-        calculateProbabilities(probabilities);
-        System.out.println("test");
-        // pick random node
-        double r = new Random().nextDouble();
-        double sum = 0.0;
-        for (Edge adjEdge : probabilities.keySet()) {
-            sum += probabilities.get(adjEdge);
-            if (r < sum) {
-                traversedEdges.add(adjEdge);
-                localPheromoneUpdate(adjEdge);
-                curVertex = adjEdge.getNeighbourOf(curVertex);
-                numOfMoves++;
+    @Override
+    public Object call() {
+        while (true) {
+            Map<Edge, Double> probabilities = new HashMap<>();
+            calculateProbabilities(probabilities);
+
+            // pick random node
+            double r = new Random().nextDouble();
+            double sum = 0.0;
+            for (Edge adjEdge : probabilities.keySet()) {
+                sum += probabilities.get(adjEdge);
+                if (r < sum) {
+                    traversedEdges.add(adjEdge);
+                    localPheromoneUpdate(adjEdge);
+                    curVertex = adjEdge.getNeighbourOf(curVertex);
+                    numOfMoves++;
+                    break;
+                }
+            }
+            // ant reached the goal or can't move forward
+            if (curVertex == endVertex || probabilities.isEmpty() || numOfMoves > graph.getVertices().size()) {
                 break;
             }
         }
-
-        // ant reached the goal or can't move forward
-        if (curVertex == endVertex || probabilities.isEmpty() || numOfMoves > graph.getVertices().size()) {
-            isFinished = true;
-        }
+        return null;
     }
 }

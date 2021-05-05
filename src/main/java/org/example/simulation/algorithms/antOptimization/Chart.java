@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
+// todo: previous data is not deleted
 public class Chart {
     private final int numOfAnts;
     private final int numOfIterations;

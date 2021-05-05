@@ -3,9 +3,6 @@ package org.example.simulation.algorithms.antOptimization;
 import javafx.animation.SequentialTransition;
 import javafx.animation.StrokeTransition;
 import javafx.animation.Transition;
-import javafx.scene.chart.LineChart;
-import javafx.scene.chart.NumberAxis;
-import javafx.scene.chart.XYChart;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
 import org.example.controller.PrimaryController;
@@ -16,6 +13,10 @@ import org.example.simulation.algorithms.Algorithm;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadPoolExecutor;
 // todo: algorithm doesn't work when graph is loaded from a file
 
 public class AntOptimization implements Algorithm {
@@ -44,14 +45,6 @@ public class AntOptimization implements Algorithm {
         numOfIterations = (int) controller.getNumberOfIterations().getValue();
     }
 
-    private boolean antsFinished(Set<Ant> ants) {
-        for (Ant a : ants) {
-            if (!a.isFinished())
-                return false;
-        }
-        return true;
-    }
-
     private double sumOfWeight(Set<Edge> edges) {
         double sum = 0.0;
         for (Edge e : edges) {
@@ -60,7 +53,7 @@ public class AntOptimization implements Algorithm {
         return sum;
     }
 
-    private void initAnts(Set<Ant> ants) {
+    private void initAnts(Set<Callable<Ant>> ants) {
         for (int i = 0; i < numOfAnts; i++) {
             Ant a = new Ant(graph, alpha, beta, pheromonePerAnt);
             ants.add(a);
@@ -80,18 +73,19 @@ public class AntOptimization implements Algorithm {
         }
     }
 
-    private void updatePheromoneOnCurrentBestPath(Set<Ant> ants, Set<Edge> currentShortestPath) {
+    private void updatePheromoneOnCurrentBestPath(Set<Callable<Ant>> ants, Set<Edge> currentShortestPath) {
         // all ants finished - update pheromone for the best path
-        for (Ant a : ants) {
-            if (a.getCurVertex() == a.getEndVertex()) {
+        for (Callable<Ant> a : ants) {
+            Ant ant = (Ant)a;
+            if (ant.getCurVertex() == ant.getEndVertex()) {
                 // ant reached the goal - update pheromone on that path
-                if (currentShortestPath.isEmpty() || sumOfWeight(a.getTraversedEdges()) < (sumOfWeight(currentShortestPath))) {
+                if (currentShortestPath.isEmpty() || sumOfWeight(ant.getTraversedEdges()) < (sumOfWeight(currentShortestPath))) {
                     currentShortestPath.clear();
-                    Set<Edge> temp = new LinkedHashSet<>(a.getTraversedEdges());
+                    Set<Edge> temp = new LinkedHashSet<>(ant.getTraversedEdges());
                     currentShortestPath.addAll(temp); // copy constructor
                     allPaths.add(temp);
-                    a.updateTraversedEdges();
-                    System.out.println("New shortest found! with length " + sumOfWeight(a.getTraversedEdges()));
+                    ant.updateTraversedEdges();
+                    System.out.println("New shortest found! with length " + sumOfWeight(ant.getTraversedEdges()));
                 }
             }
         }
@@ -135,29 +129,25 @@ public class AntOptimization implements Algorithm {
 
 
     @Override
-    public void run() {
+    public void run() throws InterruptedException {
         System.out.println("Ants started");
         initParameters();
         graph = controller.getGraph();
 
         Set<Edge> currentShortestPath = new LinkedHashSet<>();
         List<Integer> successfulPathsPerIteration = new ArrayList<>(numOfIterations);
-
+        ExecutorService executorService = Executors.newFixedThreadPool(4);
         for (int i = 0; i < numOfIterations; i++) {
-            Set<Ant> ants = new HashSet<>();
+            Set<Callable<Ant>> ants = new HashSet<>();
             initAnts(ants);
-            while (!antsFinished(ants)) {
-                for (Ant ant : ants) {
-                    if (!ant.isFinished())
-                        ant.makeMove();
-                }
-            }
+            executorService.invokeAll(ants);
             evaporation();
             updatePheromoneOnCurrentBestPath(ants, currentShortestPath);
             // count number of ants that reached the goal
             int cnt = 0;
-            for (Ant a : ants) {
-                if(a.getCurVertex() == a.getEndVertex())
+            for (Callable<Ant> a : ants) {
+                Ant ant = (Ant)a;
+                if (ant.getCurVertex() == ant.getEndVertex())
                     cnt++;
             }
             successfulPathsPerIteration.add(i, cnt);
