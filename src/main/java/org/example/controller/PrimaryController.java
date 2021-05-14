@@ -3,11 +3,9 @@ package org.example.controller;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.RadioButton;
-import javafx.scene.control.Slider;
-import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.*;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.WindowEvent;
 import lombok.Getter;
@@ -26,6 +24,9 @@ import java.io.IOException;
 // todo: fix window responsiveness
 @Getter
 public class PrimaryController {
+    @FXML
+    private SplitPane splitPane;
+
     @FXML
     private Pane graphEditor;
 
@@ -227,7 +228,6 @@ public class PrimaryController {
         this.graphGenerator = new GraphGenerator(this);
         this.simulation = new Simulation(this);
         this.fileInOutHandler = new FileInOutHandler(this);
-
         initButtons();
     }
 
@@ -266,6 +266,10 @@ public class PrimaryController {
                 }
             }
         });
+
+        /* initialize split pane divosor position */
+        splitPane.setDividerPositions(0.7);
+        SplitPane.setResizableWithParent(splitPane, false);
     }
 
     public void addVertexToPane(Vertex v) {
