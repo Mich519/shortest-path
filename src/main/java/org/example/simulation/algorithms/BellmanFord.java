@@ -12,7 +12,7 @@ import org.example.graph.Vertex;
 
 import java.util.*;
 
-public class BellmanFord implements Algorithm{
+public class BellmanFord implements Algorithm {
 
     private final Graph graph;
     private final Map<Vertex, Vertex> predecessors;
@@ -55,8 +55,9 @@ public class BellmanFord implements Algorithm{
     }
 
     @Override
-    public void animate() {
+    public void animate(PrimaryController controller) {
         // animation
+        controller.toogleButtonsActivity(true);
         Set<Vertex> shortestPath = new LinkedHashSet<>();
         List<Transition> transitions = new ArrayList<>();
         for (Vertex v = graph.getEndVertex(); v != null ; v = predecessors.get(v)) {
@@ -67,5 +68,8 @@ public class BellmanFord implements Algorithm{
         st.setCycleCount(1);
         st.getChildren().addAll(transitions);
         st.play();
+        st.setOnFinished(actionEvent -> {
+            controller.toogleButtonsActivity(false);
+        });
     }
 }

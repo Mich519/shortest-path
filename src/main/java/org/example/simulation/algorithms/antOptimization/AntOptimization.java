@@ -12,12 +12,10 @@ import org.example.graph.Graph;
 import org.example.graph.Vertex;
 import org.example.simulation.algorithms.Algorithm;
 
-import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadPoolExecutor;
 // todo: algorithm doesn't work when graph is loaded from a file
 
 public class AntOptimization implements Algorithm {
@@ -87,8 +85,9 @@ public class AntOptimization implements Algorithm {
     }
 
     @Override
-    public void animate() {
+    public void animate(PrimaryController controller) {
         // animate
+        controller.toogleButtonsActivity(true);
         List<Transition> transitions = new ArrayList<>();
         SequentialTransition st = new SequentialTransition();
 
@@ -111,6 +110,7 @@ public class AntOptimization implements Algorithm {
                     e.setPheromone(1.0 / e.getLength().get());
                 }
             }
+            controller.toogleButtonsActivity(false);
             System.out.println("Animation finished");
         });
     }

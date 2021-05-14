@@ -1,5 +1,7 @@
 package org.example.simulation.algorithms;
 
+import org.example.controller.PrimaryController;
+
 public class Genetic implements Algorithm {
     private final int initialPopulation = 100;
 
@@ -9,7 +11,7 @@ public class Genetic implements Algorithm {
     }
 
     @Override
-    public void animate() {
+    public void animate(PrimaryController controller) {
 
     }
 }

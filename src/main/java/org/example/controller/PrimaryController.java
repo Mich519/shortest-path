@@ -272,6 +272,26 @@ public class PrimaryController {
         SplitPane.setResizableWithParent(splitPane, false);
     }
 
+    public void toogleButtonsActivity(boolean disabled) {
+        /* disable or enable buttons */
+        startNode.setDisable(disabled);
+        endNode.setDisable(disabled);
+        addVertex.setDisable(disabled);
+        removeVertex.setDisable(disabled);
+        showWeights.setDisable(disabled);
+        vertexCount.setDisable(disabled);
+        generate.setDisable(disabled);
+        dijkstra.setDisable(disabled);
+        aStar.setDisable(disabled);
+        bellmanFord.setDisable(disabled);
+        antOptimization.setDisable(disabled);
+        start.setDisable(disabled);
+        save.setDisable(disabled);
+        load.setDisable(disabled);
+        clearGraphEditor.setDisable(disabled);
+        edgeLabels.setDisable(disabled);
+    }
+
     public void addVertexToPane(Vertex v) {
         if (!graphEditor.getChildren().contains(v)) {
             graphEditor.getChildren().add(v);

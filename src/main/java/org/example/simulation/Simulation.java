@@ -23,15 +23,15 @@ public class Simulation {
     public void simulateDijkstra() {
         if (controller.getGraph().getStartVertex() != null && controller.getGraph().getEndVertex() != null) {
             /* check if start and end vertices are set */
+
             Graph graph = controller.getGraph();
             double simulationSpeed = controller.getSimulationSpeed().getValue();
             Naive dijkstra = new Naive(graph, new VertexByCurLowestCostComparator(), simulationSpeed);
             dijkstra.run();
             if(controller.getShowAnimation().isSelected()) {
-                dijkstra.animate();
+                dijkstra.animate(controller);
             }
         }
-        controller.drawGraph();
     }
 
     public void simulateAStar() {
@@ -42,7 +42,7 @@ public class Simulation {
             Naive aStar = new Naive(graph, new VertexByTotalCostComparator(controller.getGraph()), simulationSpeed);
             aStar.run();
             if(controller.getShowAnimation().isSelected()) {
-                aStar.animate();
+                aStar.animate(controller);
             }
         }
     }
@@ -66,7 +66,7 @@ public class Simulation {
                 }
             }
             if(controller.getShowAnimation().isSelected()) {
-                antOptimization.animate();
+                antOptimization.animate(controller);
             }
         }
     }
@@ -74,11 +74,12 @@ public class Simulation {
     public void simulateBellmanFord() throws Exception {
         if (controller.getGraph().getStartVertex() != null && controller.getGraph().getEndVertex() != null) {
             /* check if start and end vertices are set */
+
             Graph graph = controller.getGraph();
             BellmanFord bellmanFord = new BellmanFord(graph);
             bellmanFord.run();
             if(controller.getShowAnimation().isSelected()) {
-                bellmanFord.animate();
+                bellmanFord.animate(controller);
             }
         }
     }

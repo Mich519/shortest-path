@@ -6,6 +6,7 @@ import javafx.animation.StrokeTransition;
 import javafx.animation.Transition;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
+import org.example.controller.PrimaryController;
 import org.example.graph.Edge;
 import org.example.graph.Graph;
 import org.example.graph.Vertex;
@@ -60,8 +61,8 @@ public class Naive implements Algorithm {
 
 
     @Override
-    public void animate() {
-
+    public void animate(PrimaryController controller) {
+        controller.toogleButtonsActivity(true);
         /* vertices animation */
         List<Transition> transitions = new ArrayList<>();
         for (Vertex v : shortestPath) {
@@ -86,7 +87,9 @@ public class Naive implements Algorithm {
         st.setOnFinished(actionEvent -> {
             for (Vertex v : graph.getVertices()) {
                 v.setCurLowestCost(Double.POSITIVE_INFINITY);
+                controller.toogleButtonsActivity(false);
             }
         });
     }
+
 }
