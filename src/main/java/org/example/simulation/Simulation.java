@@ -1,24 +1,26 @@
 package org.example.simulation;
 
 import org.example.controller.PrimaryController;
-import org.example.graph.Graph;
-import org.example.simulation.algorithms.*;
+import org.example.graph.comparators.VertexByCurLowestCostComparator;
+import org.example.graph.comparators.VertexByTotalCostComparator;
+import org.example.simulation.algorithms.BellmanFord;
+import org.example.simulation.algorithms.Naive;
 import org.example.simulation.algorithms.antOptimization.AntOptimization;
 
 public class Simulation {
 
     private final PrimaryController controller;
 
-    private final Dijkstra dijkstra;
-    private final AStar aStar;
+    private final Naive dijkstra;
+    private final Naive aStar;
     private final AntOptimization antOptimization;
     private final BellmanFord bellmanFord;
 
 
     public Simulation(PrimaryController controller) {
         this.controller = controller;
-        this.dijkstra = new Dijkstra(controller);
-        this.aStar = new AStar(controller);
+        this.dijkstra = new Naive(controller, new VertexByCurLowestCostComparator());
+        this.aStar = new Naive(controller, new VertexByTotalCostComparator(controller.getGraph()));
         this.antOptimization = new AntOptimization(controller);
         this.bellmanFord = new BellmanFord(controller);
 

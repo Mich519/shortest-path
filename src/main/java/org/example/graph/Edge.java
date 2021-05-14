@@ -25,7 +25,7 @@ public class Edge extends Line implements Serializable {
     public static final Color defaultColor = Color.LIMEGREEN;
     public static final Color pathColor = Color.BLUE;
 
-    private Pair<Vertex, Vertex> vertices;
+    private final Pair<Vertex, Vertex> vertices;
     //private final Vertex source;
     //private final Vertex destination;
 
@@ -84,7 +84,6 @@ public class Edge extends Line implements Serializable {
         bindLength();
         bindLabel();
         this.pheromone = 1.0 / length.get(); // initial pheromone value
-
     }
 
     public Vertex getNeighbourOf(Vertex v) {

@@ -68,7 +68,9 @@ public class Chart {
         this.numOfIterations = numOfIterations;
         this.antsThatReachedGoalPerIteration = antsThatReachedGoalPerIteration;
         this.allPaths = allPaths;
+    }
 
+    public void show() throws IOException {
         LineChart<Number, Number> lineChart1 = successfulPathChart();
         LineChart<Number, Number> lineChart2 = shortestPathsChart();
 
@@ -80,6 +82,5 @@ public class Chart {
         stage.setTitle("My New Stage Title");
         stage.setScene(scene);
         stage.show();
-
     }
 }

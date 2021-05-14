@@ -10,20 +10,17 @@ import org.example.controller.PrimaryController;
 import org.example.graph.Edge;
 import org.example.graph.Graph;
 import org.example.graph.Vertex;
-import org.example.graph.comparators.VertexByCurLowestCostComparator;
 
 import java.util.*;
 
-// todo: edge label with weight
-// todo: path traversing optimization
-// todo: AStar and Dijkstra code is similiar - remove redundancy
-// todo: create wrapper for vertices
-
-public class Dijkstra implements Algorithm{
+public class Naive implements Algorithm {
 
     private final PrimaryController controller;
-    public Dijkstra(PrimaryController controller) {
+    private final Comparator<Vertex> vertexComparator;
+
+    public Naive(PrimaryController controller, Comparator<Vertex> vertexComparator) {
         this.controller = controller;
+        this.vertexComparator = vertexComparator;
     }
 
     private void simulateTraversal(Graph graph, LinkedHashSet<Vertex> s, HashMap<Vertex, Vertex> mapVertexToPrev) {
@@ -62,7 +59,7 @@ public class Dijkstra implements Algorithm{
         LinkedHashSet<Vertex> s = new LinkedHashSet<>(); // s - will be storing ordered vertices that represent shortest path at the end
         mapVertexToPrev.put(graph.getStartVertex(), null);
         graph.getStartVertex().setCurLowestCost(0);
-        PriorityQueue<Vertex> q = new PriorityQueue<>(10, new VertexByCurLowestCostComparator());
+        PriorityQueue<Vertex> q = new PriorityQueue<>(10, vertexComparator);
         q.addAll(graph.getVertices());
         while (!q.isEmpty()) {
             Vertex v = q.poll();
@@ -89,7 +86,3 @@ public class Dijkstra implements Algorithm{
         simulateTraversal(graph, s, mapVertexToPrev);
     }
 }
-
-
-
-

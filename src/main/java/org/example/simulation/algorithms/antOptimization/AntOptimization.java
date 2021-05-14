@@ -119,14 +119,14 @@ public class AntOptimization implements Algorithm {
             // generate raport
             if (controller.getGenerateReport().isSelected()) {
                 try {
-                    Chart c = new Chart(numOfAnts, numOfIterations, currentShortestPath, allPaths);
+                    Chart chart = new Chart(numOfAnts, numOfIterations, currentShortestPath, allPaths);
+                    chart.show();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
         });
     }
-
 
     @Override
     public void run() throws InterruptedException {

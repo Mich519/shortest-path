@@ -37,13 +37,12 @@ public class Ant implements Callable {
         this.alpha = alpha;
         this.beta = beta;
         this.pheromonePerAnt = pheromonePerAnt;
-        this.numOfSuccessfulPaths = numOfSuccessfulPaths;
         this.isFinished = false;
         this.numOfMoves = 0;
     }
 
     private void calculateProbabilities(Map<Edge, Double> probabilities) {
-        /* for each adjacent edge calculate probabilty of chosing that edge */
+        /* for each adjacent edge calculate probability of choosing that edge */
 
         // total probabilities
         double p_denominator = 0.0;
