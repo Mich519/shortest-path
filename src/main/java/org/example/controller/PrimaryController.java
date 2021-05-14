@@ -99,6 +99,9 @@ public class PrimaryController {
     private RadioButton generateReport;
 
     @FXML
+    private RadioButton showAnimation;
+
+    @FXML
     private Button start;
 
     private Graph graph;
@@ -135,6 +138,7 @@ public class PrimaryController {
                 }
             }
         });
+        showAnimation.setSelected(true);
     }
 
     public void initButtons() {

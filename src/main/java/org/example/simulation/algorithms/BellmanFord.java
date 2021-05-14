@@ -14,17 +14,16 @@ import java.util.*;
 
 public class BellmanFord implements Algorithm{
 
-    private final PrimaryController controller;
-
-    public BellmanFord(PrimaryController controller) {
-        this.controller = controller;
+    private final Graph graph;
+    private final Map<Vertex, Vertex> predecessors;
+    public BellmanFord(Graph graph) {
+        this.graph = graph;
+        this.predecessors =  new HashMap<>();
     }
 
     @Override
     public void run() throws Exception {
-        Graph graph = controller.getGraph();
         Map<Vertex, Double> distances = new HashMap<>();
-        Map<Vertex, Vertex> predecessors = new HashMap<>();
         predecessors.put(graph.getStartVertex(), null); // starting vertex doesn't have predecessor
         for (Vertex v : graph.getVertices()) {
             distances.put(v, Double.POSITIVE_INFINITY);
@@ -53,7 +52,10 @@ public class BellmanFord implements Algorithm{
                 }
             }
         }
+    }
 
+    @Override
+    public void animate() {
         // animation
         Set<Vertex> shortestPath = new LinkedHashSet<>();
         List<Transition> transitions = new ArrayList<>();

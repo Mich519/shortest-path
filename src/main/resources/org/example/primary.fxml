@@ -244,6 +244,11 @@
                               <Insets bottom="10.0" left="10.0" />
                            </VBox.margin>
                         </RadioButton>
+                        <RadioButton fx:id="showAnimation" mnemonicParsing="false" text="Show animation">
+                           <VBox.margin>
+                              <Insets bottom="10.0" left="10.0" />
+                           </VBox.margin>
+                        </RadioButton>
                         <Button fx:id="start" mnemonicParsing="false" prefHeight="50.0" prefWidth="68.0" text="Start" textAlignment="CENTER">
                            <VBox.margin>
                               <Insets bottom="10.0" left="10.0" right="10.0" />

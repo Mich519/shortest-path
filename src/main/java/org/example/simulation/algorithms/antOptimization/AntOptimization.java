@@ -5,6 +5,7 @@ import javafx.animation.StrokeTransition;
 import javafx.animation.Transition;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
+import lombok.Getter;
 import org.example.controller.PrimaryController;
 import org.example.graph.Edge;
 import org.example.graph.Graph;
@@ -20,29 +21,23 @@ import java.util.concurrent.ThreadPoolExecutor;
 // todo: algorithm doesn't work when graph is loaded from a file
 
 public class AntOptimization implements Algorithm {
-    public double pheromonePerAnt; // amount of dropped pheromone
-    public int numOfAnts;
-    public double evapRate; // evaporation rate
-    public double alpha;
-    public double beta;
-    private int numOfIterations;
-
-    private final PrimaryController controller;
-    private Graph graph;
+    private final ParametersContainer parameters;
+    private final Graph graph;
+    private final double animationSpeed;
+    @Getter
     private final List<Set<Edge>> allPaths;
+    @Getter
+    private final Set<Edge> currentShortestPath;
+    @Getter
+    private final List<Integer> successfulPathsPerIteration;
 
-    public AntOptimization(PrimaryController controller) {
-        this.controller = controller;
+    public AntOptimization(Graph graph, ParametersContainer parameters, double animationSpeed) {
+        this.graph = graph;
+        this.parameters = parameters;
+        this.animationSpeed = animationSpeed;
         this.allPaths = new ArrayList<>();
-    }
-
-    private void initParameters() {
-        pheromonePerAnt = controller.getPheromonePerAnt().getValue();
-        numOfAnts = (int) controller.getNumberOfAnts().getValue();
-        evapRate = controller.getEvaporationRate().getValue();
-        alpha = controller.getAlpha().getValue();
-        beta = controller.getBeta().getValue();
-        numOfIterations = (int) controller.getNumberOfIterations().getValue();
+        this.currentShortestPath = new LinkedHashSet<>();
+        this.successfulPathsPerIteration = new ArrayList<>(parameters.numOfIterations);
     }
 
     private double sumOfWeight(Set<Edge> edges) {
@@ -54,8 +49,8 @@ public class AntOptimization implements Algorithm {
     }
 
     private void initAnts(Set<Callable<Ant>> ants) {
-        for (int i = 0; i < numOfAnts; i++) {
-            Ant a = new Ant(graph, alpha, beta, pheromonePerAnt);
+        for (int i = 0; i < parameters.numOfAnts; i++) {
+            Ant a = new Ant(graph, parameters.alpha, parameters.beta, parameters.pheromonePerAnt);
             ants.add(a);
         }
     }
@@ -64,7 +59,7 @@ public class AntOptimization implements Algorithm {
         // evaporation
         for (Vertex v : graph.getVertices()) {
             for (Edge e : v.getAdjEdges()) {
-                double f = (1 - evapRate) * e.getPheromone();
+                double f = (1 - parameters.evapRate) * e.getPheromone();
                 if (f > 0.000001) {
                     // zero division prevention
                     e.setPheromone(f);
@@ -91,7 +86,8 @@ public class AntOptimization implements Algorithm {
         }
     }
 
-    private void animatePaths(List<Integer> currentShortestPath) {
+    @Override
+    public void animate() {
         // animate
         List<Transition> transitions = new ArrayList<>();
         SequentialTransition st = new SequentialTransition();
@@ -101,7 +97,7 @@ public class AntOptimization implements Algorithm {
         for (Set<Edge> s : allPaths) {
             Color randomColor = Color.rgb(colorShades * i++, 0, 0);
             for (Edge e : s) {
-                transitions.add(new StrokeTransition(Duration.millis(1001 - controller.getSimulationSpeed().getValue()), e, Edge.defaultColor, randomColor));
+                transitions.add(new StrokeTransition(Duration.millis(animationSpeed), e, Edge.defaultColor, randomColor));
             }
         }
 
@@ -116,28 +112,16 @@ public class AntOptimization implements Algorithm {
                 }
             }
             System.out.println("Animation finished");
-            // generate raport
-            if (controller.getGenerateReport().isSelected()) {
-                try {
-                    Chart chart = new Chart(numOfAnts, numOfIterations, currentShortestPath, allPaths);
-                    chart.show();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
         });
     }
 
     @Override
     public void run() throws InterruptedException {
         System.out.println("Ants started");
-        initParameters();
-        graph = controller.getGraph();
 
-        Set<Edge> currentShortestPath = new LinkedHashSet<>();
-        List<Integer> successfulPathsPerIteration = new ArrayList<>(numOfIterations);
+
         ExecutorService executorService = Executors.newFixedThreadPool(4);
-        for (int i = 0; i < numOfIterations; i++) {
+        for (int i = 0; i < parameters.numOfIterations; i++) {
             Set<Callable<Ant>> ants = new HashSet<>();
             initAnts(ants);
             executorService.invokeAll(ants);
@@ -150,10 +134,10 @@ public class AntOptimization implements Algorithm {
                 if (ant.getCurVertex() == ant.getEndVertex())
                     cnt++;
             }
-            successfulPathsPerIteration.add(i, cnt);
+            successfulPathsPerIteration.add(cnt);
         }
 
         System.out.println("Ants finished");
-        animatePaths(successfulPathsPerIteration);
+        //animatePaths(successfulPathsPerIteration);
     }
 }

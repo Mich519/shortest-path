@@ -18,8 +18,7 @@ import java.util.Set;
 
 // todo: previous data is not deleted
 public class Chart {
-    private final int numOfAnts;
-    private final int numOfIterations;
+    private final ParametersContainer parameters;
     private final List<Integer> antsThatReachedGoalPerIteration;
     private final List<Set<Edge>> allPaths;
 
@@ -34,7 +33,7 @@ public class Chart {
 
         XYChart.Series<Number, Number> series = new XYChart.Series<>();
         for (int i = 0; i < antsThatReachedGoalPerIteration.size(); i++) {
-            series.getData().add(new XYChart.Data<>(i, (double) (antsThatReachedGoalPerIteration.get(i) * 100 / numOfAnts)));
+            series.getData().add(new XYChart.Data<>(i, (double) (antsThatReachedGoalPerIteration.get(i) * 100 / parameters.numOfAnts)));
         }
         lineChart.getData().add(series);
         return lineChart;
@@ -61,11 +60,10 @@ public class Chart {
         return lineChart;
     }
 
-    public Chart(int numOfAnts, int numOfIterations, List<Integer> antsThatReachedGoalPerIteration,
+    public Chart(ParametersContainer parameters, List<Integer> antsThatReachedGoalPerIteration,
                  List<Set<Edge>> allPaths) throws IOException {
 
-        this.numOfAnts = numOfAnts;
-        this.numOfIterations = numOfIterations;
+        this.parameters = parameters;
         this.antsThatReachedGoalPerIteration = antsThatReachedGoalPerIteration;
         this.allPaths = allPaths;
     }

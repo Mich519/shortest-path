@@ -7,4 +7,9 @@ public class Genetic implements Algorithm {
     public void run() {
 
     }
+
+    @Override
+    public void animate() {
+
+    }
 }
