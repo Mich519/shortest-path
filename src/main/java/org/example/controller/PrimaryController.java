@@ -49,6 +49,9 @@ public class PrimaryController {
     private RadioButton edgeLabels;
 
     @FXML
+    private Slider vertexRadius;
+
+    @FXML
     private Button generate;
 
     @FXML
@@ -218,6 +221,10 @@ public class PrimaryController {
         numberOfIterations.setValue(100);
         numberOfIterations.setShowTickLabels(true);
         numberOfIterations.setShowTickMarks(true);
+
+        vertexRadius.setMin(5);
+        vertexRadius.setMax(30);
+        vertexRadius.setValue(20);
     }
 
     @FXML

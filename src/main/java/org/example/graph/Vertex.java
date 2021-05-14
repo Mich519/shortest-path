@@ -1,6 +1,7 @@
 package org.example.graph;
 
 import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
@@ -41,6 +42,8 @@ public class Vertex extends Circle implements Serializable {
         centerX.bind(centerXProperty());
         centerY.bind(centerYProperty());
 
+        radiusProperty().bind(controller.getVertexRadius().valueProperty());
+
         // set event handlers
         final DragData dragData = new DragData();
         setOnMousePressed(new OnMousePressedEventHandler(dragData, this));
@@ -57,6 +60,5 @@ public class Vertex extends Circle implements Serializable {
         }
         return null;
     }
-
 }
 
