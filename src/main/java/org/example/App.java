@@ -8,6 +8,7 @@ import javafx.stage.Stage;
 import org.example.controller.PrimaryController;
 
 import java.io.IOException;
+import java.util.Objects;
 
 /**
  * JavaFX App
@@ -25,6 +26,7 @@ public class App extends Application {
         FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource(fxml + ".fxml"));
         Parent p = fxmlLoader.load();
         Scene scene = new Scene(p,800, 640);
+        scene.getStylesheets().add(Objects.requireNonNull(App.class.getResource("bootstrap3.css")).toExternalForm());
         stage.setScene(scene);
         stage.setResizable(true);
         stage.setMaximized(true);
@@ -34,7 +36,6 @@ public class App extends Application {
     }
 
     public static void main(String[] args) {
-
         launch();
     }
 }

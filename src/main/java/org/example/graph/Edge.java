@@ -77,6 +77,7 @@ public class Edge extends Line implements Serializable {
         startYProperty().bind(source.centerYProperty());
         endXProperty().bind(destination.centerXProperty());
         endYProperty().bind(destination.centerYProperty());
+        //strokeWidthProperty().bind(con);
         setStrokeWidth(4);
 
         setStroke(color);

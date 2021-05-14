@@ -22,6 +22,7 @@ import java.io.IOException;
 
 // todo: add slider labels
 // todo: fix window responsiveness
+// todo: edge width binding
 @Getter
 public class PrimaryController {
     @FXML
@@ -50,6 +51,9 @@ public class PrimaryController {
 
     @FXML
     private Slider vertexRadius;
+
+    @FXML
+    private Slider edgeWidth;
 
     @FXML
     private Button generate;
@@ -225,6 +229,10 @@ public class PrimaryController {
         vertexRadius.setMin(5);
         vertexRadius.setMax(30);
         vertexRadius.setValue(20);
+
+        edgeWidth.setMin(1);
+        edgeWidth.setMax(5);
+        edgeWidth.setValue(4);
     }
 
     @FXML
