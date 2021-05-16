@@ -7,6 +7,7 @@ import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -65,13 +66,13 @@ public class Chart {
 
     private List<Label> createLabelParameters() {
         List<Label> parameterLabels = new ArrayList<>();
-        parameterLabels.add(new Label("Number of iterations: "+ parameters.numOfIterations));
-        parameterLabels.add(new Label("Number of ants: "+ parameters.numOfAnts));
-        parameterLabels.add(new Label("Pheromone per ant: "+ parameters.pheromonePerAnt));
-        parameterLabels.add(new Label("Evaporation rate: "+ parameters.evapRate));
-        parameterLabels.add(new Label("Alpha: "+ parameters.alpha));
-        parameterLabels.add(new Label("Beta: "+ parameters.beta));
-        parameterLabels.add(new Label("Number of found paths: "+ allPaths.size()));
+        parameterLabels.add(new Label("Number of iterations: " + parameters.numOfIterations));
+        parameterLabels.add(new Label("Number of ants: " + parameters.numOfAnts));
+        parameterLabels.add(new Label("Pheromone per ant: " + parameters.pheromonePerAnt));
+        parameterLabels.add(new Label("Evaporation rate: " + parameters.evapRate));
+        parameterLabels.add(new Label("Alpha: " + parameters.alpha));
+        parameterLabels.add(new Label("Beta: " + parameters.beta));
+        parameterLabels.add(new Label("Number of found paths: " + allPaths.size()));
         return parameterLabels;
     }
 
@@ -82,7 +83,6 @@ public class Chart {
         this.antsThatReachedGoalPerIteration = antsThatReachedGoalPerIteration;
         this.allPaths = allPaths;
     }
-
 
 
     public void show() throws IOException {

@@ -61,7 +61,7 @@ public class BellmanFord implements Algorithm {
         Set<Vertex> shortestPath = new LinkedHashSet<>();
         List<Transition> transitions = new ArrayList<>();
         for (Vertex v = graph.getEndVertex(); v != null ; v = predecessors.get(v)) {
-            transitions.add(new FillTransition(Duration.millis(500), v, Color.ORANGE, Color.BLUEVIOLET));
+            transitions.add(new FillTransition(Duration.millis(controller.getSimulationSpeed().getMax() - controller.getSimulationSpeed().getValue()), v, Color.ORANGE, Color.BLUEVIOLET));
             shortestPath.add(v);
         }
         SequentialTransition st = new SequentialTransition();

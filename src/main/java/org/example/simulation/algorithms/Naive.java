@@ -66,18 +66,18 @@ public class Naive implements Algorithm {
         /* vertices animation */
         List<Transition> transitions = new ArrayList<>();
         for (Vertex v : shortestPath) {
-            transitions.add(new FillTransition(Duration.millis(1001 - simulationSpeed), v, Color.ORANGE, Color.BLUEVIOLET));
+            transitions.add(new FillTransition(Duration.millis(controller.getSimulationSpeed().getMax() - controller.getSimulationSpeed().getValue()), v, Color.ORANGE, Color.BLUEVIOLET));
         }
         SequentialTransition st = new SequentialTransition();
         st.setCycleCount(1);
 
         /* color edges that represent a path */
         for (Vertex ver = graph.getEndVertex(); ver != null; ver = mapVertexToPrev.get(ver)) {
-            transitions.add(new FillTransition(Duration.millis(1001 - simulationSpeed), ver, Color.ORANGE, Color.RED));
+            transitions.add(new FillTransition(Duration.millis(controller.getSimulationSpeed().getMax() - controller.getSimulationSpeed().getValue()), ver, Color.ORANGE, Color.RED));
             Vertex pred = mapVertexToPrev.get(ver);
             if (pred != null) {
                 Edge e = ver.findEdgeConnectedTo(pred);
-                transitions.add(new StrokeTransition(Duration.millis(1001 - simulationSpeed), e, Color.LIMEGREEN, Color.BLUE));
+                transitions.add(new StrokeTransition(Duration.millis(controller.getSimulationSpeed().getMax() - controller.getSimulationSpeed().getValue()), e, Color.LIMEGREEN, Color.BLUE));
             }
         }
         st.getChildren().addAll(transitions);

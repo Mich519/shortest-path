@@ -98,7 +98,6 @@ public class Ant implements Callable {
                 if (r < sum) {
                     traversedEdges.add(adjEdge);
                     //localPheromoneUpdate(adjEdge);
-                    //adjEdge.setPheromone(adjEdge.getPheromone() * 1.3);
                     curVertex = adjEdge.getNeighbourOf(curVertex);
                     numOfMoves++;
                     break;

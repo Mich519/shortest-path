@@ -96,7 +96,7 @@ public class AntOptimization implements Algorithm {
         for (Set<Edge> s : allPaths) {
             Color randomColor = Color.rgb(colorShades * i++, 0, 0);
             for (Edge e : s) {
-                transitions.add(new StrokeTransition(Duration.millis(1001 - animationSpeed), e, Edge.defaultColor, randomColor));
+                transitions.add(new StrokeTransition(Duration.millis(controller.getSimulationSpeed().getMax() - controller.getSimulationSpeed().getValue()), e, Edge.defaultColor, randomColor));
             }
         }
 
