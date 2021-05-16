@@ -87,6 +87,10 @@ public class Edge extends Line implements Serializable {
         this.pheromone = 1.0 / length.get(); // initial pheromone value
     }
 
+    public void resetPheromone() {
+        this.pheromone = 1.0 / length.get();
+    }
+
     public Vertex getNeighbourOf(Vertex v) {
         if (vertices.getKey() == v)
             return vertices.getValue();

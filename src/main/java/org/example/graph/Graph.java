@@ -53,6 +53,10 @@ public class Graph implements Serializable {
         return 0;
     }
 
+    public void resetPheromone() {
+        vertices.forEach(vertex -> vertex.getAdjEdges().forEach(Edge::resetPheromone));
+    }
+
     public void setStartVertex(Vertex v) {
         this.startVertex = v;
     }

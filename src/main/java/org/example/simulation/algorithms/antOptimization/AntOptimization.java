@@ -3,7 +3,6 @@ package org.example.simulation.algorithms.antOptimization;
 import javafx.animation.SequentialTransition;
 import javafx.animation.StrokeTransition;
 import javafx.animation.Transition;
-import javafx.beans.property.DoubleProperty;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
 import lombok.Getter;
@@ -67,7 +66,7 @@ public class AntOptimization implements Algorithm {
         }
     }
 
-    private void updatePheromoneOnCurrentBestPath(Set<Callable<Ant>> ants, Set<Edge> currentShortestPath) {
+    private void updatePheromoneOnSuccessfulPaths(Set<Callable<Ant>> ants, Set<Edge> currentShortestPath) {
         // all ants finished - update pheromone for the best path
         for (Callable<Ant> a : ants) {
             Ant ant = (Ant)a;
@@ -78,9 +77,9 @@ public class AntOptimization implements Algorithm {
                     Set<Edge> temp = new LinkedHashSet<>(ant.getTraversedEdges());
                     currentShortestPath.addAll(temp); // copy constructor
                     allPaths.add(temp);
-                    ant.updateTraversedEdges();
                     System.out.println("New shortest found! with length " + sumOfWeight(ant.getTraversedEdges()));
                 }
+                ant.updateTraversedEdges();
             }
         }
     }
@@ -105,12 +104,6 @@ public class AntOptimization implements Algorithm {
         st.getChildren().addAll(transitions);
         st.play();
         st.setOnFinished(actionEvent -> {
-            for (Vertex v : graph.getVertices()) {
-                for (Edge e : v.getAdjEdges()) {
-                    // reset edge pheromone
-                    e.setPheromone(1.0 / e.getLength().get());
-                }
-            }
             controller.toogleButtonsActivity(false);
             System.out.println("Animation finished");
         });
@@ -118,6 +111,7 @@ public class AntOptimization implements Algorithm {
 
     @Override
     public void run() throws InterruptedException {
+        graph.resetPheromone();
         System.out.println("Ants started");
         ExecutorService executorService = Executors.newFixedThreadPool(4);
         for (int i = 0; i < parameters.numOfIterations; i++) {
@@ -125,7 +119,7 @@ public class AntOptimization implements Algorithm {
             initAnts(ants);
             executorService.invokeAll(ants);
             evaporation();
-            updatePheromoneOnCurrentBestPath(ants, currentShortestPath);
+            updatePheromoneOnSuccessfulPaths(ants, currentShortestPath);
             // count number of ants that reached the goal
             int cnt = 0;
             for (Callable<Ant> a : ants) {

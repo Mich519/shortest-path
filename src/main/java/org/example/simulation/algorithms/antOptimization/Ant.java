@@ -73,9 +73,13 @@ public class Ant implements Callable {
     }
 
     public void updateTraversedEdges() {
+        double totalLength = 0;
+        for (Edge e : traversedEdges)
+            totalLength += e.getLength().get();
         for (Edge e : traversedEdges) {
             double f = e.getPheromone();
-            double deltaF = pheromonePerAnt / e.getLength().get();
+            double deltaF = pheromonePerAnt / totalLength;
+
             e.setPheromone(f + deltaF);
         }
     }
