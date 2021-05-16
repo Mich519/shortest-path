@@ -3,6 +3,7 @@ package org.example.simulation.algorithms.antOptimization;
 import javafx.animation.SequentialTransition;
 import javafx.animation.StrokeTransition;
 import javafx.animation.Transition;
+import javafx.beans.property.DoubleProperty;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
 import lombok.Getter;
@@ -48,7 +49,7 @@ public class AntOptimization implements Algorithm {
 
     private void initAnts(Set<Callable<Ant>> ants) {
         for (int i = 0; i < parameters.numOfAnts; i++) {
-            Ant a = new Ant(graph, parameters.alpha, parameters.beta, parameters.pheromonePerAnt);
+            Ant a = new Ant(graph, parameters.alpha, parameters.beta, parameters.pheromonePerAnt, parameters.evapRate);
             ants.add(a);
         }
     }
@@ -96,7 +97,7 @@ public class AntOptimization implements Algorithm {
         for (Set<Edge> s : allPaths) {
             Color randomColor = Color.rgb(colorShades * i++, 0, 0);
             for (Edge e : s) {
-                transitions.add(new StrokeTransition(Duration.millis(animationSpeed), e, Edge.defaultColor, randomColor));
+                transitions.add(new StrokeTransition(Duration.millis(1001 - animationSpeed), e, Edge.defaultColor, randomColor));
             }
         }
 
@@ -118,8 +119,6 @@ public class AntOptimization implements Algorithm {
     @Override
     public void run() throws InterruptedException {
         System.out.println("Ants started");
-
-
         ExecutorService executorService = Executors.newFixedThreadPool(4);
         for (int i = 0; i < parameters.numOfIterations; i++) {
             Set<Callable<Ant>> ants = new HashSet<>();

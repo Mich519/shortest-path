@@ -21,6 +21,7 @@ public class Ant implements Callable {
     private double alpha;
     private double beta;
     private double pheromonePerAnt;
+    private double evapRate;
 
     private Vertex curVertex;
     private Set<Edge> traversedEdges;
@@ -28,7 +29,7 @@ public class Ant implements Callable {
     private int numOfMoves;
     private Integer numOfSuccessfulPaths;
 
-    Ant(Graph graph, double alpha, double beta, double pheromonePerAnt) {
+    Ant(Graph graph, double alpha, double beta, double pheromonePerAnt, double evapRate) {
         this.graph = graph;
         this.startVertex = graph.getStartVertex();
         this.endVertex = graph.getEndVertex();
@@ -65,7 +66,10 @@ public class Ant implements Callable {
 
     private void localPheromoneUpdate(Edge e) {
         // update last traversed edge
-        //e.setPheromone((1-AntOptimization.evapRate) * e.getPheromone() + AntOptimization.evapRate * e.calculateWeight());
+            double f = e.getPheromone();
+            double deltaF = pheromonePerAnt / e.getLength().get();
+            e.setPheromone(f + deltaF);
+            e.setPheromone(f + f);
     }
 
     public void updateTraversedEdges() {
@@ -73,7 +77,6 @@ public class Ant implements Callable {
             double f = e.getPheromone();
             double deltaF = pheromonePerAnt / e.getLength().get();
             e.setPheromone(f + deltaF);
-            //graph.findSameEdge(e).setPheromone(f + deltaF);
         }
     }
 
@@ -90,7 +93,8 @@ public class Ant implements Callable {
                 sum += probabilities.get(adjEdge);
                 if (r < sum) {
                     traversedEdges.add(adjEdge);
-                    localPheromoneUpdate(adjEdge);
+                    //localPheromoneUpdate(adjEdge);
+                    //adjEdge.setPheromone(adjEdge.getPheromone() * 1.3);
                     curVertex = adjEdge.getNeighbourOf(curVertex);
                     numOfMoves++;
                     break;

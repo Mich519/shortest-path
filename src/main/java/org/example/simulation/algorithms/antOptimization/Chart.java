@@ -6,12 +6,15 @@ import javafx.scene.Scene;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
+import javafx.scene.control.Label;
 import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.example.App;
 import org.example.graph.Edge;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -60,6 +63,18 @@ public class Chart {
         return lineChart;
     }
 
+    private List<Label> createLabelParameters() {
+        List<Label> parameterLabels = new ArrayList<>();
+        parameterLabels.add(new Label("Number of iterations: "+ parameters.numOfIterations));
+        parameterLabels.add(new Label("Number of ants: "+ parameters.numOfAnts));
+        parameterLabels.add(new Label("Pheromone per ant: "+ parameters.pheromonePerAnt));
+        parameterLabels.add(new Label("Evaporation rate: "+ parameters.evapRate));
+        parameterLabels.add(new Label("Alpha: "+ parameters.alpha));
+        parameterLabels.add(new Label("Beta: "+ parameters.beta));
+        parameterLabels.add(new Label("Number of found paths: "+ allPaths.size()));
+        return parameterLabels;
+    }
+
     public Chart(ParametersContainer parameters, List<Integer> antsThatReachedGoalPerIteration,
                  List<Set<Edge>> allPaths) throws IOException {
 
@@ -68,16 +83,24 @@ public class Chart {
         this.allPaths = allPaths;
     }
 
+
+
     public void show() throws IOException {
         LineChart<Number, Number> lineChart1 = successfulPathChart();
         LineChart<Number, Number> lineChart2 = shortestPathsChart();
+        List<Label> labels = createLabelParameters();
+        VBox labelsContainer = new VBox();
+        for (Label l : labels) {
+            labelsContainer.getChildren().add(l);
+        }
 
         FlowPane chartContainer = new FlowPane(lineChart1, lineChart2);
+        chartContainer.getChildren().add(labelsContainer);
         FXMLLoader.load(Objects.requireNonNull(App.class.getResource("chart.fxml")));
-        Scene scene = new Scene(chartContainer, 800, 600);
+        Scene scene = new Scene(chartContainer, 800, 640);
         Stage stage = new Stage();
         stage.setScene(scene);
-        stage.setTitle("My New Stage Title");
+        stage.setTitle("Ant Optimization algorithm report");
         stage.setScene(scene);
         stage.show();
     }
