@@ -83,6 +83,9 @@ public class PrimaryController {
     private RadioButton bellmanFord;
 
     @FXML
+    private RadioButton genetic;
+
+    @FXML
     private Slider numberOfAnts;
 
     @FXML
@@ -130,6 +133,7 @@ public class PrimaryController {
         aStar.setToggleGroup(toggleGroup2);
         antOptimization.setToggleGroup(toggleGroup2);
         bellmanFord.setToggleGroup(toggleGroup2);
+        genetic.setToggleGroup(toggleGroup2);
 
         edgeLabels.setSelected(true);
         edgeLabels.setOnMouseClicked(mouseEvent -> {
@@ -177,8 +181,9 @@ public class PrimaryController {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+            } else if (genetic.isSelected()) {
+                simulation.simulateGenetic();
             }
-
         });
     }
 

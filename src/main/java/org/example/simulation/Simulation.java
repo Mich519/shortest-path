@@ -9,6 +9,7 @@ import org.example.simulation.algorithms.Naive;
 import org.example.simulation.algorithms.antOptimization.AntOptimization;
 import org.example.simulation.algorithms.antOptimization.Chart;
 import org.example.simulation.algorithms.antOptimization.ParametersContainer;
+import org.example.simulation.algorithms.genetic.Genetic;
 
 import java.io.IOException;
 
@@ -80,6 +81,18 @@ public class Simulation {
             bellmanFord.run();
             if(controller.getShowAnimation().isSelected()) {
                 bellmanFord.animate(controller);
+            }
+        }
+    }
+
+    public void simulateGenetic() {
+        if (controller.getGraph().getStartVertex() != null && controller.getGraph().getEndVertex() != null) {
+            /* check if start and end vertices are set */
+            Graph graph = controller.getGraph();
+            Genetic genetic = new Genetic(graph);
+            genetic.run();
+            if(controller.getShowAnimation().isSelected()) {
+                genetic.animate(controller);
             }
         }
     }

@@ -1,11 +1,8 @@
 package org.example.graph;
 
 import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import org.example.controller.PrimaryController;
@@ -16,7 +13,6 @@ import org.example.graph.eventHandlers.RemoveVertexEvent;
 
 import java.io.Serializable;
 import java.util.HashSet;
-import java.util.List;
 
 @Getter
 @Setter
