@@ -12,36 +12,32 @@ public class Individual {
     private final Vertex startVertex;
     private final Vertex endVertex;
     private Vertex curVertex;
-    private final Set<Vertex> traveledVertices;
+    private final List<Vertex> traveledVertices;
 
     public Individual(Vertex startVertex, Vertex endVertex) {
         this.startVertex = startVertex;
         this.endVertex = endVertex;
         curVertex = startVertex;
-        traveledVertices = new LinkedHashSet<>();
+        traveledVertices = new ArrayList<>();
     }
 
     public void search() {
         while (true) {
             traveledVertices.add(curVertex);
-            List<Vertex> accessibleVerices = new ArrayList<>();
-            for (Edge adjEdge : curVertex.getAdjEdges()) {
-                for(Vertex neighbour : adjEdge.getVertices())
-                if (!traversedEdges.contains(e))
-                    accessibleRoutes.add(e);
-            }
-            if(curVertex == endVertex || accessibleRoutes.size() == 0) {
-                if (curVertex == endVertex) {
+            List<Vertex> neighbours = curVertex.getNeighbours();
+            List<Vertex> accessibleVertices = new ArrayList<>(neighbours);
+            accessibleVertices.removeAll(traveledVertices);
+
+            if(isPathSuccessful() || accessibleVertices.size() == 0) {
+                if (isPathSuccessful() ) {
                     System.out.println("Successful path was found");
                 }
                 break;
             }
 
-            int random = new Random().nextInt(accessibleRoutes.size());
-            Edge randomEdge = accessibleRoutes.get(random);
-            Vertex nextVertex = randomEdge.getNeighbourOf(curVertex);
-            traversedEdges.add(randomEdge);
-            curVertex = nextVertex;
+            // choose random vertex
+            int random = new Random().nextInt(accessibleVertices.size());
+            curVertex = accessibleVertices.get(random);
         }
     }
 

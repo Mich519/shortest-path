@@ -12,7 +12,9 @@ import org.example.graph.eventHandlers.OnMouseReleasedEventHandler;
 import org.example.graph.eventHandlers.RemoveVertexEvent;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 
 @Getter
 @Setter
@@ -55,6 +57,15 @@ public class Vertex extends Circle implements Serializable {
             }
         }
         return null;
+    }
+
+    public List<Vertex> getNeighbours() {
+        List<Vertex> neighbours = new ArrayList<>();
+        for (Edge e : getAdjEdges()) {
+            Vertex neighbour = e.getNeighbourOf(this);
+            neighbours.add(neighbour);
+        }
+        return neighbours;
     }
 }
 

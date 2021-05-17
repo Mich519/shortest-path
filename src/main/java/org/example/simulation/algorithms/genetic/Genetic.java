@@ -1,7 +1,6 @@
 package org.example.simulation.algorithms.genetic;
 
 import org.example.controller.PrimaryController;
-import org.example.graph.Edge;
 import org.example.graph.Graph;
 import org.example.graph.Vertex;
 import org.example.simulation.algorithms.Algorithm;
@@ -36,35 +35,57 @@ public class Genetic implements Algorithm {
     }
 
     private void selection() {
-        individuals.sort(new IndividualByShortestPathComparator());
+        // individuals.sort(new IndividualByShortestPathComparator());
         individuals.removeIf(individual -> !individual.isPathSuccessful());
     }
 
-    private void mate(Individual parent1, Individual parent2) {
-        List<Vertex> commonVertices = new ArrayList<>();
+    private void swapPaths(Individual parent1, Individual parent2, List<Vertex> commonVertices) {
 
-        for (Edge e1 : parent1.getTraversedEdges()) {
-            Vertex key1 = e1.getVertices().getKey();
-            Vertex value1 = e1.getVertices().getValue();
-            for (Edge e2 : parent2.getTraversedEdges()) {
-                Vertex key2 = e2.getVertices().getKey();
-                Vertex value2 = e1.getVertices().getValue();
-                if (key1 == v2)
-                    commonVertices.add(v1);
-            }
+        // pick random common vertex
+        int random = new Random().nextInt(commonVertices.size());
+        Vertex randomCommonVertex = commonVertices.get(random);
+
+        // extract first part of paths
+        List<Vertex> firstPart1 = new ArrayList<>();
+        List<Vertex> firstPart2 = new ArrayList<>();
+
+        for (Vertex v : parent1.getTraveledVertices()) {
+            if (v == randomCommonVertex) break;
+            firstPart1.add(v);
         }
+        for (Vertex v : parent2.getTraveledVertices()) {
+            if (v == randomCommonVertex) break;
+            firstPart2.add(v);
+        }
+
+        // extract second part of paths
+        List<Vertex> secondPart1 = new ArrayList<>(parent1.getTraveledVertices());
+        List<Vertex> secondPart2 = new ArrayList<>(parent2.getTraveledVertices());
+        secondPart1.removeAll(firstPart1);
+        secondPart2.removeAll(firstPart2);
+        firstPart1.addAll(secondPart2);
+        firstPart2.addAll(secondPart1);
+
+        // replace
+        parent1.getTraveledVertices().clear();
+        parent1.getTraveledVertices().addAll(firstPart1);
+
+        parent2.getTraveledVertices().clear();
+        parent2.getTraveledVertices().addAll(firstPart2);
+    }
+
+    private void mate(Individual parent1, Individual parent2) {
+
+        // find parents' common vertices
+        List<Vertex> commonVertices = new ArrayList<>(parent1.getTraveledVertices());
+        commonVertices.retainAll(parent2.getTraveledVertices());
 
         if (commonVertices.isEmpty()) {
             // no common vertices
             System.out.println("No common vertices");
         } else {
-            int random = new Random().nextInt(commonVertices.size());
-            Vertex randomCommonVertex = commonVertices.get(random); // exchange paths starting from 'randomCommonVertex'
-            Set<Edge> partialPathOfParent1 = new LinkedHashSet<>();
-            Set<Edge> partialPathOfParent2 = new LinkedHashSet<>();
-            for (Edge e1 : parent1.getTraversedEdges()) {
-                if(e1.getVertices().getValue() == )
-            }
+            System.out.println("Swapping paths ... s");
+            swapPaths(parent1, parent2, commonVertices);
         }
     }
 
@@ -74,16 +95,31 @@ public class Genetic implements Algorithm {
             - if they have two common vertices -> swap their paths starting from that point
             - else -> connect two points with the random path
          */
-        int random1 = new Random().nextInt(individuals.size());
-        int random2 = new Random().nextInt(individuals.size());
-        if (random1 != random2) {
-            Individual parent1 = individuals.get(random1);
-            Individual parent2 = individuals.get(random2);
+        if (individuals.size() >= 2) {
+            List<Individual> temp = new ArrayList<>(individuals);
+
+            // pick random parent 1
+            int random1 = new Random().nextInt(temp.size());
+            Individual parent1 = temp.get(random1);
+            temp.remove(parent1);
+
+            // pick random parent 2
+            int random2 = new Random().nextInt(temp.size());
+            Individual parent2 = temp.get(random2);
+            temp.remove(parent2);
+
             mate(parent1, parent2);
+
+        } else {
+            System.out.println("Individuals cant crossover!");
         }
     }
 
-    private void mutation(Individual individual) {
+    private void mutate(Individual individual) {
+        int random = new Random().nextInt(individuals.size());
+        Individual randomIndividual = individuals.get(random);
+
+        random = new Random().nextInt(individual.getTraveledVertices().size());
 
     }
 
@@ -96,10 +132,11 @@ public class Genetic implements Algorithm {
 
             double r = new Random().nextDouble();
             if (r < CROSSOVER_RATIO) {
+                System.out.println("Crossover occured!");
                 crossover();
             }
             if (r < MUTATION_RATIO) {
-
+                // mutation();
             }
         }
         System.out.println("Finished");
