@@ -1,5 +1,6 @@
 package org.example.simulation.algorithms.genetic;
 
+import javafx.animation.Transition;
 import lombok.Getter;
 import org.example.graph.Edge;
 import org.example.graph.Graph;

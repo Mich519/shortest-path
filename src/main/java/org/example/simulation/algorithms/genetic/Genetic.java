@@ -1,5 +1,10 @@
 package org.example.simulation.algorithms.genetic;
 
+import javafx.animation.FillTransition;
+import javafx.animation.SequentialTransition;
+import javafx.animation.Transition;
+import javafx.scene.paint.Color;
+import javafx.util.Duration;
 import org.example.controller.PrimaryController;
 import org.example.graph.Graph;
 import org.example.graph.Vertex;
@@ -11,19 +16,24 @@ public class Genetic implements Algorithm {
     private final int POPULATION_SIZE = 100;
     private final int MAX_GENERATION = 50;
     private final double CROSSOVER_RATIO = 1;
-    private final double MUTATION_RATIO = 0.1;
+    private final double MUTATION_RATIO = 1;
 
     private final Graph graph;
     private final List<Individual> individuals;
+
 
     public Genetic(Graph graph) {
         this.graph = graph;
         this.individuals = new ArrayList<>(POPULATION_SIZE);
     }
 
+    /*
+    TODO: edge cases
+     */
+
     private void initialization() {
         /*
-        For each individual generate random path from start to end (initial chromosomes)
+            For each individual generate random path from start to end (initial chromosomes)
          */
         for (int i = 0; i < POPULATION_SIZE; i++) {
             individuals.add(new Individual(graph.getStartVertex(), graph.getEndVertex()));
@@ -45,7 +55,7 @@ public class Genetic implements Algorithm {
         int random = new Random().nextInt(commonVertices.size());
         Vertex randomCommonVertex = commonVertices.get(random);
 
-        // extract first part of paths
+        // extract first part of each path
         List<Vertex> firstPart1 = new ArrayList<>();
         List<Vertex> firstPart2 = new ArrayList<>();
 
@@ -58,7 +68,7 @@ public class Genetic implements Algorithm {
             firstPart2.add(v);
         }
 
-        // extract second part of paths
+        // extract second part of each path
         List<Vertex> secondPart1 = new ArrayList<>(parent1.getTraveledVertices());
         List<Vertex> secondPart2 = new ArrayList<>(parent2.getTraveledVertices());
         secondPart1.removeAll(firstPart1);
@@ -79,6 +89,7 @@ public class Genetic implements Algorithm {
         // find parents' common vertices
         List<Vertex> commonVertices = new ArrayList<>(parent1.getTraveledVertices());
         commonVertices.retainAll(parent2.getTraveledVertices());
+        commonVertices.removeAll(List.of(graph.getStartVertex(), graph.getEndVertex())); // remove start and end vertex
 
         if (commonVertices.isEmpty()) {
             // no common vertices
@@ -115,12 +126,102 @@ public class Genetic implements Algorithm {
         }
     }
 
-    private void mutate(Individual individual) {
+    private void searchForAlternativeRoute(Individual individual, Vertex source, Vertex destination) {
+        /*
+        Search for alternative route between soruce and destination.
+        Avoid vertices that
+         */
+        Set<Vertex> alternativeRoute = new LinkedHashSet<>();
+        Vertex curVertex = source;
+        final int TRIALS_THRESHOLD = graph.getVertices().size() / 2;
+        for (int step = 0; step < TRIALS_THRESHOLD; step++) {
+            alternativeRoute.add(curVertex);
+            if (curVertex == destination)
+                break;
+
+            // search for alternative path
+            List<Vertex> neighbours = curVertex.getNeighbours();
+            if (step == 0) {
+                // inaccessible in first step
+                neighbours.remove(source);
+                neighbours.remove(destination);
+            }
+            int random = new Random().nextInt(neighbours.size());
+            curVertex = neighbours.get(random);
+        }
+
+        // check if old path does not contain alternative route
+        if (individual.getTraveledVertices().containsAll(alternativeRoute)) {
+
+        }
+
+        // replace old path with the new one
+        List<Vertex> newPath = new ArrayList<>();
+
+        if (curVertex == destination) {
+            System.out.println("Alternative path was found!");
+
+            List<Vertex> firstPartOfThePath = new ArrayList<>();
+            List<Vertex> secondPartOfThePath = new ArrayList<>(individual.getTraveledVertices());
+
+            // add part before 'source'
+            for (Vertex v : individual.getTraveledVertices()) {
+                if (v == source) {
+                    break;
+                }
+                firstPartOfThePath.add(v);
+            }
+            newPath.addAll(firstPartOfThePath);
+
+            // add alternative path between source and destination
+            newPath.addAll(alternativeRoute);
+
+            // add part after 'destination'
+            secondPartOfThePath.removeAll(firstPartOfThePath);
+            secondPartOfThePath.remove(source);
+            secondPartOfThePath.remove(destination);
+            newPath.addAll(secondPartOfThePath);
+
+            // replace
+            individual.getTraveledVertices().clear();
+            individual.getTraveledVertices().addAll(newPath);
+
+            /*
+            DEBUG
+             */
+        }
+    }
+
+    private void mutate() {
+        // pick random individual
         int random = new Random().nextInt(individuals.size());
         Individual randomIndividual = individuals.get(random);
 
-        random = new Random().nextInt(individual.getTraveledVertices().size());
+        // prepare list of vertices to pick randomly
+        List<Vertex> temp = new ArrayList<>(randomIndividual.getTraveledVertices());
+        temp.removeAll(List.of(graph.getStartVertex(), graph.getEndVertex())); // remove start and end vertex
 
+        // pick random vertex 1
+        int random1 = new Random().nextInt(temp.size());
+        Vertex randomVertex1 = temp.get(random1);
+        temp.remove(randomVertex1);
+
+        // pick random vertex 2
+        int random2 = new Random().nextInt(temp.size());
+        Vertex randomVertex2 = temp.get(random2);
+        temp.remove(randomVertex2);
+
+        Vertex source, destination;
+        if (random1 <= random2) {
+            source = randomVertex1;
+            destination = randomVertex2;
+        } else {
+            source = randomVertex2;
+            destination = randomVertex1;
+        }
+
+        // try to find alternative path between these vertices
+        searchForAlternativeRoute(randomIndividual, source, destination);
     }
 
     @Override
@@ -136,14 +237,34 @@ public class Genetic implements Algorithm {
                 crossover();
             }
             if (r < MUTATION_RATIO) {
-                // mutation();
+                System.out.println("Mutation occured!");
+                mutate();
             }
         }
         System.out.println("Finished");
+        individuals.forEach(individual -> System.out.println(individual.getTraveledVertices()));
     }
 
     @Override
     public void animate(PrimaryController controller) {
+        // animation
+        controller.toogleButtonsActivity(true);
+        List<Transition> transitions = new ArrayList<>();
+        individuals
+                .stream()
+                .filter(Individual::isPathSuccessful)
+                .forEach(individual -> individual.getTraveledVertices()
+                        .forEach(vertex -> {
+                            transitions.add(new FillTransition(Duration.millis(controller.getSimulationSpeed().getMax() - controller.getSimulationSpeed().getValue()), vertex, Color.ORANGE, Color.BLUEVIOLET));
+                        }));
 
+
+        SequentialTransition st = new SequentialTransition();
+        st.setCycleCount(1);
+        st.getChildren().addAll(transitions);
+        st.play();
+        st.setOnFinished(actionEvent -> {
+            controller.toogleButtonsActivity(false);
+        });
     }
 }
