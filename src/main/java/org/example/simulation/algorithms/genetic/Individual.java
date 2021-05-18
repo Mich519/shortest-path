@@ -1,25 +1,26 @@
 package org.example.simulation.algorithms.genetic;
 
-import javafx.animation.Transition;
 import lombok.Getter;
-import org.example.graph.Edge;
-import org.example.graph.Graph;
 import org.example.graph.Vertex;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 @Getter
-public class Individual {
+public class Individual implements Comparable<Individual>{
     private final Vertex startVertex;
     private final Vertex endVertex;
     private Vertex curVertex;
     private final List<Vertex> traveledVertices;
+    private double totalCost;
 
     public Individual(Vertex startVertex, Vertex endVertex) {
         this.startVertex = startVertex;
         this.endVertex = endVertex;
         curVertex = startVertex;
         traveledVertices = new ArrayList<>();
+        totalCost = 0;
     }
 
     public void search() {
@@ -42,7 +43,30 @@ public class Individual {
         }
     }
 
+    public void updateTotalCost() {
+        totalCost = 0;
+        for (int i=1; i<traveledVertices.size(); i++) {
+            Vertex v1 = traveledVertices.get(i-1);
+            Vertex v2 = traveledVertices.get(i);
+            try {
+                totalCost += v2.findEdgeConnectedTo(v1).getLength().get();
+            }
+            catch (NullPointerException e) {
+                e.printStackTrace();
+            }
+
+
+        }
+    }
+
     public boolean isPathSuccessful() {
         return curVertex == endVertex;
+    }
+
+    @Override
+    public int compareTo(Individual individual) {
+        if(getTotalCost() < individual.getTotalCost())
+            return -1;
+        return 1;
     }
 }

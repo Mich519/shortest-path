@@ -11,6 +11,7 @@ import org.example.graph.Vertex;
 import org.example.simulation.algorithms.Algorithm;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class Genetic implements Algorithm {
     private final int POPULATION_SIZE = 100;
@@ -45,8 +46,10 @@ public class Genetic implements Algorithm {
     }
 
     private void selection() {
-        // individuals.sort(new IndividualByShortestPathComparator());
+        // remove individuals that didn't finish the path
         individuals.removeIf(individual -> !individual.isPathSuccessful());
+        individuals.forEach(Individual::updateTotalCost);
+        Collections.sort(individuals);
     }
 
     private void swapPaths(Individual parent1, Individual parent2, List<Vertex> commonVertices) {
@@ -58,30 +61,45 @@ public class Genetic implements Algorithm {
         // extract first part of each path
         List<Vertex> firstPart1 = new ArrayList<>();
         List<Vertex> firstPart2 = new ArrayList<>();
+        List<Vertex> secondPart1 = new ArrayList<>(parent1.getTraveledVertices());
+        List<Vertex> secondPart2 = new ArrayList<>(parent2.getTraveledVertices());
 
-        for (Vertex v : parent1.getTraveledVertices()) {
+        // parent 1: first part
+        for (int i=0; i<parent1.getTraveledVertices().size(); i++) {
+            Vertex v = parent1.getTraveledVertices().get(i);
             if (v == randomCommonVertex) break;
             firstPart1.add(v);
         }
-        for (Vertex v : parent2.getTraveledVertices()) {
+
+        // parent 1: second part
+        for (int i = parent1.getTraveledVertices().size() - 1; i>=0; i--) {
+            Vertex v = parent1.getTraveledVertices().get(i);
+            secondPart1.add(v);
+            if (v == randomCommonVertex) break;
+        }
+
+        // parent 2: first part
+        for (int i=0; i<parent2.getTraveledVertices().size(); i++) {
+            Vertex v = parent2.getTraveledVertices().get(i);
             if (v == randomCommonVertex) break;
             firstPart2.add(v);
         }
 
-        // extract second part of each path
-        List<Vertex> secondPart1 = new ArrayList<>(parent1.getTraveledVertices());
-        List<Vertex> secondPart2 = new ArrayList<>(parent2.getTraveledVertices());
-        secondPart1.removeAll(firstPart1);
-        secondPart2.removeAll(firstPart2);
-        firstPart1.addAll(secondPart2);
-        firstPart2.addAll(secondPart1);
+        // parent 2: second part
+        for (int i = parent2.getTraveledVertices().size() - 1; i>=0; i--) {
+            Vertex v = parent2.getTraveledVertices().get(i);
+            secondPart2.add(v);
+            if (v == randomCommonVertex) break;
+        }
 
         // replace
         parent1.getTraveledVertices().clear();
         parent1.getTraveledVertices().addAll(firstPart1);
+        parent1.getTraveledVertices().addAll(secondPart2);
 
         parent2.getTraveledVertices().clear();
         parent2.getTraveledVertices().addAll(firstPart2);
+        parent2.getTraveledVertices().addAll(secondPart1);
     }
 
     private void mate(Individual parent1, Individual parent2) {
@@ -185,10 +203,6 @@ public class Genetic implements Algorithm {
             // replace
             individual.getTraveledVertices().clear();
             individual.getTraveledVertices().addAll(newPath);
-
-            /*
-            DEBUG
-             */
         }
     }
 
@@ -231,34 +245,43 @@ public class Genetic implements Algorithm {
         selection();
         for (int gen = 1; gen <= MAX_GENERATION; gen++) {
 
+            // debug
+            for (Individual individual : individuals) {
+                Set<Vertex> test = new HashSet<>();
+                for (Vertex v : individual.getTraveledVertices()) {
+                    if(!test.add(v)) {
+                        System.out.println("no hej :)");
+                    }
+                }
+            }
+            //
+
             double r = new Random().nextDouble();
             if (r < CROSSOVER_RATIO) {
                 System.out.println("Crossover occured!");
-                crossover();
+                //crossover();
             }
             if (r < MUTATION_RATIO) {
-                System.out.println("Mutation occured!");
-                mutate();
+                //System.out.println("Mutation occured!");
+                //mutate();
             }
+            selection();
         }
         System.out.println("Finished");
-        individuals.forEach(individual -> System.out.println(individual.getTraveledVertices()));
     }
 
     @Override
     public void animate(PrimaryController controller) {
-        // animation
+        selection();
+
         controller.toogleButtonsActivity(true);
         List<Transition> transitions = new ArrayList<>();
-        individuals
-                .stream()
-                .filter(Individual::isPathSuccessful)
-                .forEach(individual -> individual.getTraveledVertices()
-                        .forEach(vertex -> {
-                            transitions.add(new FillTransition(Duration.millis(controller.getSimulationSpeed().getMax() - controller.getSimulationSpeed().getValue()), vertex, Color.ORANGE, Color.BLUEVIOLET));
-                        }));
-
-
+        for (Individual individual : individuals) {
+            for (Vertex v : individual.getTraveledVertices()) {
+                transitions.add(new FillTransition(Duration.millis(controller.getSimulationSpeed().getMax() - controller.getSimulationSpeed().getValue()), v, Color.ORANGE, Color.BLUEVIOLET));
+            }
+        }
+        individuals.forEach(individual -> System.out.println(individual.getTraveledVertices()));
         SequentialTransition st = new SequentialTransition();
         st.setCycleCount(1);
         st.getChildren().addAll(transitions);
