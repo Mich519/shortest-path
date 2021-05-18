@@ -128,65 +128,67 @@ public class Genetic implements Algorithm {
         }
     }
 
+    private void replaceWithAlternativePath(Individual individual, Set<Vertex> alternativeRoute) {
+
+        System.out.println("Alternative path was found!");
+        List<Vertex> newPath = new ArrayList<>();
+        List<Vertex> firstPartOfThePath = new ArrayList<>();
+        List<Vertex> secondPartOfThePath = new ArrayList<>(individual.getTraveledVertices());
+
+        // add part before 'source'
+        for (Vertex v : individual.getTraveledVertices()) {
+            if (v == source) {
+                break;
+            }
+            firstPartOfThePath.add(v);
+        }
+        newPath.addAll(firstPartOfThePath);
+
+        // add alternative path between source and destination
+        newPath.addAll(alternativeRoute);
+
+        // add part after 'destination'
+        secondPartOfThePath.removeAll(firstPartOfThePath);
+        secondPartOfThePath.remove(source);
+        secondPartOfThePath.remove(destination);
+        newPath.addAll(secondPartOfThePath);
+
+        // replace
+        individual.getTraveledVertices().clear();
+        individual.getTraveledVertices().addAll(newPath);
+    }
+
     private void searchForAlternativeRoute(Individual individual, Vertex source, Vertex destination) {
         /*
         Search for alternative route between soruce and destination.
         Avoid vertices that
          */
-        Set<Vertex> alternativeRoute = new LinkedHashSet<>();
         Vertex curVertex = source;
+        Set<Vertex> alternativeRoute = new LinkedHashSet<>(Set.of(curVertex));
         final int TRIALS_THRESHOLD = graph.getVertices().size() / 2;
-        for (int step = 0; step < TRIALS_THRESHOLD; step++) {
-            alternativeRoute.add(curVertex);
-            if (curVertex == destination)
-                break;
+        for (int step = 0; step < TRIALS_THRESHOLD && curVertex != destination; step++) {
 
-            // search for alternative path
-            List<Vertex> neighbours = curVertex.getNeighbours();
-            if (step == 0) {
-                // inaccessible in first step
-                neighbours.remove(source);
-                neighbours.remove(destination);
+            // get accessible vertices - skip previously visited
+            List<Vertex> accessibleVertices = new ArrayList<>(curVertex.getNeighbours());
+            accessibleVertices.removeAll(individual.getTraveledVertices());
+            accessibleVertices.removeAll(alternativeRoute);
+
+            if (accessibleVertices.size() > 0) {
+                int random = new Random().nextInt(accessibleVertices.size());
+                curVertex = accessibleVertices.get(random);
+                alternativeRoute.add(curVertex);
             }
-            int random = new Random().nextInt(neighbours.size());
-            curVertex = neighbours.get(random);
-        }
-
-        // check if old path does not contain alternative route
-        if (individual.getTraveledVertices().containsAll(alternativeRoute)) {
-
+            else {
+                System.out.println("Unable to find alternative path - dead end");
+                break;
+            }
         }
 
         // replace old path with the new one
-        List<Vertex> newPath = new ArrayList<>();
+
 
         if (curVertex == destination) {
-            System.out.println("Alternative path was found!");
-
-            List<Vertex> firstPartOfThePath = new ArrayList<>();
-            List<Vertex> secondPartOfThePath = new ArrayList<>(individual.getTraveledVertices());
-
-            // add part before 'source'
-            for (Vertex v : individual.getTraveledVertices()) {
-                if (v == source) {
-                    break;
-                }
-                firstPartOfThePath.add(v);
-            }
-            newPath.addAll(firstPartOfThePath);
-
-            // add alternative path between source and destination
-            newPath.addAll(alternativeRoute);
-
-            // add part after 'destination'
-            secondPartOfThePath.removeAll(firstPartOfThePath);
-            secondPartOfThePath.remove(source);
-            secondPartOfThePath.remove(destination);
-            newPath.addAll(secondPartOfThePath);
-
-            // replace
-            individual.getTraveledVertices().clear();
-            individual.getTraveledVertices().addAll(newPath);
+            replaceWithAlternativePath();
         }
     }
 
@@ -246,8 +248,8 @@ public class Genetic implements Algorithm {
                 crossover();
             }
             if (r < MUTATION_RATIO) {
-                //System.out.println("Mutation occured!");
-                //mutate();
+                System.out.println("Mutation occured!");
+                mutate();
             }
             selection();
         }
