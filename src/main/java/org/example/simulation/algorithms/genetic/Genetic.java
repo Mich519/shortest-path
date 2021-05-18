@@ -56,30 +56,27 @@ public class Genetic implements Algorithm {
     private Pair<List<Vertex>, List<Vertex>> splitPathIntoParts(Individual parent, Vertex cutPoint) {
         List<Vertex> firstPart = new ArrayList<>();
         List<Vertex> secondPart = new ArrayList<>();
-        // first part
-        for (int i = 0; i < parent.getTraveledVertices().size(); i++) {
-            Vertex v = parent.getTraveledVertices().get(i);
-            if (v == cutPoint) break;
-            firstPart.add(v);
-        }
 
-        // second part
-        for (int i = parent.getTraveledVertices().size() - 1; i >= 0; i--) {
-            Vertex v = parent.getTraveledVertices().get(i);
-            secondPart.add(v);
-            if (v == cutPoint) break;
+        List<Vertex> currentPart = firstPart;
+        for (Vertex v : parent.getTraveledVertices()) {
+            if (v == cutPoint)
+                currentPart = secondPart;
+            currentPart.add(v);
         }
-        Collections.reverse(secondPart);
-
         return new Pair<>(firstPart, secondPart);
     }
 
-    private void swapPaths(Individual parent1, Individual parent2, List<Vertex> commonVertices) {
+    private void swapPaths(Individual parent1, Individual parent2, Set<Vertex> commonVertices) {
 
         // pick random common vertex
-        int random = new Random().nextInt(commonVertices.size());
-        Vertex randomCommonVertex = commonVertices.get(random);
+        int i = 0, random = new Random().nextInt(commonVertices.size());
+        Vertex randomCommonVertex = null;
+        for (Vertex v : commonVertices) {
+            if (i++ == random)
+                randomCommonVertex = v;
+        }
 
+        // split paths into parts (randomCommonVertex is cut point)
         Pair<List<Vertex>, List<Vertex>> pathPartsOfParent1 = splitPathIntoParts(parent1, randomCommonVertex);
         Pair<List<Vertex>, List<Vertex>> pathPartsOfParent2 = splitPathIntoParts(parent1, randomCommonVertex);
 
@@ -95,16 +92,10 @@ public class Genetic implements Algorithm {
 
     private void mate(Individual parent1, Individual parent2) {
 
-        // find parents' common vertices
-        List<Vertex> commonVertices = new ArrayList<>();
-        for (Vertex v1 : parent1.getTraveledVertices()) {
-            for (Vertex v2 : parent2.getTraveledVertices()) {
-                if (v1 == v2 && !commonVertices.contains(v1)) {
-                    commonVertices.add(v1);
-                }
-
-            }
-        }
+        // get parents' common vertices
+        Set<Vertex> commonVertices = new HashSet<>();
+        commonVertices.addAll(parent1.getTraveledVertices());
+        commonVertices.addAll(parent2.getTraveledVertices());
         commonVertices.removeAll(List.of(graph.getStartVertex(), graph.getEndVertex())); // remove start and end vertex
 
         if (commonVertices.isEmpty()) {
@@ -117,11 +108,6 @@ public class Genetic implements Algorithm {
     }
 
     private void crossover() {
-        /*
-        Pick two best candidates.
-            - if they have two common vertices -> swap their paths starting from that point
-            - else -> connect two points with the random path
-         */
         if (individuals.size() >= 2) {
             List<Individual> temp = new ArrayList<>(individuals);
 
