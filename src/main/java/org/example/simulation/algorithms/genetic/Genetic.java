@@ -5,6 +5,7 @@ import javafx.animation.SequentialTransition;
 import javafx.animation.Transition;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
+import javafx.util.Pair;
 import org.example.controller.PrimaryController;
 import org.example.graph.Graph;
 import org.example.graph.Vertex;
@@ -52,61 +53,58 @@ public class Genetic implements Algorithm {
         Collections.sort(individuals);
     }
 
+    private Pair<List<Vertex>, List<Vertex>> splitPathIntoParts(Individual parent, Vertex cutPoint) {
+        List<Vertex> firstPart = new ArrayList<>();
+        List<Vertex> secondPart = new ArrayList<>();
+        // first part
+        for (int i = 0; i < parent.getTraveledVertices().size(); i++) {
+            Vertex v = parent.getTraveledVertices().get(i);
+            if (v == cutPoint) break;
+            firstPart.add(v);
+        }
+
+        // second part
+        for (int i = parent.getTraveledVertices().size() - 1; i >= 0; i--) {
+            Vertex v = parent.getTraveledVertices().get(i);
+            secondPart.add(v);
+            if (v == cutPoint) break;
+        }
+        Collections.reverse(secondPart);
+
+        return new Pair<>(firstPart, secondPart);
+    }
+
     private void swapPaths(Individual parent1, Individual parent2, List<Vertex> commonVertices) {
 
         // pick random common vertex
         int random = new Random().nextInt(commonVertices.size());
         Vertex randomCommonVertex = commonVertices.get(random);
 
-        // extract first part of each path
-        List<Vertex> firstPart1 = new ArrayList<>();
-        List<Vertex> firstPart2 = new ArrayList<>();
-        List<Vertex> secondPart1 = new ArrayList<>(parent1.getTraveledVertices());
-        List<Vertex> secondPart2 = new ArrayList<>(parent2.getTraveledVertices());
-
-        // parent 1: first part
-        for (int i=0; i<parent1.getTraveledVertices().size(); i++) {
-            Vertex v = parent1.getTraveledVertices().get(i);
-            if (v == randomCommonVertex) break;
-            firstPart1.add(v);
-        }
-
-        // parent 1: second part
-        for (int i = parent1.getTraveledVertices().size() - 1; i>=0; i--) {
-            Vertex v = parent1.getTraveledVertices().get(i);
-            secondPart1.add(v);
-            if (v == randomCommonVertex) break;
-        }
-
-        // parent 2: first part
-        for (int i=0; i<parent2.getTraveledVertices().size(); i++) {
-            Vertex v = parent2.getTraveledVertices().get(i);
-            if (v == randomCommonVertex) break;
-            firstPart2.add(v);
-        }
-
-        // parent 2: second part
-        for (int i = parent2.getTraveledVertices().size() - 1; i>=0; i--) {
-            Vertex v = parent2.getTraveledVertices().get(i);
-            secondPart2.add(v);
-            if (v == randomCommonVertex) break;
-        }
+        Pair<List<Vertex>, List<Vertex>> pathPartsOfParent1 = splitPathIntoParts(parent1, randomCommonVertex);
+        Pair<List<Vertex>, List<Vertex>> pathPartsOfParent2 = splitPathIntoParts(parent1, randomCommonVertex);
 
         // replace
         parent1.getTraveledVertices().clear();
-        parent1.getTraveledVertices().addAll(firstPart1);
-        parent1.getTraveledVertices().addAll(secondPart2);
+        parent1.getTraveledVertices().addAll(pathPartsOfParent1.getKey());
+        parent1.getTraveledVertices().addAll(pathPartsOfParent2.getValue());
 
         parent2.getTraveledVertices().clear();
-        parent2.getTraveledVertices().addAll(firstPart2);
-        parent2.getTraveledVertices().addAll(secondPart1);
+        parent2.getTraveledVertices().addAll(pathPartsOfParent2.getKey());
+        parent2.getTraveledVertices().addAll(pathPartsOfParent1.getValue());
     }
 
     private void mate(Individual parent1, Individual parent2) {
 
         // find parents' common vertices
-        List<Vertex> commonVertices = new ArrayList<>(parent1.getTraveledVertices());
-        commonVertices.retainAll(parent2.getTraveledVertices());
+        List<Vertex> commonVertices = new ArrayList<>();
+        for (Vertex v1 : parent1.getTraveledVertices()) {
+            for (Vertex v2 : parent2.getTraveledVertices()) {
+                if (v1 == v2 && !commonVertices.contains(v1)) {
+                    commonVertices.add(v1);
+                }
+
+            }
+        }
         commonVertices.removeAll(List.of(graph.getStartVertex(), graph.getEndVertex())); // remove start and end vertex
 
         if (commonVertices.isEmpty()) {
@@ -249,8 +247,8 @@ public class Genetic implements Algorithm {
             for (Individual individual : individuals) {
                 Set<Vertex> test = new HashSet<>();
                 for (Vertex v : individual.getTraveledVertices()) {
-                    if(!test.add(v)) {
-                        System.out.println("no hej :)");
+                    if (!test.add(v)) {
+                        //System.out.println("no hej :)");
                     }
                 }
             }
@@ -259,7 +257,7 @@ public class Genetic implements Algorithm {
             double r = new Random().nextDouble();
             if (r < CROSSOVER_RATIO) {
                 System.out.println("Crossover occured!");
-                //crossover();
+                crossover();
             }
             if (r < MUTATION_RATIO) {
                 //System.out.println("Mutation occured!");

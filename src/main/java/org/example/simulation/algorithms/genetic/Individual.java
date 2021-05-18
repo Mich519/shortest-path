@@ -4,6 +4,7 @@ import lombok.Getter;
 import org.example.graph.Vertex;
 
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Random;
 
@@ -49,13 +50,12 @@ public class Individual implements Comparable<Individual>{
             Vertex v1 = traveledVertices.get(i-1);
             Vertex v2 = traveledVertices.get(i);
             try {
-                totalCost += v2.findEdgeConnectedTo(v1).getLength().get();
+                totalCost += v1.findEdgeConnectedTo(v2).getLength().get();
             }
             catch (NullPointerException e) {
                 e.printStackTrace();
+
             }
-
-
         }
     }
 
