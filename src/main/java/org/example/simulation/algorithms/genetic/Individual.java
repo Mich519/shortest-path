@@ -10,14 +10,14 @@ public class Individual implements Comparable<Individual>{
     private final Vertex startVertex;
     private final Vertex endVertex;
     private Vertex curVertex;
-    private final List<Vertex> traveledVertices;
+    private final Set<Vertex> traveledVertices;
     private double totalCost;
 
     public Individual(Vertex startVertex, Vertex endVertex) {
         this.startVertex = startVertex;
         this.endVertex = endVertex;
         curVertex = startVertex;
-        traveledVertices = new ArrayList<>();
+        traveledVertices = new LinkedHashSet<>();
         totalCost = 0;
     }
 
@@ -43,15 +43,15 @@ public class Individual implements Comparable<Individual>{
 
     public void updateTotalCost() {
         totalCost = 0;
-        for (int i=1; i<traveledVertices.size(); i++) {
-            Vertex v1 = traveledVertices.get(i-1);
-            Vertex v2 = traveledVertices.get(i);
+        List<Vertex> traversedVerticesList = new ArrayList<>(traveledVertices);
+        for (int i=1; i<traversedVerticesList.size(); i++) {
+            Vertex v1 = traversedVerticesList.get(i-1);
+            Vertex v2 = traversedVerticesList.get(i);
             try {
                 totalCost += v1.findEdgeConnectedTo(v2).getLength().get();
             }
             catch (NullPointerException e) {
                 e.printStackTrace();
-
             }
         }
     }

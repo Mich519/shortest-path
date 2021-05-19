@@ -43,11 +43,11 @@ public class Genetic implements Algorithm {
         Collections.sort(individuals);
     }
 
-    private Pair<List<Vertex>, List<Vertex>> splitPathIntoParts(Individual parent, Vertex cutPoint) {
-        List<Vertex> firstPart = new ArrayList<>();
-        List<Vertex> secondPart = new ArrayList<>();
+    private Pair<Set<Vertex>, Set<Vertex>> splitPathIntoParts(Individual parent, Vertex cutPoint) {
+        Set<Vertex> firstPart = new LinkedHashSet<>();
+        Set<Vertex> secondPart = new LinkedHashSet<>();
 
-        List<Vertex> currentPart = firstPart;
+        Set<Vertex> currentPart = firstPart;
         for (Vertex v : parent.getTraveledVertices()) {
             if (v == cutPoint)
                 currentPart = secondPart;
@@ -66,8 +66,8 @@ public class Genetic implements Algorithm {
         }
 
         // split paths into parts (randomCommonVertex is cut point)
-        Pair<List<Vertex>, List<Vertex>> pathPartsOfParent1 = splitPathIntoParts(parent1, randomCommonVertex);
-        Pair<List<Vertex>, List<Vertex>> pathPartsOfParent2 = splitPathIntoParts(parent1, randomCommonVertex);
+        Pair<Set<Vertex>, Set<Vertex>> pathPartsOfParent1 = splitPathIntoParts(parent1, randomCommonVertex);
+        Pair<Set<Vertex>, Set<Vertex>> pathPartsOfParent2 = splitPathIntoParts(parent1, randomCommonVertex);
 
         // replace
         parent1.getTraveledVertices().clear();
@@ -118,16 +118,14 @@ public class Genetic implements Algorithm {
         }
     }
 
-    private void replaceWithAlternativePath(Individual individual, List<Vertex> alternativeRoute) {
+    private void replaceWithAlternativePath(Individual individual, Set<Vertex> alternativeRoute, Vertex source, Vertex destination) {
 
         System.out.println("Alternative path was found!");
-        Vertex source = alternativeRoute.get(0);
-        Vertex destination = alternativeRoute.get(alternativeRoute.size() - 1);
-        Pair<List<Vertex>, List<Vertex>> firstPartOfThePath = splitPathIntoParts(individual, source);
-        Pair<List<Vertex>, List<Vertex>> secondPartOfThePath = splitPathIntoParts(individual, destination);
+        Pair<Set<Vertex>, Set<Vertex>> firstPartOfThePath = splitPathIntoParts(individual, source);
+        Pair<Set<Vertex>, Set<Vertex>> secondPartOfThePath = splitPathIntoParts(individual, destination);
 
         // build new path
-        List<Vertex> newPath = new ArrayList<>();
+        Set<Vertex> newPath = new LinkedHashSet<>();
         newPath.addAll(firstPartOfThePath.getKey());
         newPath.addAll(alternativeRoute);
         secondPartOfThePath.getValue().remove(destination);
@@ -141,21 +139,16 @@ public class Genetic implements Algorithm {
     private void searchForAlternativeRoute(Individual individual, Vertex source, Vertex destination) {
 
         Vertex curVertex = source;
-        List<Vertex> alternativeRoute = new ArrayList<>(List.of(curVertex));
+        Set<Vertex> alternativeRoute = new LinkedHashSet<>(Set.of(curVertex));
         final int TRIALS_THRESHOLD = graph.getVertices().size() / 2;
         for (int step = 0; step < TRIALS_THRESHOLD && curVertex != destination; step++) {
-            System.out.println("Searching");
-            // get accessible vertices - skip previously visited
-            List<Vertex> accessibleVertices = new ArrayList<>(curVertex.getNeighbours());
-            if(!accessibleVertices.contains(destination)) {
-                accessibleVertices.removeAll(individual.getTraveledVertices());
-                accessibleVertices.removeAll(alternativeRoute);
-            }
-            else {
-                accessibleVertices.removeAll(individual.getTraveledVertices());
-                accessibleVertices.removeAll(alternativeRoute);
+
+            // get accessible vertices
+            Set<Vertex> accessibleVertices = new HashSet<>(curVertex.getNeighbours());
+            accessibleVertices.removeAll(individual.getTraveledVertices());
+            accessibleVertices.removeAll(alternativeRoute);
+            if(curVertex.getNeighbours().contains(destination) && step > 0)
                 accessibleVertices.add(destination);
-            }
 
             if (accessibleVertices.size() > 0) {
                 Map<Double, Vertex> vertexToProbabilityMap = new HashMap<>();
@@ -185,7 +178,7 @@ public class Genetic implements Algorithm {
 
         if (curVertex == destination) {
             System.out.println("Alternative path found! Replacing ...");
-            replaceWithAlternativePath(individual, alternativeRoute);
+            replaceWithAlternativePath(individual, alternativeRoute, source, destination);
         }
     }
 
