@@ -3,10 +3,7 @@ package org.example.simulation.algorithms.genetic;
 import lombok.Getter;
 import org.example.graph.Vertex;
 
-import java.util.ArrayList;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 @Getter
 public class Individual implements Comparable<Individual>{

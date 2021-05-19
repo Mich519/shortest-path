@@ -67,5 +67,9 @@ public class Vertex extends Circle implements Serializable {
         }
         return neighbours;
     }
+
+    public double distanceTo(Vertex v) {
+        return Math.sqrt(Math.pow(getCenterX() - v.getCenterX(), 2) + Math.pow(getCenterY() - v.getCenterY(), 2));
+    }
 }
 
