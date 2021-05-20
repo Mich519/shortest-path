@@ -52,13 +52,21 @@ public class Genetic implements Algorithm {
         Pair<List<Vertex>, List<Vertex>> pathPartsOfParent2 = parent2.splitPathIntoParts(randomCommonVertex);
 
         // replace
-        parent1.getTraveledVertices().clear();
-        parent1.getTraveledVertices().addAll(pathPartsOfParent1.getKey());
+        parent1.getTraveledVertices().retainAll(pathPartsOfParent1.getKey());
         parent1.getTraveledVertices().addAll(pathPartsOfParent2.getValue());
 
-        parent1.getTraveledVertices().clear();
-        parent2.getTraveledVertices().addAll(pathPartsOfParent2.getKey());
+        parent2.getTraveledVertices().retainAll(pathPartsOfParent2.getKey());
         parent2.getTraveledVertices().addAll(pathPartsOfParent1.getValue());
+        try {
+            parent1.updateTotalCost();
+        } catch (NullPointerException n) {
+            n.printStackTrace();
+        }
+        try {
+            parent2.updateTotalCost();
+        } catch (NullPointerException n) {
+            n.printStackTrace();
+        }
     }
 
     private void mate(Individual parent1, Individual parent2) {
@@ -145,7 +153,7 @@ public class Genetic implements Algorithm {
             }
             if (r < MUTATION_RATIO) {
                 System.out.println("Mutation occured!");
-                mutate();
+                //mutate();
             }
             selection();
         }
@@ -172,3 +180,4 @@ public class Genetic implements Algorithm {
         });
     }
 }
+

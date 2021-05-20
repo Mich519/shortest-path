@@ -39,7 +39,7 @@ public class Individual implements Comparable<Individual>{
         }
     }
 
-    public void updateTotalCost() {
+    public void updateTotalCost() throws NullPointerException{
         totalCost = 0;
         for (int i=1; i<traveledVertices.size(); i++) {
             Vertex v1 = traveledVertices.get(i-1);
@@ -49,6 +49,7 @@ public class Individual implements Comparable<Individual>{
             }
             catch (NullPointerException e) {
                 e.printStackTrace();
+                throw new NullPointerException();
             }
         }
     }
@@ -148,6 +149,8 @@ public class Individual implements Comparable<Individual>{
     public int compareTo(Individual individual) {
         if(getTotalCost() < individual.getTotalCost())
             return -1;
-        return 1;
+        else if(getTotalCost() > individual.getTotalCost())
+            return 1;
+        return 0;
     }
 }
