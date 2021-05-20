@@ -57,7 +57,7 @@ public class Genetic implements Algorithm {
         parent1.getTraveledVertices().addAll(pathPartsOfParent2.getValue());
 
         parent2.getTraveledVertices().clear();
-        parent2.getTraveledVertices().retainAll(pathPartsOfParent2.getKey());
+        parent2.getTraveledVertices().addAll(pathPartsOfParent2.getKey());
         parent2.getTraveledVertices().addAll(pathPartsOfParent1.getValue());
         try {
             parent1.updateTotalCost();
@@ -142,12 +142,6 @@ public class Genetic implements Algorithm {
         } catch (IllegalArgumentException e) {
             e.printStackTrace();
         }
-
-
-
-
-        // try to find alternative path between these vertices
-
     }
 
     @Override
@@ -161,6 +155,7 @@ public class Genetic implements Algorithm {
                 System.out.println("Crossover occured!");
                 crossover();
             }
+            selection();
             if (r < MUTATION_RATIO) {
                 System.out.println("Mutation occured!");
                 mutate();

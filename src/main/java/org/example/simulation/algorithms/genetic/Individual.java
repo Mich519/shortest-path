@@ -111,31 +111,31 @@ public class Individual implements Comparable<Individual>{
 
     public void searchForAlternativeRoute(Vertex source, Vertex destination, Graph graph) {
 
-        Vertex curVertex = source;
-        List<Vertex> alternativeRoute = new ArrayList<>(List.of(curVertex));
+        Vertex cur = source;
+        List<Vertex> alternativeRoute = new ArrayList<>(List.of(cur));
         final int TRIALS_THRESHOLD = graph.getVertices().size() / 2;
-        for (int step = 0; step < TRIALS_THRESHOLD && curVertex != destination; step++) {
+        for (int step = 0; step < TRIALS_THRESHOLD && cur != destination; step++) {
 
             // get accessible vertices
-            List<Vertex> accessibleVertices = new ArrayList<>(curVertex.getNeighbours());
+            List<Vertex> accessibleVertices = new ArrayList<>(cur.getNeighbours());
             accessibleVertices.removeAll(getTraveledVertices());
             accessibleVertices.removeAll(alternativeRoute);
-            if (curVertex.getNeighbours().contains(destination) && step > 0)
+            if (cur.getNeighbours().contains(destination) && step > 0)
                 accessibleVertices.add(destination);
 
             if (accessibleVertices.size() > 0) {
-                curVertex = pickRandomVertexToTraverse(accessibleVertices, destination);
-                if(curVertex == null) {
+                cur = pickRandomVertexToTraverse(accessibleVertices, destination);
+                if(cur == null) {
                     System.out.println("Pozdrawiam bardzo serdecznie. Marcin Najman.");
                 }
-                alternativeRoute.add(curVertex);
+                alternativeRoute.add(cur);
             } else {
                 System.out.println("Unable to find alternative path - dead end");
                 break;
             }
         }
 
-        if (curVertex == destination) {
+        if (cur == destination) {
             System.out.println("Alternative path found! Replacing ...");
             replaceWithAlternativePath(alternativeRoute, source, destination);
         }
