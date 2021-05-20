@@ -12,7 +12,6 @@ import org.example.graph.Vertex;
 import org.example.simulation.algorithms.Algorithm;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class Genetic implements Algorithm {
     private final int POPULATION_SIZE = 500;
@@ -32,7 +31,7 @@ public class Genetic implements Algorithm {
         for (int i = 0; i < POPULATION_SIZE; i++) {
             Individual individual = new Individual(graph.getStartVertex(), graph.getEndVertex());
             individuals.add(individual);
-            individual.search();
+            individual.initialSearch();
         }
     }
 
@@ -43,38 +42,21 @@ public class Genetic implements Algorithm {
         Collections.sort(individuals);
     }
 
-    private Pair<Set<Vertex>, Set<Vertex>> splitPathIntoParts(Individual parent, Vertex cutPoint) {
-        Set<Vertex> firstPart = new LinkedHashSet<>();
-        Set<Vertex> secondPart = new LinkedHashSet<>();
-
-        Set<Vertex> currentPart = firstPart;
-        for (Vertex v : parent.getTraveledVertices()) {
-            if (v == cutPoint)
-                currentPart = secondPart;
-            currentPart.add(v);
-        }
-        return new Pair<>(firstPart, secondPart);
-    }
-
-    private void swapPaths(Individual parent1, Individual parent2, Set<Vertex> commonVertices) {
+    private void swapPaths(Individual parent1, Individual parent2, List<Vertex> commonVertices) {
         // pick random common vertex
-        int i = 0, random = new Random().nextInt(commonVertices.size());
-        Vertex randomCommonVertex = null;
-        for (Vertex v : commonVertices) {
-            if (i++ == random)
-                randomCommonVertex = v;
-        }
+        int random = new Random().nextInt(commonVertices.size());
+        Vertex randomCommonVertex = commonVertices.get(random);
 
         // split paths into parts (randomCommonVertex is cut point)
-        Pair<Set<Vertex>, Set<Vertex>> pathPartsOfParent1 = splitPathIntoParts(parent1, randomCommonVertex);
-        Pair<Set<Vertex>, Set<Vertex>> pathPartsOfParent2 = splitPathIntoParts(parent1, randomCommonVertex);
+        Pair<List<Vertex>, List<Vertex>> pathPartsOfParent1 = parent1.splitPathIntoParts(randomCommonVertex);
+        Pair<List<Vertex>, List<Vertex>> pathPartsOfParent2 = parent2.splitPathIntoParts(randomCommonVertex);
 
         // replace
         parent1.getTraveledVertices().clear();
         parent1.getTraveledVertices().addAll(pathPartsOfParent1.getKey());
         parent1.getTraveledVertices().addAll(pathPartsOfParent2.getValue());
 
-        parent2.getTraveledVertices().clear();
+        parent1.getTraveledVertices().clear();
         parent2.getTraveledVertices().addAll(pathPartsOfParent2.getKey());
         parent2.getTraveledVertices().addAll(pathPartsOfParent1.getValue());
     }
@@ -82,16 +64,15 @@ public class Genetic implements Algorithm {
     private void mate(Individual parent1, Individual parent2) {
 
         // get parents' common vertices
-        Set<Vertex> commonVertices = new HashSet<>();
-        commonVertices.addAll(parent1.getTraveledVertices());
-        commonVertices.addAll(parent2.getTraveledVertices());
+        List<Vertex> commonVertices = new ArrayList<>(parent1.getTraveledVertices());
+        commonVertices.retainAll(parent2.getTraveledVertices());
         commonVertices.removeAll(List.of(graph.getStartVertex(), graph.getEndVertex())); // remove start and end vertex
 
         if (commonVertices.isEmpty()) {
             // no common vertices
             System.out.println("No common vertices");
         } else {
-            System.out.println("Swapping paths ... s");
+            System.out.println("Swapping paths ... ");
             swapPaths(parent1, parent2, commonVertices);
         }
     }
@@ -118,86 +99,23 @@ public class Genetic implements Algorithm {
         }
     }
 
-    private void replaceWithAlternativePath(Individual individual, Set<Vertex> alternativeRoute, Vertex source, Vertex destination) {
-
-        System.out.println("Alternative path was found!");
-        Pair<Set<Vertex>, Set<Vertex>> firstPartOfThePath = splitPathIntoParts(individual, source);
-        Pair<Set<Vertex>, Set<Vertex>> secondPartOfThePath = splitPathIntoParts(individual, destination);
-
-        // build new path
-        Set<Vertex> newPath = new LinkedHashSet<>();
-        newPath.addAll(firstPartOfThePath.getKey());
-        newPath.addAll(alternativeRoute);
-        secondPartOfThePath.getValue().remove(destination);
-        newPath.addAll(secondPartOfThePath.getValue());
-
-        // replace
-        individual.getTraveledVertices().clear();
-        individual.getTraveledVertices().addAll(newPath);
-    }
-
-    private void searchForAlternativeRoute(Individual individual, Vertex source, Vertex destination) {
-
-        Vertex curVertex = source;
-        Set<Vertex> alternativeRoute = new LinkedHashSet<>(Set.of(curVertex));
-        final int TRIALS_THRESHOLD = graph.getVertices().size() / 2;
-        for (int step = 0; step < TRIALS_THRESHOLD && curVertex != destination; step++) {
-
-            // get accessible vertices
-            Set<Vertex> accessibleVertices = new HashSet<>(curVertex.getNeighbours());
-            accessibleVertices.removeAll(individual.getTraveledVertices());
-            accessibleVertices.removeAll(alternativeRoute);
-            if(curVertex.getNeighbours().contains(destination) && step > 0)
-                accessibleVertices.add(destination);
-
-            if (accessibleVertices.size() > 0) {
-                Map<Double, Vertex> vertexToProbabilityMap = new HashMap<>();
-                double totalProb = 0;
-                for (Vertex v : accessibleVertices) {
-                    double prob = 1 / v.distanceTo(destination);
-                    vertexToProbabilityMap.put(prob, v);
-                    totalProb += prob;
-                }
-                double scale = 1 / totalProb;
-                double random = new Random().nextDouble();
-                vertexToProbabilityMap.keySet().stream().map(aDouble -> aDouble * scale);
-                double temp = 0;
-                for (Double d : vertexToProbabilityMap.keySet()) {
-                    temp+=d;
-                    if(random < temp) {
-                        curVertex = vertexToProbabilityMap.get(d);
-                        break;
-                    }
-                }
-                alternativeRoute.add(curVertex);
-            } else {
-                System.out.println("Unable to find alternative path - dead end");
-                break;
-            }
-        }
-
-        if (curVertex == destination) {
-            System.out.println("Alternative path found! Replacing ...");
-            replaceWithAlternativePath(individual, alternativeRoute, source, destination);
-        }
-    }
-
     private void mutate() {
         // pick random individual
-        int random = new Random().nextInt(individuals.size());
-        Individual randomIndividual = individuals.get(random);
+        Random random = new Random();
+        int r = random.nextInt(individuals.size());
+        Individual randomIndividual = individuals.get(r);
 
         // prepare list of vertices to pick randomly
         List<Vertex> temp = new ArrayList<>(randomIndividual.getTraveledVertices());
         temp.removeAll(List.of(graph.getStartVertex(), graph.getEndVertex())); // remove start and end vertex
 
         // pick random vertex 1
-        int random1 = new Random().nextInt(temp.size());
+        int random1 = random.nextInt(temp.size());
         Vertex randomVertex1 = temp.get(random1);
         temp.remove(randomVertex1);
 
         // pick random vertex 2
-        int random2 = new Random().nextInt(temp.size());
+        int random2 = random.nextInt(temp.size());
         Vertex randomVertex2 = temp.get(random2);
         temp.remove(randomVertex2);
 
@@ -211,7 +129,7 @@ public class Genetic implements Algorithm {
         }
 
         // try to find alternative path between these vertices
-        searchForAlternativeRoute(randomIndividual, source, destination);
+        randomIndividual.searchForAlternativeRoute(source, destination, graph);
     }
 
     @Override
