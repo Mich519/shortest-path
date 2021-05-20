@@ -52,9 +52,11 @@ public class Genetic implements Algorithm {
         Pair<List<Vertex>, List<Vertex>> pathPartsOfParent2 = parent2.splitPathIntoParts(randomCommonVertex);
 
         // replace
-        parent1.getTraveledVertices().retainAll(pathPartsOfParent1.getKey());
+        parent1.getTraveledVertices().clear();
+        parent1.getTraveledVertices().addAll(pathPartsOfParent1.getKey());
         parent1.getTraveledVertices().addAll(pathPartsOfParent2.getValue());
 
+        parent2.getTraveledVertices().clear();
         parent2.getTraveledVertices().retainAll(pathPartsOfParent2.getKey());
         parent2.getTraveledVertices().addAll(pathPartsOfParent1.getValue());
         try {
@@ -118,26 +120,34 @@ public class Genetic implements Algorithm {
         temp.removeAll(List.of(graph.getStartVertex(), graph.getEndVertex())); // remove start and end vertex
 
         // pick random vertex 1
-        int random1 = random.nextInt(temp.size());
-        Vertex randomVertex1 = temp.get(random1);
-        temp.remove(randomVertex1);
+        try {
+            int random1 = random.nextInt(temp.size());
+            Vertex randomVertex1 = temp.get(random1);
+            temp.remove(randomVertex1);
 
-        // pick random vertex 2
-        int random2 = random.nextInt(temp.size());
-        Vertex randomVertex2 = temp.get(random2);
-        temp.remove(randomVertex2);
+            // pick random vertex 2
+            int random2 = random.nextInt(temp.size());
+            Vertex randomVertex2 = temp.get(random2);
+            temp.remove(randomVertex2);
+            Vertex source, destination;
 
-        Vertex source, destination;
-        if (random1 <= random2) {
-            source = randomVertex1;
-            destination = randomVertex2;
-        } else {
-            source = randomVertex2;
-            destination = randomVertex1;
+            if (random1 <= random2) {
+                source = randomVertex1;
+                destination = randomVertex2;
+            } else {
+                source = randomVertex2;
+                destination = randomVertex1;
+            }
+            randomIndividual.searchForAlternativeRoute(source, destination, graph);
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
         }
 
+
+
+
         // try to find alternative path between these vertices
-        randomIndividual.searchForAlternativeRoute(source, destination, graph);
+
     }
 
     @Override
@@ -153,7 +163,7 @@ public class Genetic implements Algorithm {
             }
             if (r < MUTATION_RATIO) {
                 System.out.println("Mutation occured!");
-                //mutate();
+                mutate();
             }
             selection();
         }
