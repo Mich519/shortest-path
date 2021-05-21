@@ -87,22 +87,49 @@ public class Genetic implements Algorithm {
         }
     }
 
+    private Pair<Individual, Individual> pickRandomParents() {
+        // pick random parent 1
+        Map<Double, Individual> probabilityMap = new LinkedHashMap<>();
+        double sumOfProbabilities = individuals.stream().mapToDouble(individual -> 1 / individual.getTotalCost()).sum();
+        double scale = 1 / sumOfProbabilities;
+        for (Individual individual : individuals) {
+            probabilityMap.put((1 / individual.getTotalCost()), individual);
+        }
+
+        Individual parent1 = null;
+        double curSum = 0;
+        double random = new Random().nextDouble();
+        for (Double probability : probabilityMap.keySet()) {
+            curSum += probability * scale;
+            if(random < curSum) {
+                parent1 = probabilityMap.get(probability);
+                probabilityMap.remove(probability);
+                sumOfProbabilities -= probability;
+                break;
+            }
+        }
+        scale = 1 / sumOfProbabilities;
+        Individual parent2 = null;
+        curSum = 0;
+        double random2 = new Random().nextDouble();
+        for (Double probability : probabilityMap.keySet()) {
+            curSum += probability * scale;
+            if(random2 < curSum) {
+                parent2 = probabilityMap.get(probability);
+                break;
+            }
+        }
+        return new Pair<>(parent1, parent2);
+    }
+
     private void crossover() {
 
         if (individuals.size() >= 2) {
-            List<Individual> temp = new ArrayList<>(individuals);
-
-            // pick random parent 1
-            int random1 = new Random().nextInt(temp.size());
-            Individual parent1 = temp.get(random1);
-            temp.remove(parent1);
-
-            // pick random parent 2
-            int random2 = new Random().nextInt(temp.size());
-            Individual parent2 = temp.get(random2);
-            temp.remove(parent2);
-
-            mate(parent1, parent2);
+            // roulette selection
+            Pair<Individual, Individual> parents = pickRandomParents();
+            if(parents.getValue() == null || parents.getKey() == null)
+                throw new NullPointerException();
+            mate(parents.getKey(), parents.getValue());
 
         } else {
             System.out.println("Individuals cant crossover!");
