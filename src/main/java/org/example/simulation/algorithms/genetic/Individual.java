@@ -2,6 +2,7 @@ package org.example.simulation.algorithms.genetic;
 
 import javafx.util.Pair;
 import lombok.Getter;
+import lombok.Setter;
 import org.example.graph.Graph;
 import org.example.graph.Vertex;
 
@@ -12,7 +13,8 @@ public class Individual implements Comparable<Individual>{
     private final Vertex startVertex;
     private final Vertex endVertex;
     private Vertex curVertex;
-    private final List<Vertex> traveledVertices;
+    @Setter
+    private List<Vertex> traveledVertices;
     private double totalCost;
 
     public Individual(Vertex startVertex, Vertex endVertex) {
@@ -30,6 +32,7 @@ public class Individual implements Comparable<Individual>{
             List<Vertex> accessibleVertices = new ArrayList<>(neighbours);
             accessibleVertices.removeAll(traveledVertices);
             if(isPathSuccessful() || accessibleVertices.size() == 0) {
+                updateTotalCost();
                 break;
             }
 
@@ -48,7 +51,6 @@ public class Individual implements Comparable<Individual>{
                 totalCost += v1.findEdgeConnectedTo(v2).getLength().get();
             }
             catch (NullPointerException e) {
-                e.printStackTrace();
                 throw new NullPointerException();
             }
         }
@@ -107,6 +109,7 @@ public class Individual implements Comparable<Individual>{
         // replace
         getTraveledVertices().clear();
         getTraveledVertices().addAll(newPath);
+        updateTotalCost();
     }
 
     public void searchForAlternativeRoute(Vertex source, Vertex destination, Graph graph) {
@@ -126,7 +129,7 @@ public class Individual implements Comparable<Individual>{
             if (accessibleVertices.size() > 0) {
                 cur = pickRandomVertexToTraverse(accessibleVertices, destination);
                 if(cur == null) {
-                    System.out.println("Pozdrawiam bardzo serdecznie. Marcin Najman.");
+                    throw new NullPointerException();
                 }
                 alternativeRoute.add(cur);
             } else {

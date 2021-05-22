@@ -20,29 +20,25 @@ public class Genetic implements Algorithm {
     private final double MUTATION_RATIO = 1;
 
     private final Graph graph;
-    private final List<Individual> individuals;
+
+    private final List<List<Individual>> generations;
 
     public Genetic(Graph graph) {
         this.graph = graph;
-        this.individuals = new ArrayList<>(POPULATION_SIZE);
+        this.generations = new ArrayList<>();
     }
 
-    private void initialization() {
+    private void initialization(List<Individual> initialGen) {
         for (int i = 0; i < POPULATION_SIZE; i++) {
             Individual individual = new Individual(graph.getStartVertex(), graph.getEndVertex());
-            individuals.add(individual);
+            initialGen.add(individual);
             individual.initialSearch();
         }
+        initialGen.removeIf(individual -> !individual.isPathSuccessful());
+        Collections.sort(initialGen);
     }
 
-    private void selection() {
-        // remove individuals that didn't finish the path
-        individuals.removeIf(individual -> !individual.isPathSuccessful());
-        individuals.forEach(Individual::updateTotalCost);
-        Collections.sort(individuals);
-    }
-
-    private void swapPaths(Individual parent1, Individual parent2, List<Vertex> commonVertices) {
+    private List<Vertex> createCombinedPath(Individual parent1, Individual parent2, List<Vertex> commonVertices) {
         // pick random common vertex
         int random = new Random().nextInt(commonVertices.size());
         Vertex randomCommonVertex = commonVertices.get(random);
@@ -52,28 +48,16 @@ public class Genetic implements Algorithm {
         Pair<List<Vertex>, List<Vertex>> pathPartsOfParent2 = parent2.splitPathIntoParts(randomCommonVertex);
 
         // replace
-        parent1.getTraveledVertices().clear();
-        parent1.getTraveledVertices().addAll(pathPartsOfParent1.getKey());
-        parent1.getTraveledVertices().addAll(pathPartsOfParent2.getValue());
-
-        parent2.getTraveledVertices().clear();
-        parent2.getTraveledVertices().addAll(pathPartsOfParent2.getKey());
-        parent2.getTraveledVertices().addAll(pathPartsOfParent1.getValue());
-        try {
-            parent1.updateTotalCost();
-        } catch (NullPointerException n) {
-            n.printStackTrace();
-        }
-        try {
-            parent2.updateTotalCost();
-        } catch (NullPointerException n) {
-            n.printStackTrace();
-        }
+        List<Vertex> combinedPath = new ArrayList<>(pathPartsOfParent1.getKey());
+        combinedPath.addAll(pathPartsOfParent2.getValue());
+        return combinedPath;
     }
 
-    private void mate(Individual parent1, Individual parent2) {
+    private Individual mate(Individual parent1, Individual parent2) {
 
         // get parents' common vertices
+        Individual child = new Individual(graph.getStartVertex(), graph.getEndVertex());
+
         List<Vertex> commonVertices = new ArrayList<>(parent1.getTraveledVertices());
         commonVertices.retainAll(parent2.getTraveledVertices());
         commonVertices.removeAll(List.of(graph.getStartVertex(), graph.getEndVertex())); // remove start and end vertex
@@ -83,67 +67,84 @@ public class Genetic implements Algorithm {
             System.out.println("No common vertices");
         } else {
             System.out.println("Swapping paths ... ");
-            swapPaths(parent1, parent2, commonVertices);
+            List<Vertex> combinedPath = createCombinedPath(parent1, parent2, commonVertices);
+            child.setTraveledVertices(combinedPath);
+            child.updateTotalCost();
+            return child;
         }
+        return null;
     }
 
-    private Pair<Individual, Individual> pickRandomParents() {
-        // pick random parent 1
-        Map<Double, Individual> probabilityMap = new LinkedHashMap<>();
-        double sumOfProbabilities = individuals.stream().mapToDouble(individual -> 1 / individual.getTotalCost()).sum();
+    private Pair<Individual, Individual> pickRandomParents(List<Individual> gen) {
+        Map<Individual, Double> probabilityMap = new LinkedHashMap<>();
+        double sumOfProbabilities = 0;
+        try {
+            sumOfProbabilities = gen.stream().mapToDouble(individual -> 1 / individual.getTotalCost()).sum();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         double scale = 1 / sumOfProbabilities;
-        for (Individual individual : individuals) {
-            probabilityMap.put((1 / individual.getTotalCost()), individual);
+        for (Individual individual : gen) {
+            probabilityMap.put(individual, 1 / individual.getTotalCost());
         }
 
         Individual parent1 = null;
         double curSum = 0;
         double random = new Random().nextDouble();
-        for (Double probability : probabilityMap.keySet()) {
-            curSum += probability * scale;
-            if(random < curSum) {
-                parent1 = probabilityMap.get(probability);
-                probabilityMap.remove(probability);
-                sumOfProbabilities -= probability;
+        for (Individual individual : probabilityMap.keySet()) {
+            curSum += probabilityMap.get(individual) * scale;
+            if (random < curSum) {
+                parent1 = individual;
+                sumOfProbabilities -= probabilityMap.get(individual);
+                probabilityMap.remove(individual);
                 break;
             }
         }
+
         scale = 1 / sumOfProbabilities;
         Individual parent2 = null;
         curSum = 0;
-        double random2 = new Random().nextDouble();
-        for (Double probability : probabilityMap.keySet()) {
-            curSum += probability * scale;
-            if(random2 < curSum) {
-                parent2 = probabilityMap.get(probability);
+        random = new Random().nextDouble();
+        for (Individual individual : probabilityMap.keySet()) {
+            curSum += probabilityMap.get(individual) * scale;
+            if (random < curSum) {
+                parent2 = individual;
+                probabilityMap.remove(individual);
                 break;
             }
         }
+        if (parent1 == null || parent2 == null)
+            throw new NullPointerException();
         return new Pair<>(parent1, parent2);
     }
 
-    private void crossover() {
-
-        if (individuals.size() >= 2) {
+    private Individual crossover(List<Individual> gen) {
+        System.out.println("Crossover occured!");
+        Individual child = null;
+        if (gen.size() >= 2) {
             // roulette selection
-            Pair<Individual, Individual> parents = pickRandomParents();
-            if(parents.getValue() == null || parents.getKey() == null)
-                throw new NullPointerException();
-            mate(parents.getKey(), parents.getValue());
-
+            Pair<Individual, Individual> parents = pickRandomParents(gen);
+            child = mate(parents.getKey(), parents.getValue());
         } else {
             System.out.println("Individuals cant crossover!");
         }
+        return child;
     }
 
-    private void mutate() {
-        // pick random individual
+    private void mutate(List<Individual> gen) {
+        System.out.println("Mutation occured!");
         Random random = new Random();
-        int r = random.nextInt(individuals.size());
-        Individual randomIndividual = individuals.get(r);
+        int r = random.nextInt(gen.size());
+        Individual randomIndividual = gen.get(r);
 
         // prepare list of vertices to pick randomly
-        List<Vertex> temp = new ArrayList<>(randomIndividual.getTraveledVertices());
+        List<Vertex> temp = new ArrayList<>();
+        try {
+            temp.addAll(randomIndividual.getTraveledVertices());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         temp.removeAll(List.of(graph.getStartVertex(), graph.getEndVertex())); // remove start and end vertex
 
         // pick random vertex 1
@@ -173,36 +174,37 @@ public class Genetic implements Algorithm {
 
     @Override
     public void run() {
-        System.out.println("Started");
-        initialization();
-        selection();
+        List<Individual> currentGen = new ArrayList<>();
+        initialization(currentGen);
+        int generationSize = currentGen.size();
         for (int gen = 1; gen <= MAX_GENERATION; gen++) {
-            double r = new Random().nextDouble();
-            if (r < CROSSOVER_RATIO) {
-                System.out.println("Crossover occured!");
-                crossover();
+            List<Individual> newGen = new ArrayList<>();
+            while (newGen.size() < generationSize) {
+                Individual newChild = crossover(currentGen);
+                if (newChild != null)
+                    newGen.add(newChild);
             }
-            selection();
-            if (r < MUTATION_RATIO) {
-                System.out.println("Mutation occured!");
-                mutate();
-            }
-            selection();
+
+            for (Individual ignored : newGen)
+                mutate(newGen);
+            generations.add(newGen);
+            currentGen.clear();
+            currentGen.addAll(newGen);
         }
         System.out.println("Finished");
     }
 
     @Override
+
     public void animate(PrimaryController controller) {
-        selection();
         controller.toogleButtonsActivity(true);
         List<Transition> transitions = new ArrayList<>();
-        for (Individual individual : individuals) {
+        /*for (Individual individual : currentGen) {
             for (Vertex v : individual.getTraveledVertices()) {
                 transitions.add(new FillTransition(Duration.millis(controller.getSimulationSpeed().getMax() - controller.getSimulationSpeed().getValue()), v, Color.ORANGE, Color.BLUEVIOLET));
             }
-        }
-        individuals.forEach(individual -> System.out.println(individual.getTraveledVertices()));
+        }*/
+        //currentGen.forEach(individual -> System.out.println(individual.getTraveledVertices()));
         SequentialTransition st = new SequentialTransition();
         st.setCycleCount(1);
         st.getChildren().addAll(transitions);
