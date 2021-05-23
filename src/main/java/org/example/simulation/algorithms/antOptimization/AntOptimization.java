@@ -19,7 +19,7 @@ import java.util.concurrent.Executors;
 // todo: algorithm doesn't work when graph is loaded from a file
 
 public class AntOptimization implements Algorithm {
-    private final ParametersContainer parameters;
+    private final AntParametersContainer parameters;
     private final Graph graph;
     private final double animationSpeed;
     @Getter
@@ -29,7 +29,7 @@ public class AntOptimization implements Algorithm {
     @Getter
     private final List<Integer> successfulPathsPerIteration;
 
-    public AntOptimization(Graph graph, ParametersContainer parameters, double animationSpeed) {
+    public AntOptimization(Graph graph, AntParametersContainer parameters, double animationSpeed) {
         this.graph = graph;
         this.parameters = parameters;
         this.animationSpeed = animationSpeed;

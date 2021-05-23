@@ -93,6 +93,18 @@ public class PrimaryController {
     private RadioButton genetic;
 
     @FXML
+    private Slider elitismRate;
+
+    @FXML
+    private Slider initialPopulation;
+
+    @FXML
+    private Slider numOfGenerations;
+
+    @FXML
+    private Slider mutationRatio;
+
+    @FXML
     private Slider numberOfAnts;
 
     @FXML
@@ -240,6 +252,28 @@ public class PrimaryController {
         numberOfIterations.setValue(100);
         numberOfIterations.setShowTickLabels(true);
         numberOfIterations.setShowTickMarks(true);
+
+        // genetic sliders
+        elitismRate.setMin(0);
+        elitismRate.setMax(1);
+        elitismRate.setValue(0.2);
+        elitismRate.setShowTickLabels(true);
+        elitismRate.setShowTickMarks(true);
+        initialPopulation.setMin(400);
+        initialPopulation.setMax(2000);
+        initialPopulation.setValue(500);
+        initialPopulation.setShowTickLabels(true);
+        initialPopulation.setShowTickMarks(true);
+        numOfGenerations.setMin(10);
+        numOfGenerations.setMax(100);
+        numOfGenerations.setValue(40);
+        numOfGenerations.setShowTickLabels(true);
+        numOfGenerations.setShowTickMarks(true);
+        mutationRatio.setMin(0);
+        mutationRatio.setMax(1.0);
+        mutationRatio.setValue(0.1);
+        mutationRatio.setShowTickLabels(true);
+        mutationRatio.setShowTickMarks(true);
 
         vertexRadius.setMin(5);
         vertexRadius.setMax(30);

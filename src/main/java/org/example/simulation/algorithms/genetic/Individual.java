@@ -1,8 +1,15 @@
 package org.example.simulation.algorithms.genetic;
 
+import javafx.animation.FillTransition;
+import javafx.animation.StrokeTransition;
+import javafx.animation.Transition;
+import javafx.scene.paint.Color;
+import javafx.util.Duration;
 import javafx.util.Pair;
 import lombok.Getter;
 import lombok.Setter;
+import org.example.controller.PrimaryController;
+import org.example.graph.Edge;
 import org.example.graph.Graph;
 import org.example.graph.Vertex;
 
@@ -55,6 +62,18 @@ public class Individual implements Comparable<Individual> {
         }
     }
 
+    public void prepareEdgeTransitions(List<Transition> transitions, PrimaryController controller) {
+        for (int i = 1; i < traveledVertices.size(); i++) {
+            Vertex v1 = traveledVertices.get(i - 1);
+            Vertex v2 = traveledVertices.get(i);
+            Edge e = v1.findEdgeConnectedTo(v2);
+            if(e == null)
+                throw new NullPointerException();
+            transitions.add(new FillTransition(Duration.millis(controller.getSimulationSpeed().getMax() - controller.getSimulationSpeed().getValue()), v1, Vertex.defaultColor, Color.PINK));
+            transitions.add(new StrokeTransition(Duration.millis(controller.getSimulationSpeed().getMax() - controller.getSimulationSpeed().getValue()), e, Edge.defaultColor, Color.WHITE));
+        }
+    }
+
     public Pair<List<Vertex>, List<Vertex>> splitPathIntoParts(Vertex cutPoint) {
         List<Vertex> firstPart = new ArrayList<>();
         List<Vertex> secondPart = new ArrayList<>();
@@ -66,12 +85,6 @@ public class Individual implements Comparable<Individual> {
             currentPart.add(v);
         }
         return new Pair<>(firstPart, secondPart);
-    }
-
-    private Vertex pickRandomVertexToTraverse(List<Vertex> accessibleVertices) {
-        Vertex result = null;
-
-        return result;
     }
 
     private void replaceWithAlternativePath(List<Vertex> alternativeRoute, Vertex source, Vertex destination) {

@@ -8,8 +8,9 @@ import org.example.simulation.algorithms.BellmanFord;
 import org.example.simulation.algorithms.Naive;
 import org.example.simulation.algorithms.antOptimization.AntOptimization;
 import org.example.simulation.algorithms.antOptimization.Chart;
-import org.example.simulation.algorithms.antOptimization.ParametersContainer;
+import org.example.simulation.algorithms.antOptimization.AntParametersContainer;
 import org.example.simulation.algorithms.genetic.Genetic;
+import org.example.simulation.algorithms.genetic.GeneticParametersContainer;
 
 import java.io.IOException;
 
@@ -52,7 +53,7 @@ public class Simulation {
         if (controller.getGraph().getStartVertex() != null && controller.getGraph().getEndVertex() != null) {
             /* check if start and end vertices are set */
             Graph graph = controller.getGraph();
-            ParametersContainer parameters = new ParametersContainer(controller);
+            AntParametersContainer parameters = new AntParametersContainer(controller);
             double simulationSpeed = controller.getSimulationSpeed().getValue();
             AntOptimization antOptimization = new AntOptimization(graph, parameters, simulationSpeed);
             antOptimization.run();
@@ -89,7 +90,8 @@ public class Simulation {
         if (controller.getGraph().getStartVertex() != null && controller.getGraph().getEndVertex() != null) {
             /* check if start and end vertices are set */
             Graph graph = controller.getGraph();
-            Genetic genetic = new Genetic(graph);
+            GeneticParametersContainer parameters = new GeneticParametersContainer(controller);
+            Genetic genetic = new Genetic(graph, parameters);
             genetic.run();
             if(controller.getShowAnimation().isSelected()) {
                 genetic.animate(controller);

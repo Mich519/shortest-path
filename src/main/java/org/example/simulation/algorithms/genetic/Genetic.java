@@ -1,7 +1,10 @@
 package org.example.simulation.algorithms.genetic;
 
+import javafx.animation.FillTransition;
 import javafx.animation.SequentialTransition;
 import javafx.animation.Transition;
+import javafx.scene.paint.Color;
+import javafx.util.Duration;
 import javafx.util.Pair;
 import org.example.controller.PrimaryController;
 import org.example.graph.Graph;
@@ -11,23 +14,19 @@ import org.example.simulation.algorithms.Algorithm;
 import java.util.*;
 
 public class Genetic implements Algorithm {
-    private final int POPULATION_SIZE = 500;
-    private final int MAX_GENERATION = 40;
-    private final double ELITISM_RATIO = 0.2;
-    private final double MUTATION_TRIALS = 50;
-    private final double MUTATION_RATIO = 0.2;
-
+    private final GeneticParametersContainer parameters;
     private final Graph graph;
 
     private final List<List<Individual>> generations;
 
-    public Genetic(Graph graph) {
+    public Genetic(Graph graph, GeneticParametersContainer parameters) {
         this.graph = graph;
         this.generations = new ArrayList<>();
+        this.parameters = parameters;
     }
 
     private void initialization(List<Individual> initialGen) {
-        for (int i = 0; i < POPULATION_SIZE; i++) {
+        for (int i = 0; i < parameters.initialPopulation; i++) {
             Individual individual = new Individual(graph.getStartVertex(), graph.getEndVertex());
             initialGen.add(individual);
             individual.initialSearch();
@@ -123,7 +122,7 @@ public class Genetic implements Algorithm {
     private void mutation(List<Individual> gen) {
         Random random = new Random();
         gen.forEach(individual -> {
-            if (random.nextDouble() < MUTATION_RATIO)
+            if (random.nextDouble() < parameters.mutationRatio)
                 individual.mutate(graph.getVertices().size() / 20, 1);
         });
     }
@@ -133,8 +132,8 @@ public class Genetic implements Algorithm {
         List<Individual> currentGen = new ArrayList<>();
         initialization(currentGen);
         int generationSize = currentGen.size();
-        for (int gen = 1; gen <= MAX_GENERATION; gen++) {
-            List<Individual> elite = currentGen.subList(0, (int) (currentGen.size() * ELITISM_RATIO));
+        for (int gen = 1; gen <= parameters.numOfGenerations; gen++) {
+            List<Individual> elite = currentGen.subList(0, (int) (currentGen.size() * parameters.elitismRate));
             List<Individual> newGen = new ArrayList<>(elite);
             while (newGen.size() < generationSize) {
                 Individual newChild = crossover(currentGen);
@@ -151,8 +150,9 @@ public class Genetic implements Algorithm {
             double a = 0;
             for (Individual ind : gen)
                 a += gen.stream().mapToDouble(Individual::getTotalCost).sum();
-            System.out.println(a / generationSize);
+            //System.out.println(a / generationSize);
         }
+        System.out.println(currentGen.get(0).getTotalCost());
         System.out.println("Finished");
     }
 
@@ -161,7 +161,9 @@ public class Genetic implements Algorithm {
     public void animate(PrimaryController controller) {
         controller.toogleButtonsActivity(true);
         List<Transition> transitions = new ArrayList<>();
-
+        for (List<Individual> generation : generations) {
+            generation.get(0).prepareEdgeTransitions(transitions, controller);
+        }
         /*for (Individual individual : currentGen) {
             for (Vertex v : individual.getTraveledVertices()) {
                 transitions.add(new FillTransition(Duration.millis(controller.getSimulationSpeed().getMax() - controller.getSimulationSpeed().getValue()), v, Color.ORANGE, Color.BLUEVIOLET));

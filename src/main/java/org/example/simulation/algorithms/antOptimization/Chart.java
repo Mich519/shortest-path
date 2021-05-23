@@ -20,7 +20,7 @@ import java.util.Set;
 
 // todo: previous data is not deleted
 public class Chart {
-    private final ParametersContainer parameters;
+    private final AntParametersContainer parameters;
     private final List<Integer> antsThatReachedGoalPerIteration;
     private final List<Set<Edge>> allPaths;
 
@@ -74,7 +74,7 @@ public class Chart {
         return parameterLabels;
     }
 
-    public Chart(ParametersContainer parameters, List<Integer> antsThatReachedGoalPerIteration,
+    public Chart(AntParametersContainer parameters, List<Integer> antsThatReachedGoalPerIteration,
                  List<Set<Edge>> allPaths) throws IOException {
 
         this.parameters = parameters;

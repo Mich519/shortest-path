@@ -72,16 +72,19 @@ public class Naive implements Algorithm {
         st.setCycleCount(1);
 
         /* color edges that represent a path */
+        double totalLength = 0;
         for (Vertex ver = graph.getEndVertex(); ver != null; ver = mapVertexToPrev.get(ver)) {
             transitions.add(new FillTransition(Duration.millis(controller.getSimulationSpeed().getMax() - controller.getSimulationSpeed().getValue()), ver, Color.ORANGE, Color.RED));
             Vertex pred = mapVertexToPrev.get(ver);
             if (pred != null) {
                 Edge e = ver.findEdgeConnectedTo(pred);
+                totalLength += e.getLength().get();
                 transitions.add(new StrokeTransition(Duration.millis(controller.getSimulationSpeed().getMax() - controller.getSimulationSpeed().getValue()), e, Color.LIMEGREEN, Color.BLUE));
             }
         }
         st.getChildren().addAll(transitions);
         st.play();
+        System.out.println(totalLength);
 
         /* reset everything */
         st.setOnFinished(actionEvent -> {

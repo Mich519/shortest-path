@@ -2,7 +2,7 @@ package org.example.simulation.algorithms.antOptimization;
 
 import org.example.controller.PrimaryController;
 
-public class ParametersContainer {
+public class AntParametersContainer {
     public final double pheromonePerAnt; // amount of dropped pheromone
     public final int numOfAnts;
     public final double evapRate; // evaporation rate
@@ -10,7 +10,7 @@ public class ParametersContainer {
     public final double beta;
     public final int numOfIterations;
 
-    public ParametersContainer(PrimaryController controller) {
+    public AntParametersContainer(PrimaryController controller) {
         pheromonePerAnt = controller.getPheromonePerAnt().getValue();
         numOfAnts = (int) controller.getNumberOfAnts().getValue();
         evapRate = controller.getEvaporationRate().getValue();
