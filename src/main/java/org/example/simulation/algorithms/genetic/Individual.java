@@ -9,7 +9,7 @@ import org.example.graph.Vertex;
 import java.util.*;
 
 @Getter
-public class Individual implements Comparable<Individual>{
+public class Individual implements Comparable<Individual> {
     private final Vertex startVertex;
     private final Vertex endVertex;
     private Vertex curVertex;
@@ -31,7 +31,7 @@ public class Individual implements Comparable<Individual>{
             List<Vertex> neighbours = curVertex.getNeighbours();
             List<Vertex> accessibleVertices = new ArrayList<>(neighbours);
             accessibleVertices.removeAll(traveledVertices);
-            if(isPathSuccessful() || accessibleVertices.size() == 0) {
+            if (isPathSuccessful() || accessibleVertices.size() == 0) {
                 updateTotalCost();
                 break;
             }
@@ -42,15 +42,14 @@ public class Individual implements Comparable<Individual>{
         }
     }
 
-    public void updateTotalCost() throws NullPointerException{
+    public void updateTotalCost() throws NullPointerException {
         totalCost = 0;
-        for (int i=1; i<traveledVertices.size(); i++) {
-            Vertex v1 = traveledVertices.get(i-1);
+        for (int i = 1; i < traveledVertices.size(); i++) {
+            Vertex v1 = traveledVertices.get(i - 1);
             Vertex v2 = traveledVertices.get(i);
             try {
                 totalCost += v1.findEdgeConnectedTo(v2).getLength().get();
-            }
-            catch (NullPointerException e) {
+            } catch (NullPointerException e) {
                 throw new NullPointerException();
             }
         }
@@ -70,27 +69,30 @@ public class Individual implements Comparable<Individual>{
     }
 
     private Vertex pickRandomVertexToTraverse(List<Vertex> accessibleVertices, Vertex destination) {
-        /*Vertex result = null;
-        Map<Double, Vertex> vertexToProbabilityMap = new HashMap<>();
+        Vertex result = null;
+        if (accessibleVertices.contains(destination))
+            return destination;
+        Map<Vertex, Double> vertexToProbabilityMap = new HashMap<>();
         double totalProb = 0;
         for (Vertex v : accessibleVertices) {
             double prob = 1 / v.distanceTo(destination);
-            vertexToProbabilityMap.put(prob, v);
+            vertexToProbabilityMap.put(v, prob);
             totalProb += prob;
         }
         double scale = 1 / totalProb;
         double random = new Random().nextDouble();
-        vertexToProbabilityMap.keySet().stream().map(aDouble -> aDouble * scale);
         double temp = 0;
-        for (Double d : vertexToProbabilityMap.keySet()) {
-            temp += d;
+        for (Vertex v : vertexToProbabilityMap.keySet()) {
+            temp += vertexToProbabilityMap.get(v) * scale;
             if (random < temp) {
-                result = vertexToProbabilityMap.get(d);
+                result = v;
                 break;
             }
-        }*/
-        int r = new Random().nextInt(accessibleVertices.size());
-        return accessibleVertices.get(r);
+        }
+        //int r = new Random().nextInt(accessibleVertices.size());
+        if (result == null)
+            throw new NullPointerException();
+        return result;
     }
 
     private void replaceWithAlternativePath(List<Vertex> alternativeRoute, Vertex source, Vertex destination) {
@@ -117,31 +119,35 @@ public class Individual implements Comparable<Individual>{
         Vertex cur = source;
         List<Vertex> alternativeRoute = new ArrayList<>(List.of(cur));
         final int TRIALS_THRESHOLD = graph.getVertices().size() / 2;
-        for (int step = 0; step < TRIALS_THRESHOLD && cur != destination; step++) {
+        for (int i = 0; i < 50; i++) {
+            for (int step = 0; step < TRIALS_THRESHOLD &&  cur != destination; step++) {
 
-            // get accessible vertices
-            List<Vertex> accessibleVertices = new ArrayList<>(cur.getNeighbours());
-            accessibleVertices.removeAll(getTraveledVertices());
-            accessibleVertices.removeAll(alternativeRoute);
-            if (cur.getNeighbours().contains(destination) && step > 0)
-                accessibleVertices.add(destination);
+                // get accessible vertices
+                List<Vertex> accessibleVertices = new ArrayList<>(cur.getNeighbours());
+                accessibleVertices.removeAll(getTraveledVertices());
+                accessibleVertices.removeAll(alternativeRoute);
+                if (cur.getNeighbours().contains(destination) && step > 0)
+                    accessibleVertices.add(destination);
 
-            if (accessibleVertices.size() > 0) {
-                cur = pickRandomVertexToTraverse(accessibleVertices, destination);
-                if(cur == null) {
-                    throw new NullPointerException();
+                if (accessibleVertices.size() > 0) {
+                    cur = pickRandomVertexToTraverse(accessibleVertices, destination);
+                    if (cur == null) {
+                        throw new NullPointerException();
+                    }
+                    alternativeRoute.add(cur);
+                } else {
+                    System.out.println("Unable to find alternative path - dead end");
+                    break;
                 }
-                alternativeRoute.add(cur);
-            } else {
-                System.out.println("Unable to find alternative path - dead end");
+            }
+
+            if (cur == destination) {
+                System.out.println("Alternative path found! Replacing ...");
+                replaceWithAlternativePath(alternativeRoute, source, destination);
                 break;
             }
         }
 
-        if (cur == destination) {
-            System.out.println("Alternative path found! Replacing ...");
-            replaceWithAlternativePath(alternativeRoute, source, destination);
-        }
     }
 
     public boolean isPathSuccessful() {
@@ -150,9 +156,9 @@ public class Individual implements Comparable<Individual>{
 
     @Override
     public int compareTo(Individual individual) {
-        if(getTotalCost() < individual.getTotalCost())
+        if (getTotalCost() < individual.getTotalCost())
             return -1;
-        else if(getTotalCost() > individual.getTotalCost())
+        else if (getTotalCost() > individual.getTotalCost())
             return 1;
         return 0;
     }

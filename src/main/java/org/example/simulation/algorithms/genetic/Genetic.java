@@ -16,6 +16,8 @@ import java.util.*;
 public class Genetic implements Algorithm {
     private final int POPULATION_SIZE = 500;
     private final int MAX_GENERATION = 50;
+    private final double ELITISM_RATIO = 0.2;
+    private final double MUTATION_TRIALS = 50;
     private final double CROSSOVER_RATIO = 1;
     private final double MUTATION_RATIO = 1;
 
@@ -38,14 +40,14 @@ public class Genetic implements Algorithm {
         Collections.sort(initialGen);
     }
 
-    private List<Vertex> createCombinedPath(Individual parent1, Individual parent2, List<Vertex> commonVertices) {
+    private List<Vertex> createCombinedPath(Pair<Individual, Individual> parents, List<Vertex> commonVertices) {
         // pick random common vertex
         int random = new Random().nextInt(commonVertices.size());
         Vertex randomCommonVertex = commonVertices.get(random);
 
         // split paths into parts (randomCommonVertex is cut point)
-        Pair<List<Vertex>, List<Vertex>> pathPartsOfParent1 = parent1.splitPathIntoParts(randomCommonVertex);
-        Pair<List<Vertex>, List<Vertex>> pathPartsOfParent2 = parent2.splitPathIntoParts(randomCommonVertex);
+        Pair<List<Vertex>, List<Vertex>> pathPartsOfParent1 = parents.getKey().splitPathIntoParts(randomCommonVertex);
+        Pair<List<Vertex>, List<Vertex>> pathPartsOfParent2 = parents.getValue().splitPathIntoParts(randomCommonVertex);
 
         // replace
         List<Vertex> combinedPath = new ArrayList<>(pathPartsOfParent1.getKey());
@@ -53,21 +55,18 @@ public class Genetic implements Algorithm {
         return combinedPath;
     }
 
-    private Individual mate(Individual parent1, Individual parent2) {
+    private Individual mate(Pair<Individual, Individual> parents) {
 
         // get parents' common vertices
         Individual child = new Individual(graph.getStartVertex(), graph.getEndVertex());
 
-        List<Vertex> commonVertices = new ArrayList<>(parent1.getTraveledVertices());
-        commonVertices.retainAll(parent2.getTraveledVertices());
+        List<Vertex> commonVertices = new ArrayList<>(parents.getKey().getTraveledVertices());
+        commonVertices.retainAll(parents.getValue().getTraveledVertices());
         commonVertices.removeAll(List.of(graph.getStartVertex(), graph.getEndVertex())); // remove start and end vertex
 
-        if (commonVertices.isEmpty()) {
-            // no common vertices
-            System.out.println("No common vertices");
-        } else {
+        if (!commonVertices.isEmpty()) {
             System.out.println("Swapping paths ... ");
-            List<Vertex> combinedPath = createCombinedPath(parent1, parent2, commonVertices);
+            List<Vertex> combinedPath = createCombinedPath(parents, commonVertices);
             child.setTraveledVertices(combinedPath);
             child.updateTotalCost();
             return child;
@@ -125,9 +124,9 @@ public class Genetic implements Algorithm {
         if (gen.size() >= 2) {
             // roulette selection
             Pair<Individual, Individual> parents = pickRandomParents(gen);
-            child = mate(parents.getKey(), parents.getValue());
+            child = mate(parents);
         } else {
-            System.out.println("Individuals cant crossover!");
+            System.out.println("Individuals can't crossover!");
         }
         return child;
     }
@@ -139,12 +138,7 @@ public class Genetic implements Algorithm {
         Individual randomIndividual = gen.get(r);
 
         // prepare list of vertices to pick randomly
-        List<Vertex> temp = new ArrayList<>();
-        try {
-            temp.addAll(randomIndividual.getTraveledVertices());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        List<Vertex> temp = new ArrayList<>(randomIndividual.getTraveledVertices());
         temp.removeAll(List.of(graph.getStartVertex(), graph.getEndVertex())); // remove start and end vertex
 
         // pick random vertex 1
@@ -178,7 +172,8 @@ public class Genetic implements Algorithm {
         initialization(currentGen);
         int generationSize = currentGen.size();
         for (int gen = 1; gen <= MAX_GENERATION; gen++) {
-            List<Individual> newGen = new ArrayList<>();
+            List<Individual> elite = currentGen.subList(0, (int) (currentGen.size() * ELITISM_RATIO));
+            List<Individual> newGen = new ArrayList<>(elite);
             while (newGen.size() < generationSize) {
                 Individual newChild = crossover(currentGen);
                 if (newChild != null)
@@ -187,9 +182,17 @@ public class Genetic implements Algorithm {
 
             for (Individual ignored : newGen)
                 mutate(newGen);
+            Collections.sort(newGen);
             generations.add(newGen);
             currentGen.clear();
             currentGen.addAll(newGen);
+        }
+        for (List<Individual> gen : generations) {
+            double a = 0;
+            for (Individual ind : gen) {
+                a += gen.stream().mapToDouble(Individual::getTotalCost).sum();
+            }
+            System.out.println(a / generationSize);
         }
         System.out.println("Finished");
     }
@@ -199,6 +202,7 @@ public class Genetic implements Algorithm {
     public void animate(PrimaryController controller) {
         controller.toogleButtonsActivity(true);
         List<Transition> transitions = new ArrayList<>();
+
         /*for (Individual individual : currentGen) {
             for (Vertex v : individual.getTraveledVertices()) {
                 transitions.add(new FillTransition(Duration.millis(controller.getSimulationSpeed().getMax() - controller.getSimulationSpeed().getValue()), v, Color.ORANGE, Color.BLUEVIOLET));
