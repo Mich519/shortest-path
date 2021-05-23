@@ -70,8 +70,8 @@ public class BellmanFord implements Algorithm {
             Vertex v1 = shortestPath.get(i - 1);
             Vertex v2 = shortestPath.get(i);
             Edge e = v1.findEdgeConnectedTo(v2);
-            transitions.add(new FillTransition(Duration.millis(controller.getSimulationSpeed().getMax() - controller.getSimulationSpeed().getValue()), v1, Color.ORANGE, Color.BLUEVIOLET));
-            transitions.add(new StrokeTransition(Duration.millis(controller.getSimulationSpeed().getMax() - controller.getSimulationSpeed().getValue()), e, Color.LIMEGREEN, Color.BLUE));
+            transitions.add(new FillTransition(Duration.millis(controller.getSimulationSpeed().getMax() - controller.getSimulationSpeed().getValue()), v1, Vertex.defaultColor, Vertex.transitionColor));
+            transitions.add(new StrokeTransition(Duration.millis(controller.getSimulationSpeed().getMax() - controller.getSimulationSpeed().getValue()), e, Edge.defaultColor, Edge.transitionColor));
         }
         SequentialTransition st = new SequentialTransition();
         st.setCycleCount(1);

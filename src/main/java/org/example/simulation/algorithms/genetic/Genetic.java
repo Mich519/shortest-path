@@ -1,10 +1,7 @@
 package org.example.simulation.algorithms.genetic;
 
-import javafx.animation.FillTransition;
 import javafx.animation.SequentialTransition;
 import javafx.animation.Transition;
-import javafx.scene.paint.Color;
-import javafx.util.Duration;
 import javafx.util.Pair;
 import org.example.controller.PrimaryController;
 import org.example.graph.Graph;
@@ -157,19 +154,12 @@ public class Genetic implements Algorithm {
     }
 
     @Override
-
     public void animate(PrimaryController controller) {
         controller.toogleButtonsActivity(true);
         List<Transition> transitions = new ArrayList<>();
         for (List<Individual> generation : generations) {
             generation.get(0).prepareEdgeTransitions(transitions, controller);
         }
-        /*for (Individual individual : currentGen) {
-            for (Vertex v : individual.getTraveledVertices()) {
-                transitions.add(new FillTransition(Duration.millis(controller.getSimulationSpeed().getMax() - controller.getSimulationSpeed().getValue()), v, Color.ORANGE, Color.BLUEVIOLET));
-            }
-        }*/
-        //currentGen.forEach(individual -> System.out.println(individual.getTraveledVertices()));
         SequentialTransition st = new SequentialTransition();
         st.setCycleCount(1);
         st.getChildren().addAll(transitions);

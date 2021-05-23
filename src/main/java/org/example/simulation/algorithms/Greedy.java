@@ -76,12 +76,12 @@ public class Greedy implements Algorithm {
         double totalLength = 0;
         List<Transition> pathTransitions = new ArrayList<>();
         for (Vertex ver = graph.getEndVertex(); ver != null; ver = mapVertexToPrev.get(ver)) {
-            pathTransitions.add(new FillTransition(Duration.millis(controller.getSimulationSpeed().getMax() - controller.getSimulationSpeed().getValue()), ver, Color.ORANGE, Color.RED));
+            pathTransitions.add(new FillTransition(Duration.millis(controller.getSimulationSpeed().getMax() - controller.getSimulationSpeed().getValue()), ver, Vertex.defaultColor, Vertex.transitionColor));
             Vertex pred = mapVertexToPrev.get(ver);
             if (pred != null) {
                 Edge e = ver.findEdgeConnectedTo(pred);
                 totalLength += e.getLength().get();
-                pathTransitions.add(new StrokeTransition(Duration.millis(controller.getSimulationSpeed().getMax() - controller.getSimulationSpeed().getValue()), e, Color.LIMEGREEN, Color.BLUE));
+                pathTransitions.add(new StrokeTransition(Duration.millis(controller.getSimulationSpeed().getMax() - controller.getSimulationSpeed().getValue()), e, Edge.defaultColor, Edge.transitionColor));
             }
         }
         Collections.reverse(pathTransitions);

@@ -26,7 +26,7 @@ public class App extends Application {
         FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource(fxml + ".fxml"));
         Parent p = fxmlLoader.load();
         Scene scene = new Scene(p,800, 640);
-        scene.getStylesheets().add(Objects.requireNonNull(App.class.getResource("bootstrap3.css")).toExternalForm());
+        scene.getStylesheets().add(Objects.requireNonNull(App.class.getResource("custom.css")).toExternalForm());
         stage.setScene(scene);
         stage.setResizable(true);
         stage.setMaximized(true);

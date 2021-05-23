@@ -85,31 +85,6 @@ public class AntOptimization implements Algorithm {
     }
 
     @Override
-    public void animate(PrimaryController controller) {
-        // animate
-        controller.toogleButtonsActivity(true);
-        List<Transition> transitions = new ArrayList<>();
-        SequentialTransition st = new SequentialTransition();
-
-        int colorShades = 255 / allPaths.size();
-        int i = 0;
-        for (Set<Edge> s : allPaths) {
-            Color randomColor = Color.rgb(colorShades * i++, 0, 0);
-            for (Edge e : s) {
-                transitions.add(new StrokeTransition(Duration.millis(controller.getSimulationSpeed().getMax() - controller.getSimulationSpeed().getValue()), e, Edge.defaultColor, randomColor));
-            }
-        }
-
-        st.setCycleCount(1);
-        st.getChildren().addAll(transitions);
-        st.play();
-        st.setOnFinished(actionEvent -> {
-            controller.toogleButtonsActivity(false);
-            System.out.println("Animation finished");
-        });
-    }
-
-    @Override
     public void run() throws InterruptedException {
         graph.resetPheromone();
         System.out.println("Ants started");
@@ -129,8 +104,32 @@ public class AntOptimization implements Algorithm {
             }
             successfulPathsPerIteration.add(cnt);
         }
-
         System.out.println("Ants finished");
-        //animatePaths(successfulPathsPerIteration);
+    }
+
+    @Override
+    public void animate(PrimaryController controller) {
+        // animate
+        controller.toogleButtonsActivity(true);
+        List<Transition> transitions = new ArrayList<>();
+        SequentialTransition st = new SequentialTransition();
+
+        int colorShades = 255 / allPaths.size();
+        int i = 0;
+        for (Set<Edge> s : allPaths) {
+            Color randomColor = Color.rgb(255, 255 - colorShades * i, 255 - colorShades * i);
+            for (Edge e : s) {
+                transitions.add(new StrokeTransition(Duration.millis(controller.getSimulationSpeed().getMax() - controller.getSimulationSpeed().getValue()), e, Edge.defaultColor, randomColor));
+            }
+            i++;
+        }
+
+        st.setCycleCount(1);
+        st.getChildren().addAll(transitions);
+        st.play();
+        st.setOnFinished(actionEvent -> {
+            controller.toogleButtonsActivity(false);
+            System.out.println("Animation finished");
+        });
     }
 }
