@@ -1,10 +1,7 @@
 package org.example.simulation.algorithms.genetic;
 
-import javafx.animation.FillTransition;
 import javafx.animation.SequentialTransition;
 import javafx.animation.Transition;
-import javafx.scene.paint.Color;
-import javafx.util.Duration;
 import javafx.util.Pair;
 import org.example.controller.PrimaryController;
 import org.example.graph.Graph;
@@ -15,11 +12,10 @@ import java.util.*;
 
 public class Genetic implements Algorithm {
     private final int POPULATION_SIZE = 500;
-    private final int MAX_GENERATION = 50;
+    private final int MAX_GENERATION = 40;
     private final double ELITISM_RATIO = 0.2;
     private final double MUTATION_TRIALS = 50;
-    private final double CROSSOVER_RATIO = 1;
-    private final double MUTATION_RATIO = 1;
+    private final double MUTATION_RATIO = 0.2;
 
     private final Graph graph;
 
@@ -76,13 +72,7 @@ public class Genetic implements Algorithm {
 
     private Pair<Individual, Individual> pickRandomParents(List<Individual> gen) {
         Map<Individual, Double> probabilityMap = new LinkedHashMap<>();
-        double sumOfProbabilities = 0;
-        try {
-            sumOfProbabilities = gen.stream().mapToDouble(individual -> 1 / individual.getTotalCost()).sum();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
+        double sumOfProbabilities = gen.stream().mapToDouble(individual -> 1 / individual.getTotalCost()).sum();
         double scale = 1 / sumOfProbabilities;
         for (Individual individual : gen) {
             probabilityMap.put(individual, 1 / individual.getTotalCost());
@@ -119,7 +109,6 @@ public class Genetic implements Algorithm {
     }
 
     private Individual crossover(List<Individual> gen) {
-        System.out.println("Crossover occured!");
         Individual child = null;
         if (gen.size() >= 2) {
             // roulette selection
@@ -131,39 +120,12 @@ public class Genetic implements Algorithm {
         return child;
     }
 
-    private void mutate(List<Individual> gen) {
-        System.out.println("Mutation occured!");
+    private void mutation(List<Individual> gen) {
         Random random = new Random();
-        int r = random.nextInt(gen.size());
-        Individual randomIndividual = gen.get(r);
-
-        // prepare list of vertices to pick randomly
-        List<Vertex> temp = new ArrayList<>(randomIndividual.getTraveledVertices());
-        temp.removeAll(List.of(graph.getStartVertex(), graph.getEndVertex())); // remove start and end vertex
-
-        // pick random vertex 1
-        try {
-            int random1 = random.nextInt(temp.size());
-            Vertex randomVertex1 = temp.get(random1);
-            temp.remove(randomVertex1);
-
-            // pick random vertex 2
-            int random2 = random.nextInt(temp.size());
-            Vertex randomVertex2 = temp.get(random2);
-            temp.remove(randomVertex2);
-            Vertex source, destination;
-
-            if (random1 <= random2) {
-                source = randomVertex1;
-                destination = randomVertex2;
-            } else {
-                source = randomVertex2;
-                destination = randomVertex1;
-            }
-            randomIndividual.searchForAlternativeRoute(source, destination, graph);
-        } catch (IllegalArgumentException e) {
-            e.printStackTrace();
-        }
+        gen.forEach(individual -> {
+            if (random.nextDouble() < MUTATION_RATIO)
+                individual.mutate(graph.getVertices().size() / 20, 1);
+        });
     }
 
     @Override
@@ -179,9 +141,7 @@ public class Genetic implements Algorithm {
                 if (newChild != null)
                     newGen.add(newChild);
             }
-
-            for (Individual ignored : newGen)
-                mutate(newGen);
+            mutation(newGen);
             Collections.sort(newGen);
             generations.add(newGen);
             currentGen.clear();
@@ -189,9 +149,8 @@ public class Genetic implements Algorithm {
         }
         for (List<Individual> gen : generations) {
             double a = 0;
-            for (Individual ind : gen) {
+            for (Individual ind : gen)
                 a += gen.stream().mapToDouble(Individual::getTotalCost).sum();
-            }
             System.out.println(a / generationSize);
         }
         System.out.println("Finished");

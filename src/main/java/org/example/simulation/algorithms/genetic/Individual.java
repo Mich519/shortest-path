@@ -68,30 +68,9 @@ public class Individual implements Comparable<Individual> {
         return new Pair<>(firstPart, secondPart);
     }
 
-    private Vertex pickRandomVertexToTraverse(List<Vertex> accessibleVertices, Vertex destination) {
+    private Vertex pickRandomVertexToTraverse(List<Vertex> accessibleVertices) {
         Vertex result = null;
-        if (accessibleVertices.contains(destination))
-            return destination;
-        Map<Vertex, Double> vertexToProbabilityMap = new HashMap<>();
-        double totalProb = 0;
-        for (Vertex v : accessibleVertices) {
-            double prob = 1 / v.distanceTo(destination);
-            vertexToProbabilityMap.put(v, prob);
-            totalProb += prob;
-        }
-        double scale = 1 / totalProb;
-        double random = new Random().nextDouble();
-        double temp = 0;
-        for (Vertex v : vertexToProbabilityMap.keySet()) {
-            temp += vertexToProbabilityMap.get(v) * scale;
-            if (random < temp) {
-                result = v;
-                break;
-            }
-        }
-        //int r = new Random().nextInt(accessibleVertices.size());
-        if (result == null)
-            throw new NullPointerException();
+
         return result;
     }
 
@@ -114,40 +93,39 @@ public class Individual implements Comparable<Individual> {
         updateTotalCost();
     }
 
-    public void searchForAlternativeRoute(Vertex source, Vertex destination, Graph graph) {
-
-        Vertex cur = source;
-        List<Vertex> alternativeRoute = new ArrayList<>(List.of(cur));
-        final int TRIALS_THRESHOLD = graph.getVertices().size() / 2;
-        for (int i = 0; i < 50; i++) {
-            for (int step = 0; step < TRIALS_THRESHOLD &&  cur != destination; step++) {
-
-                // get accessible vertices
+    public void searchForAlternativeRoute(Vertex from, int maxSearchDepth, int numOfTrials) {
+        Random random = new Random();
+        boolean success = false;
+        for (int i = 0; i < numOfTrials; i++) {
+            Vertex cur = from;
+            List<Vertex> alternativeRoute = new ArrayList<>(List.of(cur));
+            for (int step = 0; step < maxSearchDepth && !success; step++) {
                 List<Vertex> accessibleVertices = new ArrayList<>(cur.getNeighbours());
-                accessibleVertices.removeAll(getTraveledVertices());
                 accessibleVertices.removeAll(alternativeRoute);
-                if (cur.getNeighbours().contains(destination) && step > 0)
-                    accessibleVertices.add(destination);
-
                 if (accessibleVertices.size() > 0) {
-                    cur = pickRandomVertexToTraverse(accessibleVertices, destination);
-                    if (cur == null) {
-                        throw new NullPointerException();
-                    }
+                    int r = random.nextInt(accessibleVertices.size());
+                    cur = accessibleVertices.get(r);
                     alternativeRoute.add(cur);
+                    if(traveledVertices.contains(cur) && step > 0)
+                        success = true;
                 } else {
                     System.out.println("Unable to find alternative path - dead end");
                     break;
                 }
             }
-
-            if (cur == destination) {
+            if(success) {
                 System.out.println("Alternative path found! Replacing ...");
-                replaceWithAlternativePath(alternativeRoute, source, destination);
+                replaceWithAlternativePath(alternativeRoute, from, cur);
                 break;
             }
         }
+    }
 
+    public void mutate(int maxSearchDepth, int numOfTrials) {
+        Random random = new Random();
+        int r = random.nextInt(traveledVertices.size());
+        Vertex randomVertex = traveledVertices.get(r);
+        searchForAlternativeRoute(randomVertex, maxSearchDepth, numOfTrials);
     }
 
     public boolean isPathSuccessful() {

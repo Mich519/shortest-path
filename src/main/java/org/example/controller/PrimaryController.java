@@ -1,12 +1,16 @@
 package org.example.controller;
 
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import lombok.Getter;
 import org.example.fileIO.FileInOutHandler;
@@ -59,10 +63,13 @@ public class PrimaryController {
     private Button generate;
 
     @FXML
-    private Button save;
+    private MenuItem neww;
 
     @FXML
-    private Button load;
+    private MenuItem save;
+
+    @FXML
+    private MenuItem load;
 
     @FXML
     private Slider vertexCount;
@@ -156,6 +163,7 @@ public class PrimaryController {
     public void initButtons() {
         graphEditor.setOnMouseClicked(new OnMouseClickedEventHandler(this));
         clearGraphEditor.setOnMouseClicked(mouseEvent -> clearAll());
+        neww.setOnAction(event -> clearAll());
         generate.setOnMouseClicked(mouseEvent -> {
             try {
                 graphGenerator.generate();
@@ -185,6 +193,8 @@ public class PrimaryController {
                 simulation.simulateGenetic();
             }
         });
+
+
     }
 
     private void initSliders() {
@@ -255,28 +265,31 @@ public class PrimaryController {
         /* this executes after scene is initialized */
 
         /* initialize load graph button */
-        load.setOnMouseClicked(mouseEvent -> {
+        load.setOnAction(event1 -> {
             FileChooser fileChooser = new FileChooser();
             fileChooser.setTitle("Open File");
             fileChooser.setInitialDirectory(new File("src/main/resources/org/example/graphs"));
-            Scene scene = load.getScene();
+            Stage owner = (Stage)load.getParentPopup().getOwnerWindow();
+            Scene scene = owner.getScene();
+            //Scene scene = load.getParentMenu().getScene();
             File file = fileChooser.showOpenDialog(scene.getWindow());
             if (file != null) {
                 try {
                     clearAll();
                     this.graph = fileInOutHandler.loadGraphFromFile(file);
                     drawGraph();
-                } catch (IOException | ClassNotFoundException e) {
-                    e.printStackTrace();
+                } catch (IOException | ClassNotFoundException exception) {
+                    exception.printStackTrace();
                 }
             }
         });
 
         /* initialize save graph button */
-        save.setOnMouseClicked(mouseEvent -> {
+        save.setOnAction(event1 -> {
             FileChooser fileChooser = new FileChooser();
             fileChooser.setInitialDirectory(new File("src/main/resources/org/example/graphs"));
-            Scene scene = save.getScene();
+            Stage owner = (Stage)save.getParentPopup().getOwnerWindow();
+            Scene scene = owner.getScene();
             File file = fileChooser.showSaveDialog(scene.getWindow());
             if (file != null) {
                 try {
@@ -306,8 +319,8 @@ public class PrimaryController {
         bellmanFord.setDisable(disabled);
         antOptimization.setDisable(disabled);
         start.setDisable(disabled);
-        save.setDisable(disabled);
-        load.setDisable(disabled);
+        // save.setDisable(disabled);
+        //load.setDisable(disabled);
         clearGraphEditor.setDisable(disabled);
         edgeLabels.setDisable(disabled);
     }
