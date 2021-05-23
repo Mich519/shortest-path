@@ -13,7 +13,7 @@ import org.example.graph.Vertex;
 
 import java.util.*;
 
-public class Naive implements Algorithm {
+public class Greedy implements Algorithm {
 
     private final Comparator<Vertex> vertexComparator;
     private final Graph graph;
@@ -21,7 +21,7 @@ public class Naive implements Algorithm {
     private final LinkedHashSet<Vertex> shortestPath;
     private final HashMap<Vertex, Vertex> mapVertexToPrev;
 
-    public Naive(Graph graph, Comparator<Vertex> vertexComparator, double simulationSpeed) {
+    public Greedy(Graph graph, Comparator<Vertex> vertexComparator, double simulationSpeed) {
         this.vertexComparator = vertexComparator;
         this.graph = graph;
         this.simulationSpeed = simulationSpeed;
@@ -63,26 +63,29 @@ public class Naive implements Algorithm {
     @Override
     public void animate(PrimaryController controller) {
         controller.toogleButtonsActivity(true);
-        /* vertices animation */
-        List<Transition> transitions = new ArrayList<>();
-        for (Vertex v : shortestPath) {
-            transitions.add(new FillTransition(Duration.millis(controller.getSimulationSpeed().getMax() - controller.getSimulationSpeed().getValue()), v, Color.ORANGE, Color.BLUEVIOLET));
-        }
         SequentialTransition st = new SequentialTransition();
+
+        /* vertices animation */
+        for (Vertex v : shortestPath) {
+            st.getChildren().add(new FillTransition(Duration.millis(controller.getSimulationSpeed().getMax() - controller.getSimulationSpeed().getValue()), v, Color.ORANGE, Color.BLUEVIOLET));
+        }
+
         st.setCycleCount(1);
 
         /* color edges that represent a path */
         double totalLength = 0;
+        List<Transition> pathTransitions = new ArrayList<>();
         for (Vertex ver = graph.getEndVertex(); ver != null; ver = mapVertexToPrev.get(ver)) {
-            transitions.add(new FillTransition(Duration.millis(controller.getSimulationSpeed().getMax() - controller.getSimulationSpeed().getValue()), ver, Color.ORANGE, Color.RED));
+            pathTransitions.add(new FillTransition(Duration.millis(controller.getSimulationSpeed().getMax() - controller.getSimulationSpeed().getValue()), ver, Color.ORANGE, Color.RED));
             Vertex pred = mapVertexToPrev.get(ver);
             if (pred != null) {
                 Edge e = ver.findEdgeConnectedTo(pred);
                 totalLength += e.getLength().get();
-                transitions.add(new StrokeTransition(Duration.millis(controller.getSimulationSpeed().getMax() - controller.getSimulationSpeed().getValue()), e, Color.LIMEGREEN, Color.BLUE));
+                pathTransitions.add(new StrokeTransition(Duration.millis(controller.getSimulationSpeed().getMax() - controller.getSimulationSpeed().getValue()), e, Color.LIMEGREEN, Color.BLUE));
             }
         }
-        st.getChildren().addAll(transitions);
+        Collections.reverse(pathTransitions);
+        st.getChildren().addAll(pathTransitions);
         st.play();
         System.out.println(totalLength);
 

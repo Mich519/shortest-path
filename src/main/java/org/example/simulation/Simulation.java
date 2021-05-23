@@ -5,7 +5,7 @@ import org.example.graph.Graph;
 import org.example.graph.comparators.VertexByCurLowestCostComparator;
 import org.example.graph.comparators.VertexByTotalCostComparator;
 import org.example.simulation.algorithms.BellmanFord;
-import org.example.simulation.algorithms.Naive;
+import org.example.simulation.algorithms.Greedy;
 import org.example.simulation.algorithms.antOptimization.AntOptimization;
 import org.example.simulation.algorithms.antOptimization.Chart;
 import org.example.simulation.algorithms.antOptimization.AntParametersContainer;
@@ -28,7 +28,7 @@ public class Simulation {
 
             Graph graph = controller.getGraph();
             double simulationSpeed = controller.getSimulationSpeed().getValue();
-            Naive dijkstra = new Naive(graph, new VertexByCurLowestCostComparator(), simulationSpeed);
+            Greedy dijkstra = new Greedy(graph, new VertexByCurLowestCostComparator(), simulationSpeed);
             dijkstra.run();
             if(controller.getShowAnimation().isSelected()) {
                 dijkstra.animate(controller);
@@ -41,7 +41,7 @@ public class Simulation {
             /* check if start and end vertices are set */
             Graph graph = controller.getGraph();
             double simulationSpeed = controller.getSimulationSpeed().getValue();
-            Naive aStar = new Naive(graph, new VertexByTotalCostComparator(controller.getGraph()), simulationSpeed);
+            Greedy aStar = new Greedy(graph, new VertexByTotalCostComparator(controller.getGraph()), simulationSpeed);
             aStar.run();
             if(controller.getShowAnimation().isSelected()) {
                 aStar.animate(controller);

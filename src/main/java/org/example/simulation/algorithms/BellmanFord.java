@@ -2,6 +2,7 @@ package org.example.simulation.algorithms;
 
 import javafx.animation.FillTransition;
 import javafx.animation.SequentialTransition;
+import javafx.animation.StrokeTransition;
 import javafx.animation.Transition;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
@@ -16,9 +17,11 @@ public class BellmanFord implements Algorithm {
 
     private final Graph graph;
     private final Map<Vertex, Vertex> predecessors;
+    private final List<Vertex> shortestPath;
     public BellmanFord(Graph graph) {
         this.graph = graph;
         this.predecessors =  new HashMap<>();
+        this.shortestPath = new ArrayList<>();
     }
 
     @Override
@@ -52,17 +55,23 @@ public class BellmanFord implements Algorithm {
                 }
             }
         }
+
+        for (Vertex v = graph.getEndVertex(); v != null ; v = predecessors.get(v)) {
+            shortestPath.add(v);
+        }
+        Collections.reverse(shortestPath);
     }
 
     @Override
     public void animate(PrimaryController controller) {
-        // animation
         controller.toogleButtonsActivity(true);
-        Set<Vertex> shortestPath = new LinkedHashSet<>();
         List<Transition> transitions = new ArrayList<>();
-        for (Vertex v = graph.getEndVertex(); v != null ; v = predecessors.get(v)) {
-            transitions.add(new FillTransition(Duration.millis(controller.getSimulationSpeed().getMax() - controller.getSimulationSpeed().getValue()), v, Color.ORANGE, Color.BLUEVIOLET));
-            shortestPath.add(v);
+        for (int i=1; i<shortestPath.size(); i++) {
+            Vertex v1 = shortestPath.get(i - 1);
+            Vertex v2 = shortestPath.get(i);
+            Edge e = v1.findEdgeConnectedTo(v2);
+            transitions.add(new FillTransition(Duration.millis(controller.getSimulationSpeed().getMax() - controller.getSimulationSpeed().getValue()), v1, Color.ORANGE, Color.BLUEVIOLET));
+            transitions.add(new StrokeTransition(Duration.millis(controller.getSimulationSpeed().getMax() - controller.getSimulationSpeed().getValue()), e, Color.LIMEGREEN, Color.BLUE));
         }
         SequentialTransition st = new SequentialTransition();
         st.setCycleCount(1);
