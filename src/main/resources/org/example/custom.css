@@ -29,3 +29,7 @@
 
 .tab-pane:focused > .tab-header-area > .headers-region > .tab:selected .focus-indicator {-fx-border-color: #fca311}
 
+.menu
+{
+     -fx-text-fill: blue;
+}

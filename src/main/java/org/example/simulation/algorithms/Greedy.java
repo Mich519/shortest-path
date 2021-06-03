@@ -33,6 +33,7 @@ public class Greedy implements Algorithm {
     @Override
     public void run() {
         // maps vertex to its predecessor in a path
+        graph.getVertices().forEach(v -> v.setCurLowestCost(Double.POSITIVE_INFINITY));
         mapVertexToPrev.put(graph.getStartVertex(), null);
         graph.getStartVertex().setCurLowestCost(0);
         PriorityQueue<Vertex> q = new PriorityQueue<>(10, vertexComparator);
@@ -59,7 +60,6 @@ public class Greedy implements Algorithm {
         }
     }
 
-
     @Override
     public void animate(PrimaryController controller) {
         controller.toogleButtonsActivity(true);
@@ -81,20 +81,21 @@ public class Greedy implements Algorithm {
             if (pred != null) {
                 Edge e = ver.findEdgeConnectedTo(pred);
                 totalLength += e.getLength().get();
-                pathTransitions.add(new StrokeTransition(Duration.millis(controller.getSimulationSpeed().getMax() - controller.getSimulationSpeed().getValue()), e, Edge.defaultColor, Edge.transitionColor));
+                pathTransitions.add(new StrokeTransition(Duration.millis(controller.getSimulationSpeed().getMax() - controller.getSimulationSpeed().getValue()), e, Edge.DEFAULT_COLOR, Edge.TRANSITION_COLOR));
             }
         }
         Collections.reverse(pathTransitions);
         st.getChildren().addAll(pathTransitions);
+        controller.getStop().setOnMouseClicked(mouseEvent -> {
+            st.stop();
+            controller.drawGraph();
+            controller.toogleButtonsActivity(false);
+        });
         st.play();
-        System.out.println(totalLength);
 
-        /* reset everything */
+        //System.out.println(totalLength);
         st.setOnFinished(actionEvent -> {
-            for (Vertex v : graph.getVertices()) {
-                v.setCurLowestCost(Double.POSITIVE_INFINITY);
-                controller.toogleButtonsActivity(false);
-            }
+            controller.toogleButtonsActivity(false);
         });
     }
 

@@ -163,6 +163,11 @@ public class Genetic implements Algorithm {
         SequentialTransition st = new SequentialTransition();
         st.setCycleCount(1);
         st.getChildren().addAll(transitions);
+        controller.getStop().setOnMouseClicked(mouseEvent -> {
+            st.stop();
+            controller.drawGraph();
+            controller.toogleButtonsActivity(false);
+        });
         st.play();
         st.setOnFinished(actionEvent -> {
             controller.toogleButtonsActivity(false);

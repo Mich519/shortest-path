@@ -5,13 +5,11 @@ import javafx.beans.binding.DoubleBinding;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
 import javafx.scene.control.Label;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Line;
 import javafx.util.Pair;
-import javafx.util.StringConverter;
 import javafx.util.converter.NumberStringConverter;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -22,8 +20,8 @@ import java.io.Serializable;
 @Getter
 @EqualsAndHashCode(callSuper = false)
 public class Edge extends Line implements Serializable {
-    public static final Color defaultColor = Color.LIMEGREEN;
-    public static final Color transitionColor = Color.BLUE;
+    public static final Color DEFAULT_COLOR = Color.LIMEGREEN;
+    public static final Color TRANSITION_COLOR = Color.BLUE;
 
     private final Pair<Vertex, Vertex> vertices;
     //private final Vertex source;
@@ -71,7 +69,7 @@ public class Edge extends Line implements Serializable {
     public Edge(Vertex source, Vertex destination) {
         super(source.centerXProperty().get(), source.centerYProperty().get(), destination.centerXProperty().get(), destination.centerYProperty().get());
         vertices = new Pair<>(source, destination);
-        this.color = Edge.defaultColor;
+        this.color = Edge.DEFAULT_COLOR;
 
         startXProperty().bind(source.centerXProperty());
         startYProperty().bind(source.centerYProperty());

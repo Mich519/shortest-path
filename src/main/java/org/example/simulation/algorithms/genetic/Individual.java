@@ -10,7 +10,6 @@ import lombok.Getter;
 import lombok.Setter;
 import org.example.controller.PrimaryController;
 import org.example.graph.Edge;
-import org.example.graph.Graph;
 import org.example.graph.Vertex;
 
 import java.util.*;
@@ -70,7 +69,7 @@ public class Individual implements Comparable<Individual> {
             if(e == null)
                 throw new NullPointerException();
             transitions.add(new FillTransition(Duration.millis(controller.getSimulationSpeed().getMax() - controller.getSimulationSpeed().getValue()), v1, Vertex.defaultColor, Color.PINK));
-            transitions.add(new StrokeTransition(Duration.millis(controller.getSimulationSpeed().getMax() - controller.getSimulationSpeed().getValue()), e, Edge.defaultColor, Color.WHITE));
+            transitions.add(new StrokeTransition(Duration.millis(controller.getSimulationSpeed().getMax() - controller.getSimulationSpeed().getValue()), e, Edge.DEFAULT_COLOR, Color.WHITE));
         }
     }
 

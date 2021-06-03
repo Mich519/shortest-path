@@ -1,14 +1,9 @@
 package org.example.controller;
 
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
@@ -133,6 +128,9 @@ public class PrimaryController {
 
     @FXML
     private Button start;
+
+    @FXML
+    private Button stop;
 
     private Graph graph;
     private GraphGenerator graphGenerator;
@@ -303,7 +301,7 @@ public class PrimaryController {
             FileChooser fileChooser = new FileChooser();
             fileChooser.setTitle("Open File");
             fileChooser.setInitialDirectory(new File("src/main/resources/org/example/graphs"));
-            Stage owner = (Stage)load.getParentPopup().getOwnerWindow();
+            Stage owner = (Stage) load.getParentPopup().getOwnerWindow();
             Scene scene = owner.getScene();
             //Scene scene = load.getParentMenu().getScene();
             File file = fileChooser.showOpenDialog(scene.getWindow());
@@ -322,7 +320,7 @@ public class PrimaryController {
         save.setOnAction(event1 -> {
             FileChooser fileChooser = new FileChooser();
             fileChooser.setInitialDirectory(new File("src/main/resources/org/example/graphs"));
-            Stage owner = (Stage)save.getParentPopup().getOwnerWindow();
+            Stage owner = (Stage) save.getParentPopup().getOwnerWindow();
             Scene scene = owner.getScene();
             File file = fileChooser.showSaveDialog(scene.getWindow());
             if (file != null) {
@@ -388,7 +386,7 @@ public class PrimaryController {
 
         // draw edges
         graph.getVertices().forEach(v -> v.getAdjEdges().forEach(e -> {
-            e.setStroke(Edge.defaultColor);
+            e.setStroke(Edge.DEFAULT_COLOR);
             addEdgeToPane(e);
         }));
 

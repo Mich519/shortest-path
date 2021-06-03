@@ -16,7 +16,6 @@ import java.util.*;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-// todo: algorithm doesn't work when graph is loaded from a file
 
 public class AntOptimization implements Algorithm {
     private final AntParametersContainer parameters;
@@ -72,7 +71,7 @@ public class AntOptimization implements Algorithm {
             Ant ant = (Ant)a;
             if (ant.getCurVertex() == ant.getEndVertex()) {
                 // ant reached the goal - update pheromone on that path
-                if (currentShortestPath.isEmpty() || sumOfWeight(ant.getTraversedEdges()) < (sumOfWeight(currentShortestPath))) {
+                if (currentShortestPath.isEmpty() || sumOfWeight(ant.getTraversedEdges()) < sumOfWeight(currentShortestPath)) {
                     currentShortestPath.clear();
                     Set<Edge> temp = new LinkedHashSet<>(ant.getTraversedEdges());
                     currentShortestPath.addAll(temp); // copy constructor
@@ -95,6 +94,7 @@ public class AntOptimization implements Algorithm {
             executorService.invokeAll(ants);
             evaporation();
             updatePheromoneOnSuccessfulPaths(ants, currentShortestPath);
+
             // count number of ants that reached the goal
             int cnt = 0;
             for (Callable<Ant> a : ants) {
@@ -119,17 +119,24 @@ public class AntOptimization implements Algorithm {
         for (Set<Edge> s : allPaths) {
             Color randomColor = Color.rgb(255, 255 - colorShades * i, 255 - colorShades * i);
             for (Edge e : s) {
-                transitions.add(new StrokeTransition(Duration.millis(controller.getSimulationSpeed().getMax() - controller.getSimulationSpeed().getValue()), e, Edge.defaultColor, randomColor));
+                transitions.add(new StrokeTransition(Duration.millis(controller.getSimulationSpeed().getMax() - controller.getSimulationSpeed().getValue()), e, Edge.DEFAULT_COLOR, randomColor));
             }
             i++;
         }
 
         st.setCycleCount(1);
         st.getChildren().addAll(transitions);
-        st.play();
-        st.setOnFinished(actionEvent -> {
+        controller.getStop().setOnMouseClicked(mouseEvent -> {
+            // init stop animation button
+            st.stop();
+            //controller.drawGraph();
             controller.toogleButtonsActivity(false);
+        });
+        st.play();
+
+        st.setOnFinished(actionEvent -> {
             System.out.println("Animation finished");
+            controller.toogleButtonsActivity(false);
         });
     }
 }
