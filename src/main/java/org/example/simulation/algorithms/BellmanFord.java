@@ -15,17 +15,17 @@ import java.util.*;
 public class BellmanFord implements Algorithm {
 
     private final Graph graph;
-    private final Map<Vertex, Vertex> predecessors;
-    private final List<Vertex> shortestPath;
+    private Map<Vertex, Vertex> predecessors;
+    private List<Vertex> shortestPath;
 
     public BellmanFord(Graph graph) {
         this.graph = graph;
-        this.predecessors = new HashMap<>();
-        this.shortestPath = new ArrayList<>();
     }
 
     @Override
     public void run() throws Exception {
+        this.predecessors = new HashMap<>();
+        this.shortestPath = new ArrayList<>();
         Map<Vertex, Double> distances = new HashMap<>();
         predecessors.put(graph.getStartVertex(), null); // starting vertex doesn't have predecessor
         for (Vertex v : graph.getVertices())
@@ -46,19 +46,19 @@ public class BellmanFord implements Algorithm {
         }
 
         // check for negative weight cycles
-        for (Vertex v : graph.getVertices()) {
+        /*for (Vertex v : graph.getVertices()) {
             for (Edge e : v.getAdjEdges()) {
                 Vertex neighbour = e.getNeighbourOf(v);
                 if (distances.get(v) + e.getLength().get() < distances.get(neighbour)) {
                     throw new Exception("Graph contains negative weight cycle.");
                 }
             }
-        }
+        }*/
 
-        for (Vertex v = graph.getEndVertex(); v != null; v = predecessors.get(v)) {
+        /*for (Vertex v = graph.getEndVertex(); v != null; v = predecessors.get(v)) {
             shortestPath.add(v);
         }
-        Collections.reverse(shortestPath);
+        Collections.reverse(shortestPath);*/
     }
 
     @Override
@@ -84,5 +84,10 @@ public class BellmanFord implements Algorithm {
         st.setOnFinished(actionEvent -> {
             controller.toogleButtonsActivity(false);
         });
+    }
+
+    @Override
+    public void generateReport() {
+
     }
 }

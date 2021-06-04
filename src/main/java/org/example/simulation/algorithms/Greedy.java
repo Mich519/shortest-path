@@ -18,27 +18,29 @@ public class Greedy implements Algorithm {
     private final Comparator<Vertex> vertexComparator;
     private final Graph graph;
     private final double simulationSpeed;
-    private final LinkedHashSet<Vertex> shortestPath;
-    private final HashMap<Vertex, Vertex> mapVertexToPrev;
+    private LinkedHashSet<Vertex> shortestPath;
+    private HashMap<Vertex, Vertex> mapVertexToPrev;
 
     public Greedy(Graph graph, Comparator<Vertex> vertexComparator, double simulationSpeed) {
         this.vertexComparator = vertexComparator;
         this.graph = graph;
         this.simulationSpeed = simulationSpeed;
-        this.shortestPath = new LinkedHashSet<>();
-        this.mapVertexToPrev = new HashMap<>();
     }
 
 
     @Override
     public void run() {
         // maps vertex to its predecessor in a path
+        shortestPath = new LinkedHashSet<>();
+        mapVertexToPrev = new HashMap<>();
         graph.getVertices().forEach(v -> v.setCurLowestCost(Double.POSITIVE_INFINITY));
         mapVertexToPrev.put(graph.getStartVertex(), null);
         graph.getStartVertex().setCurLowestCost(0);
         PriorityQueue<Vertex> q = new PriorityQueue<>(10, vertexComparator);
         q.addAll(graph.getVertices());
+
         while (!q.isEmpty()) {
+
             Vertex v = q.poll();
             shortestPath.add(v);
             for (Edge w : v.getAdjEdges()) {
@@ -99,4 +101,8 @@ public class Greedy implements Algorithm {
         });
     }
 
+    @Override
+    public void generateReport() {
+
+    }
 }

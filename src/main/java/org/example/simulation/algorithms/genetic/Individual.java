@@ -88,7 +88,6 @@ public class Individual implements Comparable<Individual> {
 
     private void replaceWithAlternativePath(List<Vertex> alternativeRoute, Vertex source, Vertex destination) {
 
-        System.out.println("Alternative path was found!");
         Pair<List<Vertex>, List<Vertex>> firstPartOfThePath = splitPathIntoParts(source);
         Pair<List<Vertex>, List<Vertex>> secondPartOfThePath = splitPathIntoParts(destination);
 
@@ -121,12 +120,10 @@ public class Individual implements Comparable<Individual> {
                     if(traveledVertices.contains(cur) && step > 0)
                         success = true;
                 } else {
-                    System.out.println("Unable to find alternative path - dead end");
                     break;
                 }
             }
             if(success) {
-                System.out.println("Alternative path found! Replacing ...");
                 replaceWithAlternativePath(alternativeRoute, from, cur);
                 break;
             }

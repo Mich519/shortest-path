@@ -184,13 +184,21 @@ public class PrimaryController {
 
         start.setOnMouseClicked(mouseEvent -> {
             if (dijkstra.isSelected()) {
-                simulation.simulateDijkstra();
+                try {
+                    simulation.simulateDijkstra();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             } else if (aStar.isSelected()) {
-                simulation.simulateAStar();
+                try {
+                    simulation.simulateAStar();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             } else if (antOptimization.isSelected()) {
                 try {
                     simulation.simulateAntOptimization();
-                } catch (InterruptedException e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             } else if (bellmanFord.isSelected()) {
@@ -200,7 +208,11 @@ public class PrimaryController {
                     e.printStackTrace();
                 }
             } else if (genetic.isSelected()) {
-                simulation.simulateGenetic();
+                try {
+                    simulation.simulateGenetic();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         });
 

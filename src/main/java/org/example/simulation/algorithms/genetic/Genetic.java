@@ -14,11 +14,11 @@ public class Genetic implements Algorithm {
     private final GeneticParametersContainer parameters;
     private final Graph graph;
 
-    private final List<List<Individual>> generations;
+    private List<List<Individual>> generations;
 
     public Genetic(Graph graph, GeneticParametersContainer parameters) {
         this.graph = graph;
-        this.generations = new ArrayList<>();
+
         this.parameters = parameters;
     }
 
@@ -57,7 +57,6 @@ public class Genetic implements Algorithm {
         commonVertices.removeAll(List.of(graph.getStartVertex(), graph.getEndVertex())); // remove start and end vertex
 
         if (!commonVertices.isEmpty()) {
-            System.out.println("Swapping paths ... ");
             List<Vertex> combinedPath = createCombinedPath(parents, commonVertices);
             child.setTraveledVertices(combinedPath);
             child.updateTotalCost();
@@ -111,7 +110,7 @@ public class Genetic implements Algorithm {
             Pair<Individual, Individual> parents = pickRandomParents(gen);
             child = mate(parents);
         } else {
-            System.out.println("Individuals can't crossover!");
+            ;
         }
         return child;
     }
@@ -126,6 +125,7 @@ public class Genetic implements Algorithm {
 
     @Override
     public void run() {
+        this.generations = new ArrayList<>();
         List<Individual> currentGen = new ArrayList<>();
         initialization(currentGen);
         int generationSize = currentGen.size();
@@ -147,10 +147,7 @@ public class Genetic implements Algorithm {
             double a = 0;
             for (Individual ind : gen)
                 a += gen.stream().mapToDouble(Individual::getTotalCost).sum();
-            //System.out.println(a / generationSize);
         }
-        System.out.println(currentGen.get(0).getTotalCost());
-        System.out.println("Finished");
     }
 
     @Override
@@ -172,6 +169,11 @@ public class Genetic implements Algorithm {
         st.setOnFinished(actionEvent -> {
             controller.toogleButtonsActivity(false);
         });
+    }
+
+    @Override
+    public void generateReport() {
+
     }
 }
 

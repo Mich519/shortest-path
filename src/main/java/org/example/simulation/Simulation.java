@@ -4,6 +4,7 @@ import org.example.controller.PrimaryController;
 import org.example.graph.Graph;
 import org.example.graph.comparators.VertexByCurLowestCostComparator;
 import org.example.graph.comparators.VertexByTotalCostComparator;
+import org.example.simulation.algorithms.Algorithm;
 import org.example.simulation.algorithms.BellmanFord;
 import org.example.simulation.algorithms.Greedy;
 import org.example.simulation.algorithms.antOptimization.AntOptimization;
@@ -13,6 +14,8 @@ import org.example.simulation.algorithms.genetic.Genetic;
 import org.example.simulation.algorithms.genetic.GeneticParametersContainer;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Simulation {
 
@@ -22,41 +25,60 @@ public class Simulation {
         this.controller = controller;
     }
 
-    public void simulateDijkstra() {
+    private void measureExecutionTime(Algorithm algorithm) throws Exception {
+        final int skip = 20; // warmup faze
+        final int numOfTests = 100;
+        for (int j=0; j<10; j++) {
+            List<Long> times = new ArrayList<>(numOfTests);
+            for (int i = 0; i < numOfTests + skip; i++) {
+                long startTime = System.nanoTime();
+                algorithm.run();
+                long finishTime = System.nanoTime();
+                long elapsed = finishTime - startTime;
+                if (i > skip) {
+                    times.add(elapsed / 100);
+                }
+            }
+            long avg = times.stream().reduce(Long::sum).get() / times.size();
+            System.out.println("Avg time: " + avg);
+        }
+    }
+
+    public void simulateDijkstra() throws Exception {
         if (controller.getGraph().getStartVertex() != null && controller.getGraph().getEndVertex() != null) {
             /* check if start and end vertices are set */
 
             Graph graph = controller.getGraph();
             double simulationSpeed = controller.getSimulationSpeed().getValue();
             Greedy dijkstra = new Greedy(graph, new VertexByCurLowestCostComparator(), simulationSpeed);
-            dijkstra.run();
-            if(controller.getShowAnimation().isSelected()) {
+            measureExecutionTime(dijkstra);
+            if (controller.getShowAnimation().isSelected()) {
                 dijkstra.animate(controller);
             }
         }
     }
 
-    public void simulateAStar() {
+    public void simulateAStar() throws Exception {
         if (controller.getGraph().getStartVertex() != null && controller.getGraph().getEndVertex() != null) {
             /* check if start and end vertices are set */
             Graph graph = controller.getGraph();
             double simulationSpeed = controller.getSimulationSpeed().getValue();
             Greedy aStar = new Greedy(graph, new VertexByTotalCostComparator(controller.getGraph()), simulationSpeed);
-            aStar.run();
-            if(controller.getShowAnimation().isSelected()) {
+            measureExecutionTime(aStar);
+            if (controller.getShowAnimation().isSelected()) {
                 aStar.animate(controller);
             }
         }
     }
 
-    public void simulateAntOptimization() throws InterruptedException {
+    public void simulateAntOptimization() throws Exception {
         if (controller.getGraph().getStartVertex() != null && controller.getGraph().getEndVertex() != null) {
             /* check if start and end vertices are set */
             Graph graph = controller.getGraph();
             AntParametersContainer parameters = new AntParametersContainer(controller);
             double simulationSpeed = controller.getSimulationSpeed().getValue();
             AntOptimization antOptimization = new AntOptimization(graph, parameters, simulationSpeed);
-            antOptimization.run();
+            measureExecutionTime(antOptimization);
 
             // generate report if selected
             if (controller.getGenerateReport().isSelected()) {
@@ -67,7 +89,7 @@ public class Simulation {
                     e.printStackTrace();
                 }
             }
-            if(controller.getShowAnimation().isSelected()) {
+            if (controller.getShowAnimation().isSelected()) {
                 antOptimization.animate(controller);
             }
         }
@@ -79,21 +101,21 @@ public class Simulation {
 
             Graph graph = controller.getGraph();
             BellmanFord bellmanFord = new BellmanFord(graph);
-            bellmanFord.run();
-            if(controller.getShowAnimation().isSelected()) {
+            measureExecutionTime(bellmanFord);
+            if (controller.getShowAnimation().isSelected()) {
                 bellmanFord.animate(controller);
             }
         }
     }
 
-    public void simulateGenetic() {
+    public void simulateGenetic() throws Exception {
         if (controller.getGraph().getStartVertex() != null && controller.getGraph().getEndVertex() != null) {
             /* check if start and end vertices are set */
             Graph graph = controller.getGraph();
             GeneticParametersContainer parameters = new GeneticParametersContainer(controller);
             Genetic genetic = new Genetic(graph, parameters);
-            genetic.run();
-            if(controller.getShowAnimation().isSelected()) {
+            measureExecutionTime(genetic);
+            if (controller.getShowAnimation().isSelected()) {
                 genetic.animate(controller);
             }
         }

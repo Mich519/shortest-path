@@ -22,19 +22,17 @@ public class AntOptimization implements Algorithm {
     private final Graph graph;
     private final double animationSpeed;
     @Getter
-    private final List<Set<Edge>> allPaths;
+    private List<Set<Edge>> allPaths;
     @Getter
-    private final Set<Edge> currentShortestPath;
+    private Set<Edge> currentShortestPath;
     @Getter
-    private final List<Integer> successfulPathsPerIteration;
+    private List<Integer> successfulPathsPerIteration;
 
     public AntOptimization(Graph graph, AntParametersContainer parameters, double animationSpeed) {
         this.graph = graph;
         this.parameters = parameters;
         this.animationSpeed = animationSpeed;
-        this.allPaths = new ArrayList<>();
-        this.currentShortestPath = new LinkedHashSet<>();
-        this.successfulPathsPerIteration = new ArrayList<>(parameters.numOfIterations);
+
     }
 
     private double sumOfWeight(Set<Edge> edges) {
@@ -76,7 +74,7 @@ public class AntOptimization implements Algorithm {
                     Set<Edge> temp = new LinkedHashSet<>(ant.getTraversedEdges());
                     currentShortestPath.addAll(temp); // copy constructor
                     allPaths.add(temp);
-                    System.out.println("New shortest found! with length " + sumOfWeight(ant.getTraversedEdges()));
+                    //System.out.println("New shortest found! with length " + sumOfWeight(ant.getTraversedEdges()));
                 }
                 ant.updateTraversedEdges();
             }
@@ -85,8 +83,10 @@ public class AntOptimization implements Algorithm {
 
     @Override
     public void run() throws InterruptedException {
+        this.allPaths = new ArrayList<>();
+        this.currentShortestPath = new LinkedHashSet<>();
+        this.successfulPathsPerIteration = new ArrayList<>(parameters.numOfIterations);
         graph.resetPheromone();
-        System.out.println("Ants started");
         ExecutorService executorService = Executors.newFixedThreadPool(4);
         for (int i = 0; i < parameters.numOfIterations; i++) {
             Set<Callable<Ant>> ants = new HashSet<>();
@@ -104,7 +104,6 @@ public class AntOptimization implements Algorithm {
             }
             successfulPathsPerIteration.add(cnt);
         }
-        System.out.println("Ants finished");
     }
 
     @Override
@@ -138,5 +137,10 @@ public class AntOptimization implements Algorithm {
             System.out.println("Animation finished");
             controller.toogleButtonsActivity(false);
         });
+    }
+
+    @Override
+    public void generateReport() {
+
     }
 }
