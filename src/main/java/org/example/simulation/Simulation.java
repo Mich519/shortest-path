@@ -119,6 +119,10 @@ public class Simulation {
             GeneticParametersContainer parameters = new GeneticParametersContainer(controller);
             Genetic genetic = new Genetic(graph, parameters);
             measureExecutionTime(genetic);
+            if (controller.getGenerateReport().isSelected()) {
+                ReportGenerator reportGenerator = new ReportGenerator();
+                reportGenerator.generateRaport(genetic);
+            }
             if (controller.getShowAnimation().isSelected()) {
                 genetic.animate(controller);
             }

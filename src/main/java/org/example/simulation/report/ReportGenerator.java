@@ -35,7 +35,6 @@ public class ReportGenerator {
         chartContainer.getChildren().add(labelsContainer);
         chartContainer.getChildren().addAll(charts);
 
-
         ScrollPane scrollPane = new ScrollPane(chartContainer);
 
         FXMLLoader.load(Objects.requireNonNull(App.class.getResource("chart.fxml")));

@@ -2,6 +2,8 @@ package org.example.simulation.algorithms.genetic;
 
 import javafx.animation.SequentialTransition;
 import javafx.animation.Transition;
+import javafx.scene.chart.XYChart;
+import javafx.scene.control.Label;
 import javafx.util.Pair;
 import org.example.controller.PrimaryController;
 import org.example.graph.Graph;
@@ -19,7 +21,6 @@ public class Genetic implements Algorithm {
 
     public Genetic(Graph graph, GeneticParametersContainer parameters) {
         this.graph = graph;
-
         this.parameters = parameters;
     }
 
@@ -110,8 +111,6 @@ public class Genetic implements Algorithm {
             // roulette selection
             Pair<Individual, Individual> parents = pickRandomParents(gen);
             child = mate(parents);
-        } else {
-            ;
         }
         return child;
     }
@@ -119,7 +118,7 @@ public class Genetic implements Algorithm {
     private void mutation(List<Individual> gen) {
         Random random = new Random();
         gen.forEach(individual -> {
-            if (random.nextDouble() < parameters.mutationRatio)
+            if (random.nextDouble() < parameters.mutationRate)
                 individual.mutate(graph.getVertices().size() / 20, 1);
         });
     }
@@ -143,11 +142,6 @@ public class Genetic implements Algorithm {
             generations.add(newGen);
             currentGen.clear();
             currentGen.addAll(newGen);
-        }
-        for (List<Individual> gen : generations) {
-            double a = 0;
-            for (Individual ind : gen)
-                a += gen.stream().mapToDouble(Individual::getTotalCost).sum();
         }
     }
 
@@ -174,7 +168,32 @@ public class Genetic implements Algorithm {
 
     @Override
     public ReportContent generateReportContent() {
-        return null;
+        ReportContent reportContent = new ReportContent();
+        reportContent.addLabel(new Label("Elitism rate: " + parameters.elitismRate));
+        reportContent.addLabel(new Label("Mutation rate: " + parameters.mutationRate));
+        reportContent.addLabel(new Label("Number of generations: " + parameters.numOfGenerations));
+        reportContent.addLabel(new Label("Initial population: " + parameters.initialPopulation));
+
+        // shortest path per generation chart
+        XYChart.Series<Number, Number> series1 = new XYChart.Series<>();
+        for (int i = 0; i < generations.size(); i++)
+            series1.getData().add(new XYChart.Data<>(i, generations.get(i).get(0).getTotalCost()));
+        reportContent.addChart(series1, "Shortest path per generation", "generation", "path length");
+
+        // sum of paths per generation chart
+        XYChart.Series<Number, Number> series2 = new XYChart.Series<>();
+
+        for (int i = 0; i < generations.size(); i++) {
+            double allPathsLength = 0;
+            for (Individual individual : generations.get(i)) {
+                allPathsLength += individual.getTotalCost();
+            }
+            series2.getData().add(new XYChart.Data<>(i, allPathsLength));
+        }
+
+        reportContent.addChart(series2, "Sum of all paths in in generation", "generation", "total path length");
+
+        return reportContent;
     }
 }
 
