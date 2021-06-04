@@ -324,7 +324,7 @@
                                     <Insets bottom="10.0" left="10.0" />
                                  </VBox.margin>
                               </RadioButton>
-                              <RadioButton fx:id="generateReport" mnemonicParsing="false" text="Generate raport" textFill="#adb5bd">
+                              <RadioButton fx:id="generateReport" mnemonicParsing="false" text="Generate report" textFill="#adb5bd">
                                  <VBox.margin>
                                     <Insets bottom="10.0" left="10.0" />
                                  </VBox.margin>
@@ -334,12 +334,29 @@
                                     <Insets bottom="10.0" left="10.0" />
                                  </VBox.margin>
                               </RadioButton>
+                              <VBox alignment="CENTER_LEFT" style="-fx-border-radius: 10 10 10 10; -fx-border-color: #264653;">
+                                 <VBox.margin>
+                                    <Insets bottom="10.0" left="10.0" />
+                                 </VBox.margin>
+                                 <children>
+                                    <RadioButton fx:id="benchmark" mnemonicParsing="false" text="Benchmark" textFill="#adb5bd">
+                                       <VBox.margin>
+                                          <Insets bottom="10.0" />
+                                       </VBox.margin>
+                                    </RadioButton>
+                                    <Label text="Number of tests" textFill="#adb5bd" />
+                                    <Slider fx:id="numOfTests" />
+                                 </children>
+                                 <padding>
+                                    <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                 </padding>
+                              </VBox>
                               <VBox alignment="CENTER" style="-fx-border-color: #264653; -fx-border-radius: 10 10 10 10;">
                                  <VBox.margin>
                                     <Insets bottom="10.0" left="10.0" right="10.0" />
                                  </VBox.margin>
                                  <children>
-                                    <Label text="Simulation speed" textFill="#adb5bd">
+                                    <Label text="Animation speed" textFill="#adb5bd">
                                        <VBox.margin>
                                           <Insets />
                                        </VBox.margin>
@@ -349,21 +366,21 @@
                                           <Insets bottom="10.0" left="10.0" right="10.0" />
                                        </VBox.margin>
                                     </Slider>
+                                    <HBox>
+                                       <VBox.margin>
+                                          <Insets bottom="10.0" left="10.0" right="10.0" />
+                                       </VBox.margin>
+                                       <children>
+                                          <Button fx:id="start" mnemonicParsing="false" prefHeight="50.0" prefWidth="68.0" text="Start" textAlignment="CENTER">
+                                             <HBox.margin>
+                                                <Insets right="10.0" />
+                                             </HBox.margin>
+                                          </Button>
+                                          <Button fx:id="stop" mnemonicParsing="false" prefHeight="50.0" prefWidth="68.0" text="Stop" textAlignment="CENTER" />
+                                       </children>
+                                    </HBox>
                                  </children>
                               </VBox>
-                              <HBox>
-                                 <VBox.margin>
-                                    <Insets bottom="10.0" left="10.0" right="10.0" />
-                                 </VBox.margin>
-                                 <children>
-                                    <Button fx:id="start" mnemonicParsing="false" prefHeight="50.0" prefWidth="68.0" text="Start" textAlignment="CENTER">
-                                       <HBox.margin>
-                                          <Insets right="10.0" />
-                                       </HBox.margin>
-                                    </Button>
-                                    <Button fx:id="stop" mnemonicParsing="false" prefHeight="50.0" prefWidth="68.0" text="Stop" textAlignment="CENTER" />
-                                 </children>
-                              </HBox>
                            </children>
                         </VBox>
                      </content>

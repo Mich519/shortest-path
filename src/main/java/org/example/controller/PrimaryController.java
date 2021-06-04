@@ -127,10 +127,19 @@ public class PrimaryController {
     private RadioButton showAnimation;
 
     @FXML
+    private RadioButton benchmark;
+
+    @FXML
+    private Slider numOfTests;
+
+    @FXML
     private Button start;
 
     @FXML
     private Button stop;
+
+    @FXML
+    private TreeView<String> logWindow;
 
     private Graph graph;
     private GraphGenerator graphGenerator;
@@ -292,6 +301,12 @@ public class PrimaryController {
         edgeWidth.setMin(1);
         edgeWidth.setMax(5);
         edgeWidth.setValue(4);
+
+        numOfTests.setMin(1);
+        numOfTests.setValue(5);
+        numOfTests.setMax(10);
+        numOfTests.setShowTickLabels(true);
+        numOfTests.setShowTickMarks(true);
     }
 
     @FXML

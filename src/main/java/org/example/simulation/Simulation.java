@@ -8,12 +8,11 @@ import org.example.simulation.algorithms.Algorithm;
 import org.example.simulation.algorithms.BellmanFord;
 import org.example.simulation.algorithms.Greedy;
 import org.example.simulation.algorithms.antOptimization.AntOptimization;
-import org.example.simulation.algorithms.antOptimization.Chart;
 import org.example.simulation.algorithms.antOptimization.AntParametersContainer;
 import org.example.simulation.algorithms.genetic.Genetic;
 import org.example.simulation.algorithms.genetic.GeneticParametersContainer;
+import org.example.simulation.report.ReportGenerator;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,22 +25,25 @@ public class Simulation {
     }
 
     private void measureExecutionTime(Algorithm algorithm) throws Exception {
-        final int skip = 20; // warmup faze
-        final int numOfTests = 100;
-        for (int j=0; j<10; j++) {
-            List<Long> times = new ArrayList<>(numOfTests);
-            for (int i = 0; i < numOfTests + skip; i++) {
-                long startTime = System.nanoTime();
-                algorithm.run();
-                long finishTime = System.nanoTime();
-                long elapsed = finishTime - startTime;
-                if (i > skip) {
-                    times.add(elapsed / 100);
+        if (controller.getBenchmark().isSelected()) {
+            final int skip = 20; // warmup faze
+            final int numOfTests = 100;
+            for (int j = 0; j < (int) controller.getNumOfTests().getValue(); j++) {
+                List<Long> times = new ArrayList<>(numOfTests);
+                for (int i = 0; i < numOfTests + skip; i++) {
+                    long startTime = System.nanoTime();
+                    algorithm.run();
+                    long finishTime = System.nanoTime();
+                    long elapsed = finishTime - startTime;
+                    if (i > skip) {
+                        times.add(elapsed / 100);
+                    }
                 }
+                long avg = times.stream().reduce(Long::sum).get() / times.size();
+                System.out.println("Avg time: " + avg);
             }
-            long avg = times.stream().reduce(Long::sum).get() / times.size();
-            System.out.println("Avg time: " + avg);
-        }
+        } else
+            algorithm.run();
     }
 
     public void simulateDijkstra() throws Exception {
@@ -52,6 +54,10 @@ public class Simulation {
             double simulationSpeed = controller.getSimulationSpeed().getValue();
             Greedy dijkstra = new Greedy(graph, new VertexByCurLowestCostComparator(), simulationSpeed);
             measureExecutionTime(dijkstra);
+            if (controller.getGenerateReport().isSelected()) {
+                ReportGenerator reportGenerator = new ReportGenerator();
+                reportGenerator.generateRaport(dijkstra);
+            }
             if (controller.getShowAnimation().isSelected()) {
                 dijkstra.animate(controller);
             }
@@ -65,6 +71,10 @@ public class Simulation {
             double simulationSpeed = controller.getSimulationSpeed().getValue();
             Greedy aStar = new Greedy(graph, new VertexByTotalCostComparator(controller.getGraph()), simulationSpeed);
             measureExecutionTime(aStar);
+            if (controller.getGenerateReport().isSelected()) {
+                ReportGenerator reportGenerator = new ReportGenerator();
+                reportGenerator.generateRaport(aStar);
+            }
             if (controller.getShowAnimation().isSelected()) {
                 aStar.animate(controller);
             }
@@ -77,17 +87,11 @@ public class Simulation {
             Graph graph = controller.getGraph();
             AntParametersContainer parameters = new AntParametersContainer(controller);
             double simulationSpeed = controller.getSimulationSpeed().getValue();
-            AntOptimization antOptimization = new AntOptimization(graph, parameters, simulationSpeed);
+            AntOptimization antOptimization = new AntOptimization(graph, parameters);
             measureExecutionTime(antOptimization);
-
-            // generate report if selected
             if (controller.getGenerateReport().isSelected()) {
-                try {
-                    Chart chart = new Chart(parameters, antOptimization.getSuccessfulPathsPerIteration(), antOptimization.getAllPaths());
-                    chart.show();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                ReportGenerator reportGenerator = new ReportGenerator();
+                reportGenerator.generateRaport(antOptimization);
             }
             if (controller.getShowAnimation().isSelected()) {
                 antOptimization.animate(controller);

@@ -4,12 +4,15 @@ import javafx.animation.FillTransition;
 import javafx.animation.SequentialTransition;
 import javafx.animation.StrokeTransition;
 import javafx.animation.Transition;
+import javafx.scene.control.Label;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
+import lombok.Setter;
 import org.example.controller.PrimaryController;
 import org.example.graph.Edge;
 import org.example.graph.Graph;
 import org.example.graph.Vertex;
+import org.example.simulation.report.ReportContent;
 
 import java.util.*;
 
@@ -17,14 +20,16 @@ public class Greedy implements Algorithm {
 
     private final Comparator<Vertex> vertexComparator;
     private final Graph graph;
-    private final double simulationSpeed;
-    private LinkedHashSet<Vertex> shortestPath;
+    private LinkedHashSet<Vertex> processedVertices;
+    private LinkedHashSet<Vertex> traversedVertices;
+    private LinkedHashSet<Edge> shortestPath;
     private HashMap<Vertex, Vertex> mapVertexToPrev;
+    @Setter
+    private long elapsedTime = 0;
 
     public Greedy(Graph graph, Comparator<Vertex> vertexComparator, double simulationSpeed) {
         this.vertexComparator = vertexComparator;
         this.graph = graph;
-        this.simulationSpeed = simulationSpeed;
     }
 
 
@@ -32,6 +37,8 @@ public class Greedy implements Algorithm {
     public void run() {
         // maps vertex to its predecessor in a path
         shortestPath = new LinkedHashSet<>();
+        traversedVertices = new LinkedHashSet<>();
+        processedVertices = new LinkedHashSet<>();
         mapVertexToPrev = new HashMap<>();
         graph.getVertices().forEach(v -> v.setCurLowestCost(Double.POSITIVE_INFINITY));
         mapVertexToPrev.put(graph.getStartVertex(), null);
@@ -42,7 +49,7 @@ public class Greedy implements Algorithm {
         while (!q.isEmpty()) {
 
             Vertex v = q.poll();
-            shortestPath.add(v);
+            processedVertices.add(v);
             for (Edge w : v.getAdjEdges()) {
                 /* perform relaxation for every vertex adjacent to v */
                 Vertex u = w.getNeighbourOf(v);
@@ -60,6 +67,16 @@ public class Greedy implements Algorithm {
             if (v == graph.getEndVertex())
                 break;
         }
+
+        // build shortest path
+        for (Vertex ver = graph.getEndVertex(); ver != null; ver = mapVertexToPrev.get(ver)) {
+            traversedVertices.add(ver);
+            Vertex pred = mapVertexToPrev.get(ver);
+            if (pred != null) {
+                Edge e = ver.findEdgeConnectedTo(pred);
+                shortestPath.add(e);
+            }
+        }
     }
 
     @Override
@@ -68,7 +85,7 @@ public class Greedy implements Algorithm {
         SequentialTransition st = new SequentialTransition();
 
         /* vertices animation */
-        for (Vertex v : shortestPath) {
+        for (Vertex v : processedVertices) {
             st.getChildren().add(new FillTransition(Duration.millis(controller.getSimulationSpeed().getMax() - controller.getSimulationSpeed().getValue()), v, Color.ORANGE, Color.BLUEVIOLET));
         }
 
@@ -102,7 +119,15 @@ public class Greedy implements Algorithm {
     }
 
     @Override
-    public void generateReport() {
-
+    public ReportContent generateReportContent() {
+        ReportContent reportContent = new ReportContent();
+        reportContent.addLabel(new Label("Number of processed vertices: " + processedVertices.size()));
+        double totalLength = 0;
+        for (Edge e : shortestPath) {
+            totalLength += e.getLength().get();
+        }
+        reportContent.addLabel(new Label("Shortest path length: " + totalLength));
+        reportContent.addLabel(new Label("Number of traversed vertices " + traversedVertices.size()));
+        return reportContent;
     }
 }

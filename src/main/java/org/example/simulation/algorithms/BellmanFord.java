@@ -9,6 +9,7 @@ import org.example.controller.PrimaryController;
 import org.example.graph.Edge;
 import org.example.graph.Graph;
 import org.example.graph.Vertex;
+import org.example.simulation.report.ReportContent;
 
 import java.util.*;
 
@@ -87,7 +88,7 @@ public class BellmanFord implements Algorithm {
     }
 
     @Override
-    public void generateReport() {
-
+    public ReportContent generateReportContent() {
+        return null;
     }
 }

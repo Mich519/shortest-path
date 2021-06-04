@@ -3,6 +3,8 @@ package org.example.simulation.algorithms.antOptimization;
 import javafx.animation.SequentialTransition;
 import javafx.animation.StrokeTransition;
 import javafx.animation.Transition;
+import javafx.scene.chart.XYChart;
+import javafx.scene.control.Label;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
 import lombok.Getter;
@@ -11,6 +13,7 @@ import org.example.graph.Edge;
 import org.example.graph.Graph;
 import org.example.graph.Vertex;
 import org.example.simulation.algorithms.Algorithm;
+import org.example.simulation.report.ReportContent;
 
 import java.util.*;
 import java.util.concurrent.Callable;
@@ -20,19 +23,17 @@ import java.util.concurrent.Executors;
 public class AntOptimization implements Algorithm {
     private final AntParametersContainer parameters;
     private final Graph graph;
-    private final double animationSpeed;
     @Getter
     private List<Set<Edge>> allPaths;
     @Getter
     private Set<Edge> currentShortestPath;
     @Getter
-    private List<Integer> successfulPathsPerIteration;
+    private List<Integer> successfulAntsPerIteration;
+    private List<Double> shortestPathLengthPerIteration;
 
-    public AntOptimization(Graph graph, AntParametersContainer parameters, double animationSpeed) {
+    public AntOptimization(Graph graph, AntParametersContainer parameters) {
         this.graph = graph;
         this.parameters = parameters;
-        this.animationSpeed = animationSpeed;
-
     }
 
     private double sumOfWeight(Set<Edge> edges) {
@@ -65,6 +66,7 @@ public class AntOptimization implements Algorithm {
 
     private void updatePheromoneOnSuccessfulPaths(Set<Callable<Ant>> ants, Set<Edge> currentShortestPath) {
         // all ants finished - update pheromone for the best path
+        int numOfSuccessfulAnts = 0;
         for (Callable<Ant> a : ants) {
             Ant ant = (Ant)a;
             if (ant.getCurVertex() == ant.getEndVertex()) {
@@ -77,15 +79,20 @@ public class AntOptimization implements Algorithm {
                     //System.out.println("New shortest found! with length " + sumOfWeight(ant.getTraversedEdges()));
                 }
                 ant.updateTraversedEdges();
+                numOfSuccessfulAnts++;
+
             }
         }
+        successfulAntsPerIteration.add(numOfSuccessfulAnts);
+        shortestPathLengthPerIteration.add(sumOfWeight(currentShortestPath));
     }
 
     @Override
     public void run() throws InterruptedException {
+        this.shortestPathLengthPerIteration = new ArrayList<>(parameters.numOfIterations);
         this.allPaths = new ArrayList<>();
         this.currentShortestPath = new LinkedHashSet<>();
-        this.successfulPathsPerIteration = new ArrayList<>(parameters.numOfIterations);
+        this.successfulAntsPerIteration = new ArrayList<>(parameters.numOfIterations);
         graph.resetPheromone();
         ExecutorService executorService = Executors.newFixedThreadPool(4);
         for (int i = 0; i < parameters.numOfIterations; i++) {
@@ -94,15 +101,6 @@ public class AntOptimization implements Algorithm {
             executorService.invokeAll(ants);
             evaporation();
             updatePheromoneOnSuccessfulPaths(ants, currentShortestPath);
-
-            // count number of ants that reached the goal
-            int cnt = 0;
-            for (Callable<Ant> a : ants) {
-                Ant ant = (Ant)a;
-                if (ant.getCurVertex() == ant.getEndVertex())
-                    cnt++;
-            }
-            successfulPathsPerIteration.add(cnt);
         }
     }
 
@@ -140,7 +138,39 @@ public class AntOptimization implements Algorithm {
     }
 
     @Override
-    public void generateReport() {
+    public ReportContent generateReportContent() {
+        ReportContent reportContent = new ReportContent();
+        reportContent.addLabel(new Label("Number of iterations: " + parameters.numOfIterations));
+        reportContent.addLabel(new Label("Number of ants: " + parameters.numOfAnts));
+        reportContent.addLabel(new Label("Pheromone per ant: " + parameters.pheromonePerAnt));
+        reportContent.addLabel(new Label("Evaporation rate: " + parameters.evapRate));
+        reportContent.addLabel(new Label("Alpha: " + parameters.alpha));
+        reportContent.addLabel(new Label("Beta: " + parameters.beta));
+        reportContent.addLabel(new Label("Number of found paths: " + allPaths.size()));
 
+        // shortest path per iteration
+        XYChart.Series<Number, Number> series1 = new XYChart.Series<>();
+        for (int i = 0; i < shortestPathLengthPerIteration.size(); i++)
+            series1.getData().add(new XYChart.Data<>(i, shortestPathLengthPerIteration.get(i)));
+        reportContent.addChart(series1, "Shortest path per iteration", "iteration", "path length");
+
+        // current shortest path over time
+        XYChart.Series<Number, Number> series2 = new XYChart.Series<>();
+        for (int i = 0; i < allPaths.size(); i++) {
+            double sum = 0.0;
+            for (Edge e : allPaths.get(i)) {
+                sum += e.getLength().get();
+            }
+            series2.getData().add(new XYChart.Data<>(i, sum));
+        }
+        reportContent.addChart(series2, "Shortest path over time", "index", "path length");
+
+        // number of ants that reached the goal
+        XYChart.Series<Number, Number> series3 = new XYChart.Series<>();
+        for (int i = 0; i < successfulAntsPerIteration.size(); i++)
+            series3.getData().add(new XYChart.Data<>(i, successfulAntsPerIteration.get(i) * 100 / parameters.numOfAnts));
+        reportContent.addChart(series3, "Percentage of successful ants per iteration", "iteration", "% of ants that reached the goal");
+
+        return reportContent;
     }
 }

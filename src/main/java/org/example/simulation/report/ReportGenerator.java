@@ -1,4 +1,4 @@
-package org.example.simulation;
+package org.example.simulation.report;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -9,6 +9,7 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.example.App;
+import org.example.simulation.algorithms.Algorithm;
 
 import java.io.IOException;
 import java.util.List;
@@ -20,14 +21,16 @@ public class ReportGenerator {
 
     }
 
-    public void generateRaport(Set<LineChart<Number, Number>> charts, List<Label> labels) throws IOException {
+    public void generateRaport(Algorithm algorithm) throws IOException {
+        ReportContent reportContent = algorithm.generateReportContent();
+        Set<Label> labels = reportContent.getLabels();
+        Set<LineChart<Number, Number>> charts = reportContent.getCharts();
+
         VBox labelsContainer = new VBox();
-        for (Label l : labels)
-            labelsContainer.getChildren().add(l);
+        labelsContainer.getChildren().addAll(labels);
 
         FlowPane chartContainer = new FlowPane();
         chartContainer.getChildren().addAll(charts);
-        chartContainer.getChildren().add(labelsContainer);
 
         FXMLLoader.load(Objects.requireNonNull(App.class.getResource("chart.fxml")));
         Scene scene = new Scene(chartContainer, 800, 640);

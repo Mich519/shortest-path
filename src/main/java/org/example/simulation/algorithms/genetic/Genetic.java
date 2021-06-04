@@ -7,6 +7,7 @@ import org.example.controller.PrimaryController;
 import org.example.graph.Graph;
 import org.example.graph.Vertex;
 import org.example.simulation.algorithms.Algorithm;
+import org.example.simulation.report.ReportContent;
 
 import java.util.*;
 
@@ -172,8 +173,8 @@ public class Genetic implements Algorithm {
     }
 
     @Override
-    public void generateReport() {
-
+    public ReportContent generateReportContent() {
+        return null;
     }
 }
 
