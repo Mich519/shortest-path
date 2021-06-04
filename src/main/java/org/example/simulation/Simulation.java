@@ -52,7 +52,7 @@ public class Simulation {
 
             Graph graph = controller.getGraph();
             double simulationSpeed = controller.getSimulationSpeed().getValue();
-            Greedy dijkstra = new Greedy(graph, new VertexByCurLowestCostComparator(), simulationSpeed);
+            Greedy dijkstra = new Greedy(graph, new VertexByCurLowestCostComparator());
             measureExecutionTime(dijkstra);
             if (controller.getGenerateReport().isSelected()) {
                 ReportGenerator reportGenerator = new ReportGenerator();
@@ -69,7 +69,7 @@ public class Simulation {
             /* check if start and end vertices are set */
             Graph graph = controller.getGraph();
             double simulationSpeed = controller.getSimulationSpeed().getValue();
-            Greedy aStar = new Greedy(graph, new VertexByTotalCostComparator(controller.getGraph()), simulationSpeed);
+            Greedy aStar = new Greedy(graph, new VertexByTotalCostComparator(controller.getGraph()));
             measureExecutionTime(aStar);
             if (controller.getGenerateReport().isSelected()) {
                 ReportGenerator reportGenerator = new ReportGenerator();

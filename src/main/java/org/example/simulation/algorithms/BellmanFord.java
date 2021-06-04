@@ -24,7 +24,7 @@ public class BellmanFord implements Algorithm {
     }
 
     @Override
-    public void run() throws Exception {
+    public void run() {
         this.predecessors = new HashMap<>();
         this.shortestPath = new ArrayList<>();
         Map<Vertex, Double> distances = new HashMap<>();

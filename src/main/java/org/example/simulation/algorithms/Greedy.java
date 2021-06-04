@@ -7,6 +7,7 @@ import javafx.animation.Transition;
 import javafx.scene.control.Label;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
+import lombok.Getter;
 import lombok.Setter;
 import org.example.controller.PrimaryController;
 import org.example.graph.Edge;
@@ -22,16 +23,14 @@ public class Greedy implements Algorithm {
     private final Graph graph;
     private LinkedHashSet<Vertex> processedVertices;
     private LinkedHashSet<Vertex> traversedVertices;
+    @Getter
     private LinkedHashSet<Edge> shortestPath;
     private HashMap<Vertex, Vertex> mapVertexToPrev;
-    @Setter
-    private long elapsedTime = 0;
 
-    public Greedy(Graph graph, Comparator<Vertex> vertexComparator, double simulationSpeed) {
+    public Greedy(Graph graph, Comparator<Vertex> vertexComparator) {
         this.vertexComparator = vertexComparator;
         this.graph = graph;
     }
-
 
     @Override
     public void run() {

@@ -12,7 +12,9 @@ import org.example.controller.PrimaryController;
 import org.example.graph.Edge;
 import org.example.graph.Graph;
 import org.example.graph.Vertex;
+import org.example.graph.comparators.VertexByCurLowestCostComparator;
 import org.example.simulation.algorithms.Algorithm;
+import org.example.simulation.algorithms.Greedy;
 import org.example.simulation.report.ReportContent;
 
 import java.util.*;
@@ -138,7 +140,7 @@ public class AntOptimization implements Algorithm {
     }
 
     @Override
-    public ReportContent generateReportContent() {
+    public ReportContent generateReportContent() throws InterruptedException {
         ReportContent reportContent = new ReportContent();
         reportContent.addLabel(new Label("Number of iterations: " + parameters.numOfIterations));
         reportContent.addLabel(new Label("Number of ants: " + parameters.numOfAnts));
@@ -170,6 +172,23 @@ public class AntOptimization implements Algorithm {
         for (int i = 0; i < successfulAntsPerIteration.size(); i++)
             series3.getData().add(new XYChart.Data<>(i, successfulAntsPerIteration.get(i) * 100 / parameters.numOfAnts));
         reportContent.addChart(series3, "Percentage of successful ants per iteration", "iteration", "% of ants that reached the goal");
+
+        // convergence
+        XYChart.Series<Number, Number> series4 = new XYChart.Series<>();
+
+        // calculate actual shortest path for comparison
+        Greedy dijkstra = new Greedy(graph, new VertexByCurLowestCostComparator());
+        dijkstra.run();
+        double sumOfWeight = sumOfWeight(dijkstra.getShortestPath());
+
+        for (int i = 0; i < allPaths.size(); i++) {
+            double sum = 0.0;
+            for (Edge e : allPaths.get(i)) {
+                sum += e.getLength().get();
+            }
+            series4.getData().add(new XYChart.Data<>(i, sum - sumOfWeight));
+        }
+        reportContent.addChart(series4, "Convergence", "index", "Difference");
 
         return reportContent;
     }
