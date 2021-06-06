@@ -6,10 +6,13 @@ import lombok.Getter;
 import java.io.Serializable;
 import java.util.*;
 
-@Getter
+
 public class Graph implements Serializable {
+    @Getter
     private final HashSet<Vertex> vertices;
+    @Getter
     private Vertex startVertex;
+    @Getter
     private Vertex endVertex;
 
     public Graph() {
@@ -51,10 +54,6 @@ public class Graph implements Serializable {
             return Math.sqrt(temp1 + temp2);
         }
         return 0;
-    }
-
-    public void resetPheromone() {
-        vertices.forEach(vertex -> vertex.getAdjEdges().forEach(Edge::resetPheromone));
     }
 
     public void setStartVertex(Vertex v) {

@@ -5,8 +5,6 @@ import org.example.controller.PrimaryController;
 
 import java.util.*;
 
-// todo: improve randomized vertices distribution
-
 public class GraphGenerator {
 
 

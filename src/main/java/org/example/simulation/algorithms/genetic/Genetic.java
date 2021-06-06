@@ -169,6 +169,7 @@ public class Genetic implements Algorithm {
     @Override
     public ReportContent generateReportContent() {
         ReportContent reportContent = new ReportContent();
+        reportContent.addLabel(new Label("Number of vertices in graph: " + graph.getVertices().size()));
         reportContent.addLabel(new Label("Elitism rate: " + parameters.elitismRate));
         reportContent.addLabel(new Label("Mutation rate: " + parameters.mutationRate));
         reportContent.addLabel(new Label("Number of generations: " + parameters.numOfGenerations));

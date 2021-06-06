@@ -2,6 +2,7 @@ package org.example.simulation.algorithms.antOptimization;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.example.controller.PrimaryController;
 import org.example.graph.Edge;
 import org.example.graph.Graph;
 import org.example.graph.Vertex;
@@ -11,9 +12,10 @@ import java.util.concurrent.Callable;
 
 @Getter
 @Setter
-public class Ant implements Callable {
+public class Ant implements Callable<Ant> {
 
     private Graph graph;
+    private Map<Edge, Double> edgeToPheromone;
     private final Vertex startVertex;
     private final Vertex endVertex;
 
@@ -29,15 +31,17 @@ public class Ant implements Callable {
     private int numOfMoves;
     private Integer numOfSuccessfulPaths;
 
-    Ant(Graph graph, double alpha, double beta, double pheromonePerAnt, double evapRate) {
+    Ant(Graph graph, AntParametersContainer parameters, Map<Edge, Double> edgeToPheromoneMap) {
+
         this.graph = graph;
+        this.edgeToPheromone = edgeToPheromoneMap;
         this.startVertex = graph.getStartVertex();
         this.endVertex = graph.getEndVertex();
         this.curVertex = startVertex;
         this.traversedEdges = new LinkedHashSet<>();
-        this.alpha = alpha;
-        this.beta = beta;
-        this.pheromonePerAnt = pheromonePerAnt;
+        this.alpha = parameters.alpha;
+        this.beta = parameters.beta;
+        this.pheromonePerAnt = parameters.pheromonePerAnt;
         this.isFinished = false;
         this.numOfMoves = 0;
     }
@@ -50,7 +54,8 @@ public class Ant implements Callable {
         for (Edge adjEdge : curVertex.getAdjEdges()) {
             if (!traversedEdges.contains(adjEdge)) {
                 // skip already traversed edges
-                p_denominator += Math.pow(adjEdge.getPheromone(), alpha) * Math.pow(1 / adjEdge.getLength().get(), beta);
+                double pheromone = edgeToPheromone.get(adjEdge);
+                p_denominator += Math.pow(pheromone, alpha) * Math.pow(1 / adjEdge.getLength().get(), beta);
             }
         }
 
@@ -58,7 +63,8 @@ public class Ant implements Callable {
         double p_nominator = 1;
         for (Edge adjEdge : curVertex.getAdjEdges()) {
             if (!traversedEdges.contains(adjEdge)) {
-                p_nominator = Math.pow(adjEdge.getPheromone(), alpha) * Math.pow(1 / adjEdge.getLength().get(), beta);
+                double pheromone = edgeToPheromone.get(adjEdge);
+                p_nominator = Math.pow(pheromone, alpha) * Math.pow(1 / adjEdge.getLength().get(), beta);
                 probabilities.put(adjEdge, p_nominator / p_denominator);
             }
         }
@@ -66,10 +72,9 @@ public class Ant implements Callable {
 
     private void localPheromoneUpdate(Edge e) {
         // update last traversed edge
-            double f = e.getPheromone();
-            double deltaF = pheromonePerAnt / e.getLength().get();
-            e.setPheromone(f + deltaF);
-            e.setPheromone(f + f);
+        double pheromone = edgeToPheromone.get(e);
+        double pheromoneIncrease = pheromonePerAnt / e.getLength().get();
+        edgeToPheromone.put(e, pheromone + pheromoneIncrease);
     }
 
     public void updateTraversedEdges() {
@@ -77,15 +82,14 @@ public class Ant implements Callable {
         for (Edge e : traversedEdges)
             totalLength += e.getLength().get();
         for (Edge e : traversedEdges) {
-            double f = e.getPheromone();
-            double deltaF = pheromonePerAnt / totalLength;
-
-            e.setPheromone(f + deltaF);
+            double pheromone = edgeToPheromone.get(e);
+            double pheromoneIncrease = pheromonePerAnt / totalLength;
+            edgeToPheromone.put(e, pheromone + pheromoneIncrease);
         }
     }
 
     @Override
-    public Object call() {
+    public Ant call() {
         while (true) {
             Map<Edge, Double> probabilities = new HashMap<>();
             calculateProbabilities(probabilities);
@@ -108,6 +112,6 @@ public class Ant implements Callable {
                 break;
             }
         }
-        return null;
+        return this;
     }
 }

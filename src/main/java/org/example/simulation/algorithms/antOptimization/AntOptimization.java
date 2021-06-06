@@ -19,23 +19,29 @@ import org.example.simulation.report.ReportContent;
 
 import java.util.*;
 import java.util.concurrent.Callable;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class AntOptimization implements Algorithm {
     private final AntParametersContainer parameters;
     private final Graph graph;
-    @Getter
+    private Map<Edge, Double> edgeToPheromoneMap;
     private List<Set<Edge>> allPaths;
-    @Getter
-    private Set<Edge> currentShortestPath;
-    @Getter
     private List<Integer> successfulAntsPerIteration;
     private List<Double> shortestPathLengthPerIteration;
 
     public AntOptimization(Graph graph, AntParametersContainer parameters) {
         this.graph = graph;
         this.parameters = parameters;
+    }
+
+    private void initPheromone() {
+        for (Vertex v : graph.getVertices()) {
+            for (Edge e : v.getAdjEdges()) {
+                edgeToPheromoneMap.putIfAbsent(e, 1.0 / e.getLength().get());
+            }
+        }
     }
 
     private double sumOfWeight(Set<Edge> edges) {
@@ -46,9 +52,9 @@ public class AntOptimization implements Algorithm {
         return sum;
     }
 
-    private void initAnts(Set<Callable<Ant>> ants) {
+    private void initAnts(List<Callable<Ant>> ants) {
         for (int i = 0; i < parameters.numOfAnts; i++) {
-            Ant a = new Ant(graph, parameters.alpha, parameters.beta, parameters.pheromonePerAnt, parameters.evapRate);
+            Callable<Ant> a = new Ant(graph, parameters, edgeToPheromoneMap);
             ants.add(a);
         }
     }
@@ -57,32 +63,30 @@ public class AntOptimization implements Algorithm {
         // evaporation
         for (Vertex v : graph.getVertices()) {
             for (Edge e : v.getAdjEdges()) {
-                double f = (1 - parameters.evapRate) * e.getPheromone();
-                if (f > 0.000001) {
+                double pheromone = (1 - parameters.evapRate) * edgeToPheromoneMap.get(e);
+                if (pheromone > 0.000001) {
                     // zero division prevention
-                    e.setPheromone(f);
+                    edgeToPheromoneMap.put(e, pheromone);
                 }
             }
         }
     }
 
-    private void updatePheromoneOnSuccessfulPaths(Set<Callable<Ant>> ants, Set<Edge> currentShortestPath) {
+    private void updatePheromoneOnSuccessfulPaths(List<Callable<Ant>> ants, Set<Edge> currentShortestPath) {
         // all ants finished - update pheromone for the best path
         int numOfSuccessfulAnts = 0;
         for (Callable<Ant> a : ants) {
-            Ant ant = (Ant)a;
+            Ant ant = (Ant) a;
             if (ant.getCurVertex() == ant.getEndVertex()) {
                 // ant reached the goal - update pheromone on that path
                 if (currentShortestPath.isEmpty() || sumOfWeight(ant.getTraversedEdges()) < sumOfWeight(currentShortestPath)) {
                     currentShortestPath.clear();
                     Set<Edge> temp = new LinkedHashSet<>(ant.getTraversedEdges());
-                    currentShortestPath.addAll(temp); // copy constructor
+                    currentShortestPath.addAll(temp);
                     allPaths.add(temp);
-                    //System.out.println("New shortest found! with length " + sumOfWeight(ant.getTraversedEdges()));
                 }
                 ant.updateTraversedEdges();
                 numOfSuccessfulAnts++;
-
             }
         }
         successfulAntsPerIteration.add(numOfSuccessfulAnts);
@@ -91,19 +95,21 @@ public class AntOptimization implements Algorithm {
 
     @Override
     public void run() throws InterruptedException {
+        this.edgeToPheromoneMap = new ConcurrentHashMap<>();
         this.shortestPathLengthPerIteration = new ArrayList<>(parameters.numOfIterations);
         this.allPaths = new ArrayList<>();
-        this.currentShortestPath = new LinkedHashSet<>();
+        Set<Edge> currentShortestPath = new LinkedHashSet<>();
         this.successfulAntsPerIteration = new ArrayList<>(parameters.numOfIterations);
-        graph.resetPheromone();
+        initPheromone();
         ExecutorService executorService = Executors.newFixedThreadPool(4);
         for (int i = 0; i < parameters.numOfIterations; i++) {
-            Set<Callable<Ant>> ants = new HashSet<>();
+            List<Callable<Ant>> ants = new ArrayList<>();
             initAnts(ants);
             executorService.invokeAll(ants);
             evaporation();
             updatePheromoneOnSuccessfulPaths(ants, currentShortestPath);
         }
+        executorService.shutdown();
     }
 
     @Override
@@ -127,8 +133,8 @@ public class AntOptimization implements Algorithm {
         st.getChildren().addAll(transitions);
         controller.getStop().setOnMouseClicked(mouseEvent -> {
             // init stop animation button
+            controller.drawGraph();
             st.stop();
-            //controller.drawGraph();
             controller.toogleButtonsActivity(false);
         });
         st.play();
@@ -142,6 +148,7 @@ public class AntOptimization implements Algorithm {
     @Override
     public ReportContent generateReportContent() throws InterruptedException {
         ReportContent reportContent = new ReportContent();
+        reportContent.addLabel(new Label("Number of vertices in graph: " + graph.getVertices().size()));
         reportContent.addLabel(new Label("Number of iterations: " + parameters.numOfIterations));
         reportContent.addLabel(new Label("Number of ants: " + parameters.numOfAnts));
         reportContent.addLabel(new Label("Pheromone per ant: " + parameters.pheromonePerAnt));

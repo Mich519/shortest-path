@@ -13,7 +13,6 @@ import java.util.Objects;
 /**
  * JavaFX App
  */
-// todo: fullscreen doesn't affect graphEditor width (?) so there is drag n' drop issue on the right side
 public class App extends Application {
 
     private static final String fxml = "primary";

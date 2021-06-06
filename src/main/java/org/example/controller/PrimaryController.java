@@ -19,9 +19,6 @@ import org.example.simulation.Simulation;
 import java.io.File;
 import java.io.IOException;
 
-// todo: add slider labels
-// todo: fix window responsiveness
-// todo: edge width binding
 @Getter
 public class PrimaryController {
     @FXML
@@ -137,9 +134,6 @@ public class PrimaryController {
 
     @FXML
     private Button stop;
-
-    @FXML
-    private TreeView<String> logWindow;
 
     private Graph graph;
     private GraphGenerator graphGenerator;

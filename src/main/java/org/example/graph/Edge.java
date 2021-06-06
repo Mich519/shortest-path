@@ -29,8 +29,6 @@ public class Edge extends Line implements Serializable {
 
     private DoubleBinding length;
     @Setter
-    private double pheromone;
-    @Setter
     private Color color;
     private Label lengthLabel;
     private SimpleStringProperty ssp;
@@ -82,11 +80,6 @@ public class Edge extends Line implements Serializable {
         setMouseTransparent(true);
         bindLength();
         bindLabel();
-        this.pheromone = 1.0 / length.get(); // initial pheromone value
-    }
-
-    public void resetPheromone() {
-        this.pheromone = 1.0 / length.get();
     }
 
     public Vertex getNeighbourOf(Vertex v) {
