@@ -273,12 +273,12 @@ public class PrimaryController {
         elitismRate.setShowTickLabels(true);
         elitismRate.setShowTickMarks(true);
         initialPopulation.setMin(400);
-        initialPopulation.setMax(2000);
+        initialPopulation.setMax(5000);
         initialPopulation.setValue(500);
         initialPopulation.setShowTickLabels(true);
         initialPopulation.setShowTickMarks(true);
         numOfGenerations.setMin(10);
-        numOfGenerations.setMax(100);
+        numOfGenerations.setMax(1000);
         numOfGenerations.setValue(40);
         numOfGenerations.setShowTickLabels(true);
         numOfGenerations.setShowTickMarks(true);
@@ -372,8 +372,6 @@ public class PrimaryController {
         bellmanFord.setDisable(disabled);
         antOptimization.setDisable(disabled);
         start.setDisable(disabled);
-        // save.setDisable(disabled);
-        //load.setDisable(disabled);
         clearGraphEditor.setDisable(disabled);
         edgeLabels.setDisable(disabled);
     }

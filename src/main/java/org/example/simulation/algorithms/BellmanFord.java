@@ -16,7 +16,6 @@ import java.util.*;
 public class BellmanFord implements Algorithm {
 
     private final Graph graph;
-    private Map<Vertex, Vertex> predecessors;
     private List<Vertex> shortestPath;
 
     public BellmanFord(Graph graph) {
@@ -25,7 +24,7 @@ public class BellmanFord implements Algorithm {
 
     @Override
     public void run() {
-        this.predecessors = new HashMap<>();
+        Map<Vertex, Vertex> predecessors = new HashMap<>();
         this.shortestPath = new ArrayList<>();
         Map<Vertex, Double> distances = new HashMap<>();
         predecessors.put(graph.getStartVertex(), null); // starting vertex doesn't have predecessor
@@ -56,10 +55,10 @@ public class BellmanFord implements Algorithm {
             }
         }*/
 
-        /*for (Vertex v = graph.getEndVertex(); v != null; v = predecessors.get(v)) {
+        for (Vertex v = graph.getEndVertex(); v != null; v = predecessors.get(v)) {
             shortestPath.add(v);
         }
-        Collections.reverse(shortestPath);*/
+        Collections.reverse(shortestPath);
     }
 
     @Override

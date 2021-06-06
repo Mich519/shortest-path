@@ -81,9 +81,8 @@ public class AntOptimization implements Algorithm {
                 // ant reached the goal - update pheromone on that path
                 if (currentShortestPath.isEmpty() || sumOfWeight(ant.getTraversedEdges()) < sumOfWeight(currentShortestPath)) {
                     currentShortestPath.clear();
-                    Set<Edge> temp = new LinkedHashSet<>(ant.getTraversedEdges());
-                    currentShortestPath.addAll(temp);
-                    allPaths.add(temp);
+                    currentShortestPath.addAll(ant.getTraversedEdges());
+                    allPaths.add(ant.getTraversedEdges());
                 }
                 ant.updateTraversedEdges();
                 numOfSuccessfulAnts++;
