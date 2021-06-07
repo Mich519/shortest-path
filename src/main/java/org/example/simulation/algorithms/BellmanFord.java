@@ -4,6 +4,7 @@ import javafx.animation.FillTransition;
 import javafx.animation.SequentialTransition;
 import javafx.animation.StrokeTransition;
 import javafx.animation.Transition;
+import javafx.scene.control.Label;
 import org.example.controller.PrimaryController;
 import org.example.graph.Edge;
 import org.example.graph.Graph;

@@ -91,7 +91,6 @@ public class Greedy implements Algorithm {
         st.setCycleCount(1);
 
         /* color edges that represent a path */
-        double totalLength = 0;
         List<Transition> pathTransitions = new ArrayList<>();
         for (Vertex ver = graph.getEndVertex(); ver != null; ver = mapVertexToPrev.get(ver)) {
             if (ver != graph.getStartVertex() && ver != graph.getEndVertex()) {
@@ -100,7 +99,6 @@ public class Greedy implements Algorithm {
             Vertex pred = mapVertexToPrev.get(ver);
             if (pred != null) {
                 Edge e = ver.findEdgeConnectedTo(pred);
-                totalLength += e.getLength().get();
                 pathTransitions.add(new StrokeTransition(controller.calculateFrameDuration(), e, Edge.DEFAULT_COLOR, Edge.TRANSITION_COLOR));
             }
         }
@@ -122,7 +120,7 @@ public class Greedy implements Algorithm {
     @Override
     public ReportContent generateReportContent() {
         ReportContent reportContent = new ReportContent();
-        reportContent.addLabel(new Label("Number of processed vertices: " + processedVertices.size()));
+        reportContent.addLabel(new Label("Number of vertices: " + graph.getVertices().size()));
         reportContent.addLabel(new Label("Number of processed vertices: " + processedVertices.size()));
         double totalLength = 0;
         for (Edge e : shortestPath) {

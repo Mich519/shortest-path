@@ -19,9 +19,9 @@ import java.util.List;
 @Getter
 @Setter
 public class Vertex extends Circle implements Serializable {
-    public static final Color DEFAULT_COLOR = Color.valueOf("#ffd166");
+    public static final Color DEFAULT_COLOR = Color.valueOf("#175873");
     public static final Color PATH_COLOR = Color.AQUAMARINE;
-    public static final Color RELAXATION_COLOR = Color.valueOf("#3a0ca3");
+    public static final Color RELAXATION_COLOR = Color.valueOf("#D37506");
     public static final Color TRANSITION_COLOR = Color.PURPLE;
     public static final Color START_COLOR = Color.GREEN;
     public static final Color END_COLOR = Color.RED;

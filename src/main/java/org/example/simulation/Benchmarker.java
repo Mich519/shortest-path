@@ -20,7 +20,7 @@ public class Benchmarker {
     public ReportContent runWithBenchmark(Algorithm algorithm) throws Exception {
         ReportContent reportContent = new ReportContent();
         reportContent.addLabel(new Label(" "));
-        reportContent.addLabel(new Label("Benchmark result:"));
+        reportContent.addLabel(new Label("Benchmark result [10^-7 s]:"));
         final int skip = 20; // warmup faze
         final int numOfTests = 100;
         System.out.println("===================");
