@@ -115,7 +115,7 @@ public class AntOptimization implements Algorithm {
     public void animate(PrimaryController controller) {
         // animate
 
-        /*controller.toogleButtonsActivity(true);
+        controller.toogleButtonsActivity(true);
         List<Transition> transitions = new ArrayList<>();
         SequentialTransition st = new SequentialTransition();
 
@@ -142,8 +142,7 @@ public class AntOptimization implements Algorithm {
         st.setOnFinished(actionEvent -> {
             System.out.println("Animation finished");
             controller.toogleButtonsActivity(false);
-        });*/
-
+        });
     }
 
     @Override

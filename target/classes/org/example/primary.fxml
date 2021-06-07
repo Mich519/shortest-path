@@ -13,9 +13,9 @@
                <menus>
                   <Menu mnemonicParsing="false" style="-fx-background-color: #212529; -fx-color: #212529;" text="File">
                     <items>
-                      <MenuItem fx:id="neww" mnemonicParsing="false" text="New" />
-                        <MenuItem fx:id="load" mnemonicParsing="false" text="Load" />
-                        <MenuItem fx:id="save" mnemonicParsing="false" text="Save" />
+                      <MenuItem fx:id="neww" mnemonicParsing="false" style="-fx-text-fill: black;" text="New" />
+                        <MenuItem fx:id="load" mnemonicParsing="false" style="-fx-text-fill: black;" text="Load" />
+                        <MenuItem fx:id="save" mnemonicParsing="false" style="-fx-text-fill: black;" text="Save" />
                     </items>
                   </Menu>
                   <Menu mnemonicParsing="false" style="-fx-color: #2b2d42;" text="Help">
@@ -114,7 +114,7 @@
                                     <Insets />
                                  </VBox.margin>
                               </HBox>
-                              <Button fx:id="clearGraphEditor" mnemonicParsing="false" text="Button">
+                              <Button fx:id="clearGraphEditor" mnemonicParsing="false" text="Clear all">
                                  <VBox.margin>
                                     <Insets left="10.0" />
                                  </VBox.margin>
