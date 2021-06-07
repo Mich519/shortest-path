@@ -13,21 +13,27 @@ import org.example.App;
 import org.example.simulation.algorithms.Algorithm;
 
 import java.io.IOException;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
 public class ReportGenerator {
-    public ReportGenerator() {
+    private final Set<Label> labels;
+    private final Set<LineChart<Number, Number>> charts;
 
+
+    public ReportGenerator() {
+        this.labels = new LinkedHashSet<>();
+        this.charts = new LinkedHashSet<>();
     }
 
-    public void generateRaport(Algorithm algorithm) throws IOException, InterruptedException {
-        ReportContent reportContent = algorithm.generateReportContent();
-        Set<Label> labels = reportContent.getLabels();
-        Set<LineChart<Number, Number>> charts = reportContent.getCharts();
+    public void addReportContent(ReportContent reportContent) {
+        labels.addAll(reportContent.getLabels());
+        charts.addAll(reportContent.getCharts());
+    }
 
-
+    public void generateRaport() throws IOException, InterruptedException {
         VBox labelsContainer = new VBox();
         labelsContainer.getChildren().addAll(labels);
 

@@ -7,6 +7,7 @@ import javafx.scene.layout.Pane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+import javafx.util.Duration;
 import lombok.Getter;
 import org.example.fileIO.FileInOutHandler;
 import org.example.graph.Edge;
@@ -376,6 +377,10 @@ public class PrimaryController {
         edgeLabels.setDisable(disabled);
     }
 
+    public Duration calculateFrameDuration() {
+        return Duration.millis(getSimulationSpeed().getMax() + 1 - getSimulationSpeed().getValue());
+    }
+
     public void addVertexToPane(Vertex v) {
         if (!graphEditor.getChildren().contains(v)) {
             graphEditor.getChildren().add(v);
@@ -399,7 +404,7 @@ public class PrimaryController {
 
         // draw vertices
         graph.getVertices().forEach(v -> {
-            v.setFill(Vertex.defaultColor);
+            v.setFill(Vertex.DEFAULT_COLOR);
             addVertexToPane(v);
         });
 
@@ -411,9 +416,9 @@ public class PrimaryController {
 
         // set unique colors for start and end nodes
         if (graph.getStartVertex() != null)
-            graph.getStartVertex().setFill(Vertex.startColor);
+            graph.getStartVertex().setFill(Vertex.START_COLOR);
         if (graph.getEndVertex() != null)
-            graph.getEndVertex().setFill(Vertex.endColor);
+            graph.getEndVertex().setFill(Vertex.END_COLOR);
     }
 
     public void clearAll() {

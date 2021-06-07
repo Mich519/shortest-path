@@ -6,9 +6,7 @@ import javafx.animation.StrokeTransition;
 import javafx.animation.Transition;
 import javafx.scene.control.Label;
 import javafx.scene.paint.Color;
-import javafx.util.Duration;
 import lombok.Getter;
-import lombok.Setter;
 import org.example.controller.PrimaryController;
 import org.example.graph.Edge;
 import org.example.graph.Graph;
@@ -85,7 +83,9 @@ public class Greedy implements Algorithm {
 
         /* vertices animation */
         for (Vertex v : processedVertices) {
-            st.getChildren().add(new FillTransition(Duration.millis(controller.getSimulationSpeed().getMax() - controller.getSimulationSpeed().getValue()), v, Color.ORANGE, Color.BLUEVIOLET));
+            if (v != graph.getStartVertex() && v != graph.getEndVertex()) {
+                st.getChildren().add(new FillTransition(controller.calculateFrameDuration(), v, Vertex.DEFAULT_COLOR, Vertex.RELAXATION_COLOR));
+            }
         }
 
         st.setCycleCount(1);
@@ -94,12 +94,14 @@ public class Greedy implements Algorithm {
         double totalLength = 0;
         List<Transition> pathTransitions = new ArrayList<>();
         for (Vertex ver = graph.getEndVertex(); ver != null; ver = mapVertexToPrev.get(ver)) {
-            pathTransitions.add(new FillTransition(Duration.millis(controller.getSimulationSpeed().getMax() - controller.getSimulationSpeed().getValue()), ver, Vertex.defaultColor, Vertex.transitionColor));
+            if (ver != graph.getStartVertex() && ver != graph.getEndVertex()) {
+                pathTransitions.add(new FillTransition(controller.calculateFrameDuration(), ver, Vertex.DEFAULT_COLOR, Vertex.TRANSITION_COLOR));
+            }
             Vertex pred = mapVertexToPrev.get(ver);
             if (pred != null) {
                 Edge e = ver.findEdgeConnectedTo(pred);
                 totalLength += e.getLength().get();
-                pathTransitions.add(new StrokeTransition(Duration.millis(controller.getSimulationSpeed().getMax() - controller.getSimulationSpeed().getValue()), e, Edge.DEFAULT_COLOR, Edge.TRANSITION_COLOR));
+                pathTransitions.add(new StrokeTransition(controller.calculateFrameDuration(), e, Edge.DEFAULT_COLOR, Edge.TRANSITION_COLOR));
             }
         }
         Collections.reverse(pathTransitions);
@@ -120,6 +122,7 @@ public class Greedy implements Algorithm {
     @Override
     public ReportContent generateReportContent() {
         ReportContent reportContent = new ReportContent();
+        reportContent.addLabel(new Label("Number of processed vertices: " + processedVertices.size()));
         reportContent.addLabel(new Label("Number of processed vertices: " + processedVertices.size()));
         double totalLength = 0;
         for (Edge e : shortestPath) {

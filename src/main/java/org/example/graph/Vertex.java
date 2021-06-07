@@ -2,7 +2,6 @@ package org.example.graph;
 
 import javafx.beans.property.DoubleProperty;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 import lombok.Getter;
 import lombok.Setter;
@@ -20,11 +19,12 @@ import java.util.List;
 @Getter
 @Setter
 public class Vertex extends Circle implements Serializable {
-    public static final Color defaultColor = Color.valueOf("#fca311");
-    public static final Color pathColor = Color.AQUAMARINE;
-    public static final Color transitionColor = Color.PURPLE;
-    public static final Color startColor = Color.GREEN;
-    public static final Color endColor = Color.RED;
+    public static final Color DEFAULT_COLOR = Color.valueOf("#ffd166");
+    public static final Color PATH_COLOR = Color.AQUAMARINE;
+    public static final Color RELAXATION_COLOR = Color.valueOf("#3a0ca3");
+    public static final Color TRANSITION_COLOR = Color.PURPLE;
+    public static final Color START_COLOR = Color.GREEN;
+    public static final Color END_COLOR = Color.RED;
 
     private HashSet<Edge> adjEdges;
     private transient PrimaryController controller;
@@ -36,7 +36,7 @@ public class Vertex extends Circle implements Serializable {
     }
 
     public Vertex(PrimaryController controller, DoubleProperty centerX, DoubleProperty centerY) {
-        super(centerX.get(), centerY.get(), 20.0, Vertex.defaultColor);
+        super(centerX.get(), centerY.get(), 20.0, Vertex.DEFAULT_COLOR);
         this.controller = controller;
         this.adjEdges = new HashSet<>();
         centerX.bind(centerXProperty());

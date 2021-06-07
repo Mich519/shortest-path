@@ -4,7 +4,6 @@ import javafx.animation.FillTransition;
 import javafx.animation.SequentialTransition;
 import javafx.animation.StrokeTransition;
 import javafx.animation.Transition;
-import javafx.util.Duration;
 import org.example.controller.PrimaryController;
 import org.example.graph.Edge;
 import org.example.graph.Graph;
@@ -69,8 +68,10 @@ public class BellmanFord implements Algorithm {
             Vertex v1 = shortestPath.get(i - 1);
             Vertex v2 = shortestPath.get(i);
             Edge e = v1.findEdgeConnectedTo(v2);
-            transitions.add(new FillTransition(Duration.millis(controller.getSimulationSpeed().getMax() - controller.getSimulationSpeed().getValue()), v1, Vertex.defaultColor, Vertex.transitionColor));
-            transitions.add(new StrokeTransition(Duration.millis(controller.getSimulationSpeed().getMax() - controller.getSimulationSpeed().getValue()), e, Edge.DEFAULT_COLOR, Edge.TRANSITION_COLOR));
+            if(v1 != graph.getStartVertex() && v1 != graph.getEndVertex()) {
+                transitions.add(new FillTransition(controller.calculateFrameDuration(), v1, Vertex.DEFAULT_COLOR, Vertex.TRANSITION_COLOR));
+            }
+            transitions.add(new StrokeTransition(controller.calculateFrameDuration(), e, Edge.DEFAULT_COLOR, Edge.TRANSITION_COLOR));
         }
         SequentialTransition st = new SequentialTransition();
         st.setCycleCount(1);

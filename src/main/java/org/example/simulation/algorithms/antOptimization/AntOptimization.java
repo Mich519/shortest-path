@@ -114,7 +114,8 @@ public class AntOptimization implements Algorithm {
     @Override
     public void animate(PrimaryController controller) {
         // animate
-        controller.toogleButtonsActivity(true);
+
+        /*controller.toogleButtonsActivity(true);
         List<Transition> transitions = new ArrayList<>();
         SequentialTransition st = new SequentialTransition();
 
@@ -123,7 +124,7 @@ public class AntOptimization implements Algorithm {
         for (Set<Edge> s : allPaths) {
             Color randomColor = Color.rgb(255, 255 - colorShades * i, 255 - colorShades * i);
             for (Edge e : s) {
-                transitions.add(new StrokeTransition(Duration.millis(controller.getSimulationSpeed().getMax() - controller.getSimulationSpeed().getValue()), e, Edge.DEFAULT_COLOR, randomColor));
+                transitions.add(new StrokeTransition(controller.calculateFrameDuration(), e, Edge.DEFAULT_COLOR, randomColor));
             }
             i++;
         }
@@ -141,7 +142,8 @@ public class AntOptimization implements Algorithm {
         st.setOnFinished(actionEvent -> {
             System.out.println("Animation finished");
             controller.toogleButtonsActivity(false);
-        });
+        });*/
+
     }
 
     @Override

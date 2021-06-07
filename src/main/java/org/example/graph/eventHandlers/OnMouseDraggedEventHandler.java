@@ -24,7 +24,6 @@ public class OnMouseDraggedEventHandler implements EventHandler<MouseEvent> {
 
         if (mouseEvent.getButton() == MouseButton.PRIMARY) {
             /* dragging vertex */
-            System.out.println(mouseEvent.getX());
             /* check if dragged vertex is within a bounds of a 'graphEditor' pane */
             if (mouseEvent.getX() - target.getRadius() > 0 && mouseEvent.getX() + target.getRadius() < controller.getGraphEditor().getWidth())
                 target.setCenterX(mouseEvent.getX());

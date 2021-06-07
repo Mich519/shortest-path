@@ -20,7 +20,7 @@ import java.io.Serializable;
 @Getter
 @EqualsAndHashCode(callSuper = false)
 public class Edge extends Line implements Serializable {
-    public static final Color DEFAULT_COLOR = Color.LIMEGREEN;
+    public static final Color DEFAULT_COLOR = Color.valueOf("#06d6a0");
     public static final Color TRANSITION_COLOR = Color.BLUE;
 
     private final Pair<Vertex, Vertex> vertices;

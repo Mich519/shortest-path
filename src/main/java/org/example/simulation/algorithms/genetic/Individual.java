@@ -4,7 +4,6 @@ import javafx.animation.FillTransition;
 import javafx.animation.StrokeTransition;
 import javafx.animation.Transition;
 import javafx.scene.paint.Color;
-import javafx.util.Duration;
 import javafx.util.Pair;
 import lombok.Getter;
 import lombok.Setter;
@@ -68,8 +67,8 @@ public class Individual implements Comparable<Individual> {
             Edge e = v1.findEdgeConnectedTo(v2);
             if(e == null)
                 throw new NullPointerException();
-            transitions.add(new FillTransition(Duration.millis(controller.getSimulationSpeed().getMax() - controller.getSimulationSpeed().getValue()), v1, Vertex.defaultColor, Color.PINK));
-            transitions.add(new StrokeTransition(Duration.millis(controller.getSimulationSpeed().getMax() - controller.getSimulationSpeed().getValue()), e, Edge.DEFAULT_COLOR, Color.WHITE));
+            transitions.add(new FillTransition(controller.calculateFrameDuration(), v1, Vertex.DEFAULT_COLOR, Color.PINK));
+            transitions.add(new StrokeTransition(controller.calculateFrameDuration(), e, Edge.DEFAULT_COLOR, Color.WHITE));
         }
     }
 

@@ -11,121 +11,70 @@ import org.example.simulation.algorithms.antOptimization.AntOptimization;
 import org.example.simulation.algorithms.antOptimization.AntParametersContainer;
 import org.example.simulation.algorithms.genetic.Genetic;
 import org.example.simulation.algorithms.genetic.GeneticParametersContainer;
+import org.example.simulation.report.ReportContent;
 import org.example.simulation.report.ReportGenerator;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class Simulation {
 
     private final PrimaryController controller;
+    private final Benchmarker benchmarker;
 
     public Simulation(PrimaryController controller) {
         this.controller = controller;
+        this.benchmarker = new Benchmarker(controller);
     }
 
-    private void measureExecutionTime(Algorithm algorithm) throws Exception {
-        if (controller.getBenchmark().isSelected()) {
-            final int skip = 20; // warmup faze
-            final int numOfTests = 100;
-            for (int j = 0; j < (int) controller.getNumOfTests().getValue(); j++) {
-                List<Long> times = new ArrayList<>(numOfTests);
-                for (int i = 0; i < numOfTests + skip; i++) {
-                    long startTime = System.nanoTime();
-                    algorithm.run();
-                    long finishTime = System.nanoTime();
-                    long elapsed = finishTime - startTime;
-                    if (i > skip) {
-                        times.add(elapsed / 100);
-                    }
-                }
-                long avg = times.stream().reduce(Long::sum).get() / times.size();
-                System.out.println("Avg time: " + avg);
+    private void simulate(Algorithm algorithm) throws Exception {
+        if (controller.getGraph().getStartVertex() != null && controller.getGraph().getEndVertex() != null) {
+            controller.drawGraph();
+            ReportContent benchmarkReport = null;
+            if (controller.getBenchmark().isSelected()) {
+                benchmarkReport = benchmarker.runWithBenchmark(algorithm);
+            } else {
+                algorithm.run();
             }
-        } else
-            algorithm.run();
+            if (controller.getGenerateReport().isSelected()) {
+                ReportGenerator reportGenerator = new ReportGenerator();
+                reportGenerator.addReportContent(algorithm.generateReportContent());
+                if (benchmarkReport != null)
+                    reportGenerator.addReportContent(benchmarkReport);
+                reportGenerator.generateRaport();
+            }
+            if (controller.getShowAnimation().isSelected()) {
+                algorithm.animate(controller);
+            }
+        }
     }
 
     public void simulateDijkstra() throws Exception {
-        if (controller.getGraph().getStartVertex() != null && controller.getGraph().getEndVertex() != null) {
-            /* check if start and end vertices are set */
-
-            Graph graph = controller.getGraph();
-            double simulationSpeed = controller.getSimulationSpeed().getValue();
-            Greedy dijkstra = new Greedy(graph, new VertexByCurLowestCostComparator());
-            measureExecutionTime(dijkstra);
-            if (controller.getGenerateReport().isSelected()) {
-                ReportGenerator reportGenerator = new ReportGenerator();
-                reportGenerator.generateRaport(dijkstra);
-            }
-            if (controller.getShowAnimation().isSelected()) {
-                dijkstra.animate(controller);
-            }
-        }
+        Graph graph = controller.getGraph();
+        Greedy dijkstra = new Greedy(graph, new VertexByCurLowestCostComparator());
+        simulate(dijkstra);
     }
 
     public void simulateAStar() throws Exception {
-        if (controller.getGraph().getStartVertex() != null && controller.getGraph().getEndVertex() != null) {
-            /* check if start and end vertices are set */
-            Graph graph = controller.getGraph();
-            double simulationSpeed = controller.getSimulationSpeed().getValue();
-            Greedy aStar = new Greedy(graph, new VertexByTotalCostComparator(controller.getGraph()));
-            measureExecutionTime(aStar);
-            if (controller.getGenerateReport().isSelected()) {
-                ReportGenerator reportGenerator = new ReportGenerator();
-                reportGenerator.generateRaport(aStar);
-            }
-            if (controller.getShowAnimation().isSelected()) {
-                aStar.animate(controller);
-            }
-        }
+        Graph graph = controller.getGraph();
+        Greedy aStar = new Greedy(graph, new VertexByTotalCostComparator(graph));
+        simulate(aStar);
     }
 
     public void simulateAntOptimization() throws Exception {
-        if (controller.getGraph().getStartVertex() != null && controller.getGraph().getEndVertex() != null) {
-            /* check if start and end vertices are set */
-            Graph graph = controller.getGraph();
-            AntParametersContainer parameters = new AntParametersContainer(controller);
-            double simulationSpeed = controller.getSimulationSpeed().getValue();
-            AntOptimization antOptimization = new AntOptimization(graph, parameters);
-            measureExecutionTime(antOptimization);
-            if (controller.getGenerateReport().isSelected()) {
-                ReportGenerator reportGenerator = new ReportGenerator();
-                reportGenerator.generateRaport(antOptimization);
-            }
-            if (controller.getShowAnimation().isSelected()) {
-                antOptimization.animate(controller);
-            }
-        }
+        Graph graph = controller.getGraph();
+        AntParametersContainer parameters = new AntParametersContainer(controller);
+        AntOptimization antOptimization = new AntOptimization(graph, parameters);
+        simulate(antOptimization);
     }
 
     public void simulateBellmanFord() throws Exception {
-        if (controller.getGraph().getStartVertex() != null && controller.getGraph().getEndVertex() != null) {
-            /* check if start and end vertices are set */
-
-            Graph graph = controller.getGraph();
-            BellmanFord bellmanFord = new BellmanFord(graph);
-            measureExecutionTime(bellmanFord);
-            if (controller.getShowAnimation().isSelected()) {
-                bellmanFord.animate(controller);
-            }
-        }
+        Graph graph = controller.getGraph();
+        BellmanFord bellmanFord = new BellmanFord(graph);
+        simulate(bellmanFord);
     }
 
     public void simulateGenetic() throws Exception {
-        if (controller.getGraph().getStartVertex() != null && controller.getGraph().getEndVertex() != null) {
-            /* check if start and end vertices are set */
-            Graph graph = controller.getGraph();
-            GeneticParametersContainer parameters = new GeneticParametersContainer(controller);
-            Genetic genetic = new Genetic(graph, parameters);
-            measureExecutionTime(genetic);
-            if (controller.getGenerateReport().isSelected()) {
-                ReportGenerator reportGenerator = new ReportGenerator();
-                reportGenerator.generateRaport(genetic);
-            }
-            if (controller.getShowAnimation().isSelected()) {
-                genetic.animate(controller);
-            }
-        }
+        Graph graph = controller.getGraph();
+        GeneticParametersContainer parameters = new GeneticParametersContainer(controller);
+        Genetic genetic = new Genetic(graph, parameters);
+        simulate(genetic);
     }
 }
