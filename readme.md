@@ -4,22 +4,25 @@
 - [Why did you make it?](#why-did-you-make-it)
 - [How can I run it?](#how-can-i-run-it)
 - [How can I use it?](#how-can-i-use-it)
-## What is it?
+## Description
 
 This is an open-source interactive shortest path algorithm visualizer. It allows user to create his own graph structures and explore various types of algorithms including: Dijkstra, A*, Bellman-Ford, Ant Optimization and Genetic.
 
 ![til](./src/main/resources/org/example/readme/app.gif)
 
-## Why did you make it?
+## Functionality
+
+## Motivation
 
 I made this application purely for educational purposes. I remember reading about Ant Optimization Algorithm and it quite fascinated me so I was wondering how can it be implemented to solve shortest path problem for graphs. Later I added more algorithms to make this application more complete.
 
 
-## How can I run it?
+## Installation 
 
 
 
-## How can I use it?
+
+## Manual
 
   Adding new vertex: 
   <ol>
