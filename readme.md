@@ -1,9 +1,9 @@
 # Shortest Path Visualizer
-### Table of contents
-- [What is it?](#what-is-it)
-- [Why did you make it?](#why-did-you-make-it)
-- [How can I run it?](#how-can-i-run-it)
-- [How can I use it?](#how-can-i-use-it)
+  - [Description](#description)
+  - [Functionality](#functionality)
+  - [Motivation](#motivation)
+  - [Installation](#installation)
+  - [Manual](#manual)
 ## Description
 
 This is an open-source interactive shortest path algorithm visualizer. It allows user to create his own graph structures and explore various types of algorithms including: Dijkstra, A*, Bellman-Ford, Ant Optimization and Genetic.
