@@ -1,3 +1,4 @@
+# Shortest Path Visualizer
 ### Table of contents
 - [What is it?](#what-is-it)
 - [Why did you make it?](#why-did-you-make-it)
