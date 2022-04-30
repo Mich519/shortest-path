@@ -1,0 +1,393 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<SplitPane fx:id="splitPane" dividerPositions="0.5" minHeight="800.0" prefWidth="800.0" style="-fx-background-color: #343a40;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.controller.PrimaryController">
+   <items>
+      <VBox>
+         <children>
+            <MenuBar style="-fx-background-color: #212529;">
+               <menus>
+                  <Menu mnemonicParsing="false" style="-fx-background-color: #212529; -fx-color: #212529;" text="File">
+                    <items>
+                      <MenuItem fx:id="neww" mnemonicParsing="false" style="-fx-text-fill: black;" text="New" />
+                        <MenuItem fx:id="load" mnemonicParsing="false" style="-fx-text-fill: black;" text="Load" />
+                        <MenuItem fx:id="save" mnemonicParsing="false" style="-fx-text-fill: black;" text="Save" />
+                    </items>
+                  </Menu>
+                  <Menu mnemonicParsing="false" style="-fx-color: #2b2d42;" text="Help">
+                    <items>
+                      <MenuItem mnemonicParsing="false" text="Action 1" />
+                    </items>
+                  </Menu>
+               </menus>
+            </MenuBar>
+            <Pane fx:id="graphEditor" style="-fx-background-color: #343a40;" VBox.vgrow="ALWAYS" />
+         </children>
+      </VBox>
+      <TabPane style="-fx-background-color: #f2d492;">
+         <tabs>
+            <Tab closable="false" style="-fx-background-color: #212529; -fx-color: #212529;" text="Editor">
+              <content>
+                  <ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER">
+                     <content>
+                        <VBox style="-fx-background-color: #212529;">
+                           <children>
+                              <Label alignment="TOP_LEFT" contentDisplay="CENTER" text="Editor " textFill="#adb5bd">
+                                 <font>
+                                    <Font name="System Bold" size="20.0" />
+                                 </font>
+                                 <VBox.margin>
+                                    <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                 </VBox.margin>
+                              </Label>
+                              <RadioButton fx:id="startNode" mnemonicParsing="false" text="Choose start node" textFill="#adb5bd">
+                                 <VBox.margin>
+                                    <Insets bottom="10.0" left="10.0" right="10.0" />
+                                 </VBox.margin>
+                              </RadioButton>
+                              <RadioButton fx:id="endNode" mnemonicParsing="false" text="Choose end node" textFill="#adb5bd">
+                                 <VBox.margin>
+                                    <Insets bottom="10.0" left="10.0" right="10.0" />
+                                 </VBox.margin>
+                              </RadioButton>
+                              <RadioButton fx:id="addVertex" mnemonicParsing="false" text="Add vertex" textFill="#adb5bd">
+                                 <VBox.margin>
+                                    <Insets bottom="10.0" left="10.0" right="10.0" />
+                                 </VBox.margin>
+                              </RadioButton>
+                              <RadioButton fx:id="removeVertex" mnemonicParsing="false" text="Remove vertex" textFill="#adb5bd">
+                                 <VBox.margin>
+                                    <Insets bottom="10.0" left="10.0" right="10.0" />
+                                 </VBox.margin>
+                              </RadioButton>
+                              <RadioButton fx:id="edgeLabels" mnemonicParsing="false" text="Show edge labels" textFill="#adb5bd">
+                                 <VBox.margin>
+                                    <Insets bottom="10.0" left="10.0" />
+                                 </VBox.margin>
+                              </RadioButton>
+                              <VBox alignment="CENTER">
+                                 <children>
+                                    <Label text="Vertex radius" textFill="#adb5bd">
+                                       <VBox.margin>
+                                          <Insets left="10.0" right="10.0" />
+                                       </VBox.margin>
+                                    </Label>
+                                    <Slider fx:id="vertexRadius" style="-fx-control-inner-background: #fca311;" styleClass="sliderClass">
+                                       <opaqueInsets>
+                                          <Insets />
+                                       </opaqueInsets>
+                                       <VBox.margin>
+                                          <Insets bottom="10.0" left="10.0" right="10.0" />
+                                       </VBox.margin>
+                                    </Slider>
+                                 </children>
+                                 <opaqueInsets>
+                                    <Insets left="10.0" right="10.0" />
+                                 </opaqueInsets>
+                              </VBox>
+                              <VBox alignment="CENTER">
+                                 <children>
+                                    <Label text="Edge width" textFill="#adb5bd">
+                                       <VBox.margin>
+                                          <Insets left="10.0" right="10.0" />
+                                       </VBox.margin>
+                                    </Label>
+                                    <Slider fx:id="edgeWidth" style="-fx-control-inner-background: #fca311;" styleClass="sliderClass">
+                                       <opaqueInsets>
+                                          <Insets />
+                                       </opaqueInsets>
+                                       <VBox.margin>
+                                          <Insets bottom="10.0" left="10.0" right="10.0" />
+                                       </VBox.margin>
+                                    </Slider>
+                                 </children>
+                                 <opaqueInsets>
+                                    <Insets left="10.0" right="10.0" />
+                                 </opaqueInsets>
+                              </VBox>
+                              <HBox alignment="BOTTOM_RIGHT">
+                                 <VBox.margin>
+                                    <Insets />
+                                 </VBox.margin>
+                              </HBox>
+                              <Button fx:id="clearGraphEditor" mnemonicParsing="false" text="Clear all">
+                                 <VBox.margin>
+                                    <Insets left="10.0" />
+                                 </VBox.margin>
+                              </Button>
+                           </children>
+                        </VBox>
+                     </content>
+                  </ScrollPane>
+              </content>
+            </Tab>
+            <Tab closable="false" style="-fx-background-color: #212529; -fx-color: #212529;" text="Generator">
+              <content>
+                  <ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER">
+                     <content>
+                        <VBox style="-fx-background-color: #212529;">
+                           <children>
+                              <Label text="Generator" textFill="#adb5bd">
+                                 <VBox.margin>
+                                    <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                 </VBox.margin>
+                                 <font>
+                                    <Font name="System Bold" size="20.0" />
+                                 </font>
+                              </Label>
+                              <RadioButton mnemonicParsing="false" text="Directed graph" textFill="#adb5bd">
+                                 <VBox.margin>
+                                    <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                 </VBox.margin>
+                              </RadioButton>
+                              <VBox alignment="CENTER">
+                                 <VBox.margin>
+                                    <Insets top="10.0" />
+                                 </VBox.margin>
+                                 <children>
+                                    <VBox alignment="CENTER">
+                                       <VBox.margin>
+                                          <Insets bottom="10.0" left="10.0" right="10.0" />
+                                       </VBox.margin>
+                                       <HBox.margin>
+                                          <Insets bottom="20.0" left="20.0" right="10.0" />
+                                       </HBox.margin>
+                                       <children>
+                                          <Label text="Number of vertices" textFill="#adb5bd">
+                                             <VBox.margin>
+                                                <Insets left="10.0" right="10.0" />
+                                             </VBox.margin>
+                                          </Label>
+                                          <Slider fx:id="vertexCount" styleClass="sliderClass">
+                                             <opaqueInsets>
+                                                <Insets />
+                                             </opaqueInsets>
+                                             <VBox.margin>
+                                                <Insets bottom="10.0" left="10.0" right="10.0" />
+                                             </VBox.margin>
+                                          </Slider>
+                                       </children>
+                                    </VBox>
+                                    <HBox alignment="CENTER">
+                                       <children>
+                                          <Button fx:id="generate" mnemonicParsing="false" text="Generated" />
+                                       </children>
+                                       <VBox.margin>
+                                          <Insets bottom="10.0" top="10.0" />
+                                       </VBox.margin>
+                                    </HBox>
+                                 </children>
+                              </VBox>
+                           </children>
+                        </VBox>
+                     </content>
+                  </ScrollPane>
+              </content>
+            </Tab>
+            <Tab closable="false" style="-fx-background-color: #212529; -fx-color: #212529;" text="Simulation">
+               <content>
+                  <ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER">
+                     <content>
+                        <VBox style="-fx-background-color: #212529;">
+                           <children>
+                              <Label text="Simulation" textFill="#adb5bd">
+                                 <font>
+                                    <Font name="System Bold" size="20.0" />
+                                 </font>
+                                 <VBox.margin>
+                                    <Insets bottom="10.0" left="10.0" top="10.0" />
+                                 </VBox.margin>
+                              </Label>
+                              <RadioButton fx:id="dijkstra" mnemonicParsing="false" text="Dijkstra" textFill="#adb5bd">
+                                 <VBox.margin>
+                                    <Insets bottom="10.0" left="10.0" top="10.0" />
+                                 </VBox.margin>
+                                 <font>
+                                    <Font name="System Bold" size="13.0" />
+                                 </font>
+                              </RadioButton>
+                              <RadioButton fx:id="aStar" mnemonicParsing="false" text="A*" textFill="#adb5bd">
+                                 <VBox.margin>
+                                    <Insets bottom="10.0" left="10.0" />
+                                 </VBox.margin>
+                                 <font>
+                                    <Font name="System Bold" size="13.0" />
+                                 </font>
+                              </RadioButton>
+                              <RadioButton fx:id="bellmanFord" mnemonicParsing="false" text="Bellman-Ford" textFill="#adb5bd">
+                                 <VBox.margin>
+                                    <Insets bottom="10.0" left="10.0" />
+                                 </VBox.margin>
+                                 <font>
+                                    <Font name="System Bold" size="13.0" />
+                                 </font>
+                              </RadioButton>
+                              <VBox spacing="10.0" style="-fx-border-color: #264653; -fx-border-radius: 10 10 10 10;">
+                                 <VBox.margin>
+                                    <Insets bottom="10.0" left="10.0" right="10.0" />
+                                 </VBox.margin>
+                                 <children>
+                                    <RadioButton fx:id="genetic" mnemonicParsing="false" text="Genetic" textFill="#adb5bd">
+                                       <font>
+                                          <Font name="System Bold" size="13.0" />
+                                       </font>
+                                    </RadioButton>
+                                    <VBox>
+                                       <children>
+                                          <Label text="Elitism rate" textFill="#adb5bd" />
+                                          <Slider fx:id="elitismRate" styleClass="sliderClass" />
+                                       </children>
+                                    </VBox>
+                                    <VBox>
+                                       <children>
+                                          <Label text="Initial population" textFill="#adb5bd" />
+                                          <Slider fx:id="initialPopulation" styleClass="sliderClass" />
+                                       </children>
+                                    </VBox>
+                                    <VBox>
+                                       <children>
+                                          <Label text="Number of generations" textFill="#adb5bd" />
+                                          <Slider fx:id="numOfGenerations" styleClass="sliderClass" />
+                                       </children>
+                                    </VBox>
+                                    <VBox>
+                                       <children>
+                                          <Label text="Mutation ratio" textFill="#adb5bd" />
+                                          <Slider fx:id="mutationRatio" styleClass="sliderClass" />
+                                       </children>
+                                    </VBox>
+                                 </children>
+                                 <padding>
+                                    <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                 </padding>
+                              </VBox>
+                              <VBox spacing="10.0" style="-fx-border-color: #264653; -fx-border-radius: 10 10 10 10;">
+                                 <VBox.margin>
+                                    <Insets bottom="10.0" left="10.0" right="10.0" />
+                                 </VBox.margin>
+                                 <children>
+                                    <RadioButton fx:id="antOptimization" mnemonicParsing="false" text="Ant Optimization" textFill="#adb5bd">
+                                       <VBox.margin>
+                                          <Insets bottom="10.0" />
+                                       </VBox.margin>
+                                       <font>
+                                          <Font name="System Bold" size="13.0" />
+                                       </font>
+                                    </RadioButton>
+                                    <VBox>
+                                       <children>
+                                          <Label text="Number of ants" textFill="#adb5bd" />
+                                          <Slider fx:id="numberOfAnts" styleClass="sliderClass" />
+                                       </children>
+                                    </VBox>
+                                    <VBox>
+                                       <children>
+                                          <Label text="Pheromone per ant" textFill="#adb5bd" />
+                                          <Slider fx:id="pheromonePerAnt" styleClass="sliderClass" />
+                                       </children>
+                                    </VBox>
+                                    <VBox>
+                                       <children>
+                                          <Label text="Alpha" textFill="#adb5bd" />
+                                          <Slider fx:id="alpha" styleClass="sliderClass" />
+                                       </children>
+                                    </VBox>
+                                    <VBox>
+                                       <children>
+                                          <Label text="Beta" textFill="#adb5bd" />
+                                          <Slider fx:id="beta" styleClass="sliderClass" />
+                                       </children>
+                                    </VBox>
+                                    <VBox>
+                                       <children>
+                                          <Label text="Evaporation rate" textFill="#adb5bd" />
+                                          <Slider fx:id="evaporationRate" styleClass="sliderClass" />
+                                       </children>
+                                    </VBox>
+                                    <VBox>
+                                       <children>
+                                          <Label text="Number of iterations" textFill="#adb5bd" />
+                                          <Slider fx:id="numberOfIterations" styleClass="sliderClass" />
+                                       </children>
+                                    </VBox>
+                                 </children>
+                                 <padding>
+                                    <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                 </padding>
+                              </VBox>
+                              <RadioButton fx:id="showWeights" mnemonicParsing="false" selected="true" text="Show weights" textFill="#adb5bd">
+                                 <VBox.margin>
+                                    <Insets bottom="10.0" left="10.0" />
+                                 </VBox.margin>
+                              </RadioButton>
+                              <RadioButton fx:id="generateReport" mnemonicParsing="false" text="Generate report" textFill="#adb5bd">
+                                 <VBox.margin>
+                                    <Insets bottom="10.0" left="10.0" />
+                                 </VBox.margin>
+                              </RadioButton>
+                              <RadioButton fx:id="showAnimation" mnemonicParsing="false" text="Show animation" textFill="#adb5bd">
+                                 <VBox.margin>
+                                    <Insets bottom="10.0" left="10.0" />
+                                 </VBox.margin>
+                              </RadioButton>
+                              <VBox alignment="CENTER_LEFT" style="-fx-border-radius: 10 10 10 10; -fx-border-color: #264653;">
+                                 <VBox.margin>
+                                    <Insets bottom="10.0" left="10.0" />
+                                 </VBox.margin>
+                                 <children>
+                                    <RadioButton fx:id="benchmark" mnemonicParsing="false" text="Benchmark" textFill="#adb5bd">
+                                       <VBox.margin>
+                                          <Insets bottom="10.0" />
+                                       </VBox.margin>
+                                    </RadioButton>
+                                    <Label text="Number of tests" textFill="#adb5bd" />
+                                    <Slider fx:id="numOfTests" />
+                                 </children>
+                                 <padding>
+                                    <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                 </padding>
+                              </VBox>
+                              <VBox alignment="CENTER" style="-fx-border-color: #264653; -fx-border-radius: 10 10 10 10;">
+                                 <VBox.margin>
+                                    <Insets bottom="10.0" left="10.0" right="10.0" />
+                                 </VBox.margin>
+                                 <children>
+                                    <Label text="Animation speed" textFill="#adb5bd">
+                                       <VBox.margin>
+                                          <Insets />
+                                       </VBox.margin>
+                                    </Label>
+                                    <Slider fx:id="simulationSpeed" styleClass="sliderClass">
+                                       <VBox.margin>
+                                          <Insets bottom="10.0" left="10.0" right="10.0" />
+                                       </VBox.margin>
+                                    </Slider>
+                                    <HBox>
+                                       <VBox.margin>
+                                          <Insets bottom="10.0" left="10.0" right="10.0" />
+                                       </VBox.margin>
+                                       <children>
+                                          <Button fx:id="start" mnemonicParsing="false" prefHeight="50.0" prefWidth="68.0" text="Start" textAlignment="CENTER">
+                                             <HBox.margin>
+                                                <Insets right="10.0" />
+                                             </HBox.margin>
+                                          </Button>
+                                          <Button fx:id="stop" mnemonicParsing="false" prefHeight="50.0" prefWidth="68.0" text="Stop" textAlignment="CENTER" />
+                                       </children>
+                                    </HBox>
+                                 </children>
+                              </VBox>
+                           </children>
+                        </VBox>
+                     </content>
+                  </ScrollPane>
+               </content>
+            </Tab>
+         </tabs>
+      </TabPane>
+   </items>
+</SplitPane>
