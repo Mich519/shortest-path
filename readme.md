@@ -67,4 +67,4 @@ Execute `java -jar <name_of_the_release>.jar`.
 
 ## License
 
-This project is distributed under the MIT License. See [LICENSE](https://github.com/Mich519/shortest-path/LICENSE) for more information.
+This project is distributed under the MIT License. See [LICENSE](https://github.com/Mich519/shortest-path/blob/master/LICENSE) for more information.
