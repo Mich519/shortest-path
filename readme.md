@@ -63,3 +63,7 @@ Execute `java -jar <name_of_the_release>.jar`.
     <li> Head on to 'Simulation' tab and pick your favourite algorithm. Some of them allow you to change various parameters. Feel free to experiment with it. </li>
     <li> Click on 'Start' button and enjoy the view. </li>
   </ol>
+
+## License
+
+This project is distributed under the MIT License. See LICENSE for more information.
