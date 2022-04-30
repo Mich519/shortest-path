@@ -1,6 +1,7 @@
 # Shortest Path Visualizer
 ![Java](https://img.shields.io/badge/java-%23ED8B00.svg?style=for-the-badge&logo=java&logoColor=white)
 ![Apache Maven](https://img.shields.io/badge/Apache%20Maven-C71A36?style=for-the-badge&logo=Apache%20Maven&logoColor=white)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
   - [Shortest Path Visualizer](#shortest-path-visualizer)
   - [Description](#description)
   - [Motivation](#motivation)
@@ -66,4 +67,4 @@ Execute `java -jar <name_of_the_release>.jar`.
 
 ## License
 
-This project is distributed under the MIT License. See LICENSE for more information.
+This project is distributed under the MIT License. See [LICENSE](https://github.com/Mich519/shortest-path/LICENSE) for more information.
