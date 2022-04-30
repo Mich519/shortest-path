@@ -1,7 +1,6 @@
 # Shortest Path Visualizer
-![Java](https://img.shields.io/badge/java-%23ED8B00.svg?style=for-the-badge&logo=java&logoColor=white)
-![Apache Maven](https://img.shields.io/badge/Apache%20Maven-C71A36?style=for-the-badge&logo=Apache%20Maven&logoColor=white)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+![GitHub release (release name instead of tag name)](https://img.shields.io/github/v/release/Mich519/shortest-path?color=4d908e&include_prereleases&style=flat-square)
+![GitHub](https://img.shields.io/github/license/Mich519/shortest-path?color=%23235789&style=flat-square)
   - [Shortest Path Visualizer](#shortest-path-visualizer)
   - [Description](#description)
   - [Motivation](#motivation)
