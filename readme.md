@@ -20,7 +20,7 @@ I made this application purely for educational purposes. I remember reading abou
 ## Installation 
 
 Make sure `Java Runtime Environment` is installed on your system.
-Go to releases page and download version of your choice (for example: [latest release](../releases/latest)). 
+Go to releases page and download version of your choice (for example: [latest release](https://github.com/Mich519/shortest-path/releases/latest)). 
 Execute `java -jar 0.0.1-release.jar`.
 
 ## User Guide
