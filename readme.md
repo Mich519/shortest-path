@@ -1,22 +1,34 @@
 # Shortest Path Visualizer
+![Java](https://img.shields.io/badge/java-%23ED8B00.svg?style=for-the-badge&logo=java&logoColor=white)
+![Apache Maven](https://img.shields.io/badge/Apache%20Maven-C71A36?style=for-the-badge&logo=Apache%20Maven&logoColor=white)
+  - [Shortest Path Visualizer](#shortest-path-visualizer)
   - [Description](#description)
-  - [Functionality](#functionality)
   - [Motivation](#motivation)
+  - [Features](#features)
   - [Installation](#installation)
-  - [Manual](#manual)
+  - [User Guide](#user-guide)
 ## Description
 
 This is an open-source interactive shortest path algorithm visualizer. It allows user to create his own graph structures and explore various types of algorithms including: Dijkstra, A*, Bellman-Ford, Ant Optimization and Genetic.
 
 ![til](./src/main/resources/org/example/readme/app.gif)
 
-## Functionality
-
 ## Motivation
 
 I made this application purely for educational purposes. I remember reading about Ant Optimization Algorithm and it quite fascinated me so I was wondering how can it be implemented to solve shortest path problem for graphs. Later I added more algorithms to make this application more complete.
 
-
+## Features
+  * Creating and modifying graph structures
+  * Generating random graph structures 
+  * Saving/loading graph structures to/from file 
+  * Changing vertices and edges size 
+  * Displaying edges' length dynamically 
+  * Running shortest path algorithms:
+    * Dijsktra
+    * A*
+    * Genetic
+    * Ant Optimization
+  * Creating and displaying simple reports from algorithms' execution
 ## Installation 
 
 Make sure `Java Runtime Environment` is installed on your system.
